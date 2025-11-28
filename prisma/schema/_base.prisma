@@ -1,0 +1,13 @@
+// =====================================================
+// Prisma base schema configuration
+// Contains generator & datasource definitions.
+// =====================================================
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "mysql"
+}
