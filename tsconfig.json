@@ -36,29 +36,13 @@
 			"@jwt": ["src/jwt"],
 			"@firebase": ["src/firebase"],
 			"@middlewares": ["src/middlewares"],
+			
 
-			"@auth": ["src/apis/auth"],
-			"@dummy": ["src/apis/dummy"],
-			"@users": ["src/apis/users"],
-			"@roles": ["src/apis/roles"],
-			"@houses": ["src/apis/houses"],
-			"@vehicles": ["src/apis/vehicles"],
-			"@commodity-prices": ["src/apis/commodity-prices"],
-			"@commodity-images": ["src/apis/commodity-images"],
-			"@flash-sales": ["src/apis/flash-sales"],
-			"@orders": ["src/apis/orders"],
-			"@promotions": ["src/apis/promotions"],
-			"@favorites": ["src/apis/favorites"],
-			"@reviews": ["src/apis/reviews"],
-			"@user-revertseens": ["src/apis/user-revertseens"],
-			"@news": ["src/apis/news"],
-			"@comments": ["src/apis/comments"],
-			"@otps": ["src/apis/otps"],
-			"@about-products": ["src/apis/about-products"],
-			"@cadastral": ["src/apis/cadastral"],
-			"@cgv-cgus": ["src/apis/cgv-cgus"],
-			"@master-data": ["src/apis/master-data"],
-			"@uploads": ["src/apis/uploads"]
+			"@locations": ["src/apis/locations"],
+
+
+
+			"@prisma": ["src/prisma"]
 		}
 	},
 	"exclude": ["./node_modules/**"],

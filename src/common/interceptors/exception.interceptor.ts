@@ -20,12 +20,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 		const data: any = (exception as any).response;
         const responseBody = {
 			status: httpStatus,
-			data: {
-				...data,
-				message: data?.message?.[`${lang}`] || data?.message || (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR ? 'Lỗi hệ thống' : 'Error'),
-			},
-			// timestamp: new Date().toISOString(),
-			// path: httpAdapter.getRequestUrl(ctx.getRequest()),
+            message: data?.message?.[`${lang}`] || data?.message || (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR ? 'Lỗi hệ thống' : 'Error'),
+			data: data,
 		};
         // Trả về response
         httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

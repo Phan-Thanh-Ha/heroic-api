@@ -12,7 +12,5 @@ export const ApiProvinceGetAll = () => {
             required: true,
             schema: { type: 'string'},
         }),
-        ApiBearerAuth(),
-        ApiOkResponse()
     )
 };

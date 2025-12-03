@@ -6,19 +6,6 @@ generator client {
 datasource db {
   provider = "mysql"
 }
-
-// ============================================
-// LOCATIONS MODULE - District
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
 model Districts {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(3)

@@ -1,0 +1,32 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { WardsService } from './wards.service';
+import { CreateWardDto } from './dto/create-ward.dto';
+import { UpdateWardDto } from './dto/update-ward.dto';
+import { LoggerService } from '@logger';
+import { ApiWardsFindByDistrictCode } from './swagger/get-wards-by-parencode.swagger';
+import { HTTP_STATUS_ENUM } from '@common';
+
+@Controller('wards')
+export class WardsController {
+  private context = WardsController.name;
+  constructor(private readonly wardsService: WardsService, private readonly logger: LoggerService) {}
+
+  // @Post()
+  // create(@Body() createWardDto: CreateWardDto) {
+  //   return this.wardsService.create(createWardDto);
+  // }
+
+  // @Get()
+  // findAll() {
+  //   return this.wardsService.findAll();
+  // }
+
+  //URL: /api/v1/locations/wards/:districtCode
+  @Get('/:districtCode')
+  @HttpCode(HTTP_STATUS_ENUM.OK)
+  @ApiWardsFindByDistrictCode()
+  async findWardsByDistrictCode(@Param('districtCode') districtCode: string) {
+    this.logger.log(this.context, 'findWardsByDistrictCode', districtCode);
+    return await this.wardsService.findWardsByDistrictCode(districtCode);
+  }
+}

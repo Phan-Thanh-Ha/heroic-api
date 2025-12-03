@@ -18,9 +18,6 @@ export class ProvinceService {
                 message: 'Lấy tất cả tỉnh thành thành công',
                 data: provinces,
                 total: provinces.length,
-                page: 1,
-                limit: 10,
-                totalPages: Math.ceil(provinces.length / 10),
             };
         } catch (error) {
             this.logger.error(this.context, 'getAllProvince', error);

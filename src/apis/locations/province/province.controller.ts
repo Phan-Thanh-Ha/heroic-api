@@ -10,7 +10,6 @@ export class ProvinceController {
     private context = ProvinceController.name;
     constructor(private readonly provinceService: ProvinceService, private readonly logger: LoggerService) {}
 
-
     //URL: /api/v1/locations/province/city
     @Get()
     @ApiProvinceGetAll()
