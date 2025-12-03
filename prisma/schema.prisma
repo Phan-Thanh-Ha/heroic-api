@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ============================================
+// LOCATIONS MODULE - District
+// ============================================
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
+model Districts {
+  id             Int      @id @default(autoincrement())
+  code           String   @unique @db.Char(3)
+  name           String   @db.VarChar(100)
+  slug           String   @db.VarChar(100)
+  type           String   @db.VarChar(50)
+  name_with_type String   @db.VarChar(150)
+  path           String?
+  path_with_type String?
+  province_code  String   @db.Char(2)
+
+  province Provinces @relation(fields: [province_code], references: [code])
+  wards    Wards[]
+
+  @@index([province_code])
+  @@map("districts")
+}
+
+// ============================================
+// LOCATIONS MODULE - Provinces
+// ============================================
+
+model Provinces {
+  id             Int      @id @default(autoincrement())
+  code           String   @unique @db.Char(2)
+  name           String   @db.VarChar(100)
+  slug           String   @db.VarChar(100)
+  type           String   @db.VarChar(50)
+  name_with_type String   @db.VarChar(150)
+  sort_order     Int?
+  lat            Float?
+  long           Float?
+  image          String?  @db.Text
+
+  districts Districts[]
+
+  @@map("provinces")
+}
+
+// ============================================
+// LOCATIONS MODULE - Wards
+// ============================================
+
+model Wards {
+  id             Int      @id @default(autoincrement())
+  code           String   @unique @db.Char(5)
+  name           String   @db.VarChar(100)
+  slug           String   @db.VarChar(100)
+  type           String   @db.VarChar(50)
+  name_with_type String   @db.VarChar(150)
+  path           String?
+  path_with_type String?
+  district_code  String   @db.Char(3)
+
+  district Districts @relation(fields: [district_code], references: [code])
+
+  @@index([district_code])
+  @@map("wards")
+}

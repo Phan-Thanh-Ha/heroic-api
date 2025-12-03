@@ -1,20 +1,21 @@
 // ============================================
-// LOCATIONS MODULE - Province
+// LOCATIONS MODULE - Wards
 // ============================================
 
-model Province {
+model Wards {
   id             Int      @id @default(autoincrement())
-  code           String   @unique @db.Char(2)
+  code           String   @unique @db.Char(5)
   name           String   @db.VarChar(100)
   slug           String   @db.VarChar(100)
   type           String   @db.VarChar(50)
   name_with_type String   @db.VarChar(150)
-  sort_order     Int?
-  lat            Float?
-  long           Float?
-  image          String?  @db.Text
+  path           String?
+  path_with_type String?
+  district_code  String   @db.Char(3)
 
-  districts District[]
+  district Districts @relation(fields: [district_code], references: [code])
 
-  @@map("provinces")
+  @@index([district_code])
+  @@map("wards")
 }
+

@@ -1,0 +1,1 @@
+import { ProvinceModule } from './locations/province/province.module';

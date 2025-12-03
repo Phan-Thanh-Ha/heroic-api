@@ -1,20 +1,22 @@
 // ============================================
-// LOCATIONS MODULE - Ward
+// LOCATIONS MODULE - Districts
 // ============================================
 
-model Ward {
+model Districts {
   id             Int      @id @default(autoincrement())
-  code           String   @unique @db.Char(5)
+  code           String   @unique @db.Char(3)
   name           String   @db.VarChar(100)
   slug           String   @db.VarChar(100)
   type           String   @db.VarChar(50)
   name_with_type String   @db.VarChar(150)
   path           String?
   path_with_type String?
-  district_code  String   @db.Char(3)
+  province_code  String   @db.Char(2)
 
-  district District @relation(fields: [district_code], references: [code])
+  province Provinces @relation(fields: [province_code], references: [code])
+  wards    Wards[]
 
-  @@index([district_code])
-  @@map("wards")
+  @@index([province_code])
+  @@map("districts")
 }
+
