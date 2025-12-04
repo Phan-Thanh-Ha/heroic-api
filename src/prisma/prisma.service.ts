@@ -13,7 +13,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
             throw new Error('DATABASE_URL is required but not set. Please add it to your .env.development or .env file.');
         }
 
-        const adapter = new PrismaMariaDb(databaseUrl);
+        // PrismaMariaDb có thể nhận DATABASE_URL string hoặc PoolConfig
+        // Với MySQL, chúng ta có thể dùng string trực tiếp
+        const adapter = new PrismaMariaDb(databaseUrl, {
+            onConnectionError: (err) => {
+                console.error('❌ Database connection error:', err);
+            },
+        });
 
         super({adapter});
     }

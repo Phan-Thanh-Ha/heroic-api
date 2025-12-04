@@ -2,10 +2,17 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { configuration } from './config';
 import { AllExceptionsFilter } from './common';
+import { BrowserProvider } from './providers';
 import cookieParser from 'cookie-parser';
 import { initSwagger } from './app.swagger';
 
 async function bootstrap() {
+  // Đảm bảo DATABASE_URL được set từ configuration trước khi khởi tạo app
+  const config = configuration();
+  if (config.databaseUrl && !process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = config.databaseUrl;
+  }
+
   const app = await NestFactory.create(AppModule);
 
   // xử lý prefix global với version
@@ -27,7 +34,14 @@ async function bootstrap() {
 		origin: '*',
 	});
 
-  await app.listen(configuration().port);
-  console.log(`📖 Swagger UI: http://localhost:${configuration().port}/docs`);
+  const port = configuration().port;
+  await app.listen(port);
+  
+  const swaggerUrl = `http://localhost:${port}/docs`;
+  console.log(`📖 Swagger UI: ${swaggerUrl}`);
+  
+  // Tự động mở Chrome với Swagger UI
+  // const browserProvider = new BrowserProvider();
+  // browserProvider.openSwagger(port);
 }
 bootstrap();

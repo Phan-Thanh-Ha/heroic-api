@@ -14,8 +14,16 @@ model Provinces {
   long           Float?
   image          String?  @db.Text
 
-  districts Districts[]
 
+  districts Districts[] // Quan hệ 1-N với bảng districts
+  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+
+  @@index([code])
+  @@index([name])
+  @@index([slug])
+  @@index([type])
+  @@index([name_with_type])
+  @@index([sort_order])
   @@map("provinces")
 }
 

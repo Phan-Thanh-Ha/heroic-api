@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@logger';
-import { CreateWardDto } from './dto/create-ward.dto';
-import { UpdateWardDto } from './dto/update-ward.dto';
+import { Injectable } from '@nestjs/common';
 import { WardsRepository } from './wards.respository';
 
 @Injectable()
@@ -29,7 +27,6 @@ export class WardsService {
   // }
   async findWardsByDistrictCode(districtCode: string) {
     try {
-      this.logger.log(this.context, 'findWardsByDistrictCode', districtCode);
       const data = await this.wardsRepository.findWardsByDistrictCode(districtCode);
       return {
         message: 'Lấy danh sách phường/xã thành công',

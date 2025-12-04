@@ -28,7 +28,6 @@ export class WardsController {
   @HttpCode(HTTP_STATUS_ENUM.OK)
   @ApiWardsFindByDistrictCode()
   async findWardsByDistrictCode(@Param('districtCode') districtCode: string) {
-    this.logger.log(this.context, 'findWardsByDistrictCode', districtCode);
     return await this.wardsService.findWardsByDistrictCode(districtCode);
   }
 }

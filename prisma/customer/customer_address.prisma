@@ -1,0 +1,21 @@
+model CustomerAddress {
+    id         Int @id @default(autoincrement()) @map("id")
+    customerId Int @map("customer_id")
+
+    fullAddress String  @db.Text @map("full_address")
+
+    provinceId Int @map("province_id")
+    districtId Int @map("district_id")
+    wardId     Int @map("ward_id")
+
+    province Provinces @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
+    district Districts @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
+    ward     Wards     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
+    customer Customer  @relation("CustomerAddress", fields: [customerId], references: [id])
+
+    @@index([customerId])
+    @@index([provinceId])
+    @@index([districtId])
+    @@index([wardId])
+    @@map("customer_address")
+}

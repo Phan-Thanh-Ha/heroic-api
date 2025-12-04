@@ -6,6 +6,23 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
+// ============================================
+// LOCATIONS MODULE - Districts
+// ============================================
+
 model Districts {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(3)
@@ -17,8 +34,9 @@ model Districts {
   path_with_type String?
   province_code  String   @db.Char(2)
 
-  province Provinces @relation(fields: [province_code], references: [code])
-  wards    Wards[]
+  province Provinces @relation(fields: [province_code], references: [code]) // Quan hệ N-1 với Provinces
+  wards    Wards[] // Quan hệ 1-N với bảng wards
+  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
 
   @@index([province_code])
   @@map("districts")
@@ -40,8 +58,16 @@ model Provinces {
   long           Float?
   image          String?  @db.Text
 
-  districts Districts[]
 
+  districts Districts[] // Quan hệ 1-N với bảng districts
+  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+
+  @@index([code])
+  @@index([name])
+  @@index([slug])
+  @@index([type])
+  @@index([name_with_type])
+  @@index([sort_order])
   @@map("provinces")
 }
 
@@ -60,8 +86,62 @@ model Wards {
   path_with_type String?
   district_code  String   @db.Char(3)
 
-  district Districts @relation(fields: [district_code], references: [code])
+  district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
+  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
 
+  @@index([code])
+  @@index([name])
+  @@index([slug])
+  @@index([type])
+  @@index([name_with_type])
+  @@index([path])
+  @@index([path_with_type])
   @@index([district_code])
   @@map("wards")
+}
+
+model CustomerAddress {
+    id         Int @id @default(autoincrement()) @map("id")
+    customerId Int @map("customer_id")
+
+    fullAddress String  @db.Text @map("full_address")
+
+    provinceId Int @map("province_id")
+    districtId Int @map("district_id")
+    wardId     Int @map("ward_id")
+
+    province Provinces @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
+    district Districts @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
+    ward     Wards     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
+    customer Customer  @relation("CustomerAddress", fields: [customerId], references: [id])
+
+    @@index([customerId])
+    @@index([provinceId])
+    @@index([districtId])
+    @@index([wardId])
+    @@map("customer_address")
+}
+
+model Customer {
+  id                Int       @id @default(autoincrement()) @map("id") // ID khách hàng
+  customerCode      String    @unique @db.Char(10) @map("customer_code") // Mã khách hàng
+  firstName         String?   @db.VarChar(255) @map("first_name") // Tên khách hàng
+  lastName          String?   @db.VarChar(255) @map("last_name") // Họ khách hàng
+  fullName          String    @db.VarChar(255) @map("full_name") // Tên đầy đủ khách hàng
+  avatarUrl         String?   @db.Text @map("avatar_url") // Ảnh đại diện khách hàng
+  email             String?   @db.VarChar(100) @map("email") // Email khách hàng
+  address           String?   @db.Text @map("address") // Địa chỉ khách hàng
+  gender            String?   @db.VarChar(10) @map("gender") // Giới tính khách hàng
+  password          String?   @db.VarChar(255) @map("password") // Mật khẩu khách hàng
+  phoneNumber       String?   @db.VarChar(20) @map("phone_number") // Số điện thoại khách hàng
+  dateOfBirth       DateTime? @db.Date @map("date_of_birth") // Ngày sinh khách hàng
+  loyaltyPoints     Int       @default(0) @map("loyalty_points") // Điểm thưởng khách hàng
+  customerGroupId   Int?      @map("customer_group_id") // Nhóm khách hàng
+
+
+  addresses CustomerAddress[] @relation("CustomerAddress") // Quan hệ 1-N với bảng customer_address
+  @@index([id])
+  @@index([customerCode])
+  @@index([fullName])
+  @@map("customers")
 }

@@ -13,8 +13,16 @@ model Wards {
   path_with_type String?
   district_code  String   @db.Char(3)
 
-  district Districts @relation(fields: [district_code], references: [code])
+  district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
+  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
 
+  @@index([code])
+  @@index([name])
+  @@index([slug])
+  @@index([type])
+  @@index([name_with_type])
+  @@index([path])
+  @@index([path_with_type])
   @@index([district_code])
   @@map("wards")
 }
