@@ -22,7 +22,7 @@ export class WardsRepository {
                 orderBy: {
                     name: 'asc',
                 },
-            });
+            }); 
         }
         catch (error) {
             this.logger.error(this.context, 'findWardsByDistrictCode', error);

@@ -1,12 +1,12 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
+import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM, SWAGGER_TAG_ENUM } from '@common';
 import { LoggerService } from '@logger';
 import { DistrictsService } from './districts.service';
 import { ApiDistrictsFindByParentCode } from './swagger';
 
 @Controller(ROUTER_ENUM.DISTRICTS)
-@ApiTags(ROUTER_TAG_ENUM.DISTRICTS)
+@ApiTags(SWAGGER_TAG_ENUM.WEBSITE, ROUTER_TAG_ENUM.DISTRICTS)
 @ApiParam({
   name: 'provinceCode',
   type: String,

@@ -10,7 +10,7 @@ export class ProvinceRepository {
     // Lấy danh sách thành phố
     async getAllProvince() {
         try {
-            return this.prisma.provinces.findMany({
+            return await this.prisma.provinces.findMany({
                 select: {
                     id: true,
                     code: true,

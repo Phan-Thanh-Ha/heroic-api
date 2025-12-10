@@ -5,18 +5,13 @@ export const configuration = () => {
 	const dbPassWord = process.env.DB_PASSWORD;
 	const dbName = process.env.DB_NAME;
 
-	// Tạo DATABASE_URL cho Prisma
-	const databaseUrl = dbHost && dbUserName && dbPassWord && dbName
-		? `mysql://${dbUserName}:${dbPassWord}@${dbHost}:${dbPort}/${dbName}`
-		: undefined;
-
 	return {
-		port: parseInt(process.env.PORT || '4040', 10),
+		port: parseInt(process.env.PORT || '3102', 10),
 		dbHost,
 		dbPort: parseInt(dbPort, 10),
 		dbUserName,
 		dbPassWord,
 		dbName,
-		databaseUrl,
+		ngrokUrl: process.env.NGROK_URL || null,
 	};
 };

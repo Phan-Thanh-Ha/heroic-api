@@ -1,12 +1,16 @@
-import dotenv from "dotenv";
-dotenv.config({ path: ".env.development" }); // hoặc chọn theo NODE_ENV
+import { defineConfig, env } from 'prisma/config';
+// Import và sử dụng function loadEnv từ config của project
+import { loadEnv } from './src/config/app/config.env';
 
-import { defineConfig, env } from "prisma/config";
+// Load environment variables
+loadEnv();
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
-  migrations: { path: "prisma/migrations" },
-  datasource: {
-    url: env("DATABASE_URL"),
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations',
   },
-});
+  datasource: {
+    url: env('DATABASE_URL'),
+  },
+})

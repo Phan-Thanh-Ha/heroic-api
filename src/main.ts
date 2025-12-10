@@ -8,10 +8,10 @@ import { initSwagger } from './app.swagger';
 
 async function bootstrap() {
   // Đảm bảo DATABASE_URL được set từ configuration trước khi khởi tạo app
-  const config = configuration();
-  if (config.databaseUrl && !process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = config.databaseUrl;
-  }
+  // const config = configuration();
+  // if (config.databaseUrl && !process.env.DATABASE_URL) {
+  //   process.env.DATABASE_URL = config.databaseUrl;
+  // }
 
   const app = await NestFactory.create(AppModule);
 
@@ -37,8 +37,10 @@ async function bootstrap() {
   const port = configuration().port;
   await app.listen(port);
   
-  const swaggerUrl = `http://localhost:${port}/docs`;
-  console.log(`📖 Swagger UI: ${swaggerUrl}`);
+  const baseUrl = `http://localhost:${port}`;
+  console.log(`\n📖 Swagger Documentation:`);
+  console.log(`   Admin:   ${baseUrl}/docs-admin`);
+  console.log(`   Website: ${baseUrl}/docs-website\n`);
   
   // Tự động mở Chrome với Swagger UI
   // const browserProvider = new BrowserProvider();

@@ -1,0 +1,24 @@
+version: "3"
+
+# Cấu hình tunnels (ngrok v3)
+tunnels:
+  # Tunnel cho API server
+  heroic-api:
+    # Nếu có static domain (ngrok paid plan), uncomment dòng dưới:
+    # domain: your-domain.ngrok-free.app
+    
+    # Hoặc dùng subdomain (nếu có)
+    # subdomain: heroic-api
+    
+    # Port của local server
+    addr: 3102
+    
+    # Protocol
+    proto: http
+    
+    # Các options khác (tùy chọn)
+    # schemes: [https]  # Chỉ dùng HTTPS
+    # inspect: false  # Tắt web inspector (ngrok v3)
+    # host_header: rewrite  # Rewrite host header
+
+

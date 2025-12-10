@@ -14,21 +14,21 @@ export class DistrictsRepository {
         try {
             this.logger.log(this.context, 'findDistrictsByProvinceCode', provinceCode);
             return await this.prisma.districts.findMany({
-            where: {
-                province_code: provinceCode,
-            },
-            select: {
-                id: true,
-                code: true,
-                name: true,
-                slug: true,
-                type: true,
-                name_with_type: true,
-                path: true,
-                path_with_type: true,
-                province_code: true,
-            },
-            orderBy: {
+                where: {
+                    province_code: provinceCode,
+                },
+                select: {
+                    id: true,
+                    code: true,
+                    name: true,
+                    slug: true,
+                    type: true,
+                    name_with_type: true,
+                    path: true,
+                    path_with_type: true,
+                    province_code: true,
+                },
+                orderBy: {
                     name: 'asc',
                 },
             });
