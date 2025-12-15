@@ -8,7 +8,7 @@ import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM, SWAGGER_TAG_ENUM } from
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller(ROUTER_ENUM.WARDS)
-@ApiTags(SWAGGER_TAG_ENUM.WEBSITE, ROUTER_TAG_ENUM.WARDS)
+@ApiTags(SWAGGER_TAG_ENUM.CUSTOMER, ROUTER_TAG_ENUM.WARDS)
 export class WardsController {
   private context = WardsController.name;
   constructor(private readonly wardsService: WardsService, private readonly logger: LoggerService) {}

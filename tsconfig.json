@@ -38,7 +38,7 @@
 			"@middlewares": ["src/middlewares"],
 			
 
-			"@locations": ["src/apis/locations"],
+			"@locations": ["src/apis/customer/locations"],
 
 
 

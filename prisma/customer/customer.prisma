@@ -1,6 +1,7 @@
 model Customer {
   id              Int       @id @default(autoincrement()) @map("id") // ID khách hàng
-  customerCode    String    @unique @map("customer_code") @db.Char(10) // Mã khách hàng
+  uuid            String    @unique @map("uuid") @db.Char(36) // UUID khách hàng
+  customerCode    String    @map("customer_code") @db.Char(50) // Mã khách hàng
   firstName       String?   @map("first_name") @db.VarChar(255) // Tên khách hàng
   lastName        String?   @map("last_name") @db.VarChar(255) // Họ khách hàng
   fullName        String    @map("full_name") @db.VarChar(255) // Tên đầy đủ khách hàng
@@ -8,6 +9,7 @@ model Customer {
   email           String?   @map("email") @db.VarChar(100) // Email khách hàng
   address         String?   @map("address") @db.Text // Địa chỉ khách hàng
   gender          String?   @map("gender") @db.VarChar(10) // Giới tính khách hàng
+  typeLogin       String?   @map("type_login") @db.VarChar(10) // Loại đăng nhập khách hàng
   password        String?   @map("password") @db.VarChar(255) // Mật khẩu khách hàng
   phoneNumber     String?   @map("phone_number") @db.VarChar(20) // Số điện thoại khách hàng
   dateOfBirth     DateTime? @map("date_of_birth") @db.Date // Ngày sinh khách hàng

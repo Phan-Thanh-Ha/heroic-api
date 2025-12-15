@@ -66,10 +66,10 @@ export const initSwagger = (app: INestApplication) => {
             includeTags: [SWAGGER_TAG_ENUM.ADMIN],
         },
         {
-            title: 'Heroic API - Website',
-            description: 'Heroic API Documentation for Website',
-            path: 'docs-website',
-            includeTags: [SWAGGER_TAG_ENUM.WEBSITE],
+            title: 'Heroic API - Customer',
+            description: 'Heroic API Documentation for Customer',
+            path: 'docs-customer',
+            includeTags: [SWAGGER_TAG_ENUM.CUSTOMER],
         },
     ];
 

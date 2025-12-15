@@ -84,7 +84,7 @@ function displayNgrokInfo(url) {
   console.log('\n✅ Ngrok tunnel đã được tạo thành công!');
   console.log(`🌐 Public URL: ${url}`);
   console.log(`📖 Swagger Admin: ${url}/docs-admin`);
-  console.log(`📖 Swagger Website: ${url}/docs-website`);
+  console.log(`📖 Swagger Customer: ${url}/docs-customer`);
 }
 
 // ============================================

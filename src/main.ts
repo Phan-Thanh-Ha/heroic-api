@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from './common';
 import { BrowserProvider } from './providers';
 import cookieParser from 'cookie-parser';
 import { initSwagger } from './app.swagger';
+import { logSwaggerUrls } from './providers';
 
 async function bootstrap() {
   // Đảm bảo DATABASE_URL được set từ configuration trước khi khởi tạo app
@@ -35,15 +36,9 @@ async function bootstrap() {
 	});
 
   const port = configuration().port;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0'); // listen trên mọi interface để máy LAN truy cập
+
+  logSwaggerUrls(port, { admin: '/docs-admin', customer: '/docs-customer' });
   
-  const baseUrl = `http://localhost:${port}`;
-  console.log(`\n📖 Swagger Documentation:`);
-  console.log(`   Admin:   ${baseUrl}/docs-admin`);
-  console.log(`   Website: ${baseUrl}/docs-website\n`);
-  
-  // Tự động mở Chrome với Swagger UI
-  // const browserProvider = new BrowserProvider();
-  // browserProvider.openSwagger(port);
 }
 bootstrap();

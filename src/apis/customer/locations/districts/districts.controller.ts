@@ -6,7 +6,7 @@ import { DistrictsService } from './districts.service';
 import { ApiDistrictsFindByParentCode } from './swagger';
 
 @Controller(ROUTER_ENUM.DISTRICTS)
-@ApiTags(SWAGGER_TAG_ENUM.WEBSITE, ROUTER_TAG_ENUM.DISTRICTS)
+@ApiTags(SWAGGER_TAG_ENUM.CUSTOMER, ROUTER_TAG_ENUM.DISTRICTS)
 @ApiParam({
   name: 'provinceCode',
   type: String,
