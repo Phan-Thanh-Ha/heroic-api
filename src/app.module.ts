@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ApiAdminModule } from './apis/admin';
 import { ApiCustomerModule } from './apis/customer';
 import { RequestLoggerMiddleware } from './common';
+import { ProvidersModule, providerApp } from './providers';
 
 @Module({
 	imports: [
@@ -11,14 +12,17 @@ import { RequestLoggerMiddleware } from './common';
 		PrismaModule,
 		ApiAdminModule,
 		ApiCustomerModule,
+		ProvidersModule,
 	],
+	providers: [...providerApp],
 })
-export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		// Use named wildcard param to avoid legacy path-to-regexp warning
-		consumer.apply(RequestLoggerMiddleware).forRoutes({
-			path: '/:path*',
-			method: RequestMethod.ALL,
-		});
-	}
-}
+export class AppModule {}
+// export class AppModule implements NestModule {
+// 	configure(consumer: MiddlewareConsumer) {
+// 		// Use named wildcard param (no leading prefix because global prefix adds /v1)
+// 		consumer.apply(RequestLoggerMiddleware).forRoutes({
+// 			path: '/*path',
+// 			method: RequestMethod.ALL,
+// 		});
+// 	}
+// }

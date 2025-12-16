@@ -4,11 +4,11 @@ import { CreateWardDto } from './dto/create-ward.dto';
 import { UpdateWardDto } from './dto/update-ward.dto';
 import { LoggerService } from '@logger';
 import { ApiWardsFindByDistrictCode } from './swagger/get-wards-by-parencode.swagger';
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM, SWAGGER_TAG_ENUM } from '@common';
+import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller(ROUTER_ENUM.WARDS)
-@ApiTags(SWAGGER_TAG_ENUM.CUSTOMER, ROUTER_TAG_ENUM.WARDS)
+@ApiTags(ROUTER_TAG_ENUM.WARDS)
 export class WardsController {
   private context = WardsController.name;
   constructor(private readonly wardsService: WardsService, private readonly logger: LoggerService) {}

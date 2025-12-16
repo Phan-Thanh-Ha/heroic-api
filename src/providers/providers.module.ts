@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BrowserProvider } from './browser.provider';
+import { BrowserProvider, ValidationProvider } from './index';
 
 @Module({
-	providers: [BrowserProvider],
-	exports: [BrowserProvider],
+	providers: [BrowserProvider, ValidationProvider],
+	exports: [BrowserProvider, ValidationProvider],
 })
 export class ProvidersModule {}
 

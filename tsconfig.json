@@ -36,13 +36,10 @@
 			"@jwt": ["src/jwt"],
 			"@firebase": ["src/firebase"],
 			"@middlewares": ["src/middlewares"],
-			
-
+			"@providers/*": ["src/providers/*"],
 			"@locations": ["src/apis/customer/locations"],
-
-
-
-			"@prisma": ["src/prisma"]
+			"@prisma": ["src/prisma"],
+			"@utils": ["src/common/utils"]
 		}
 	},
 	"exclude": ["./node_modules/**"],

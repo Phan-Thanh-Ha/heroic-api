@@ -1,9 +1,8 @@
 import { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
-import { configuration } from "./config";
-import { extraModels } from "./extraModels.swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { ROUTER_TAG_ENUM, SWAGGER_TAG_ENUM } from "./common/enums";
 import { filterDocumentByTags } from "./common/swagger";
-import { SWAGGER_TAG_ENUM } from "./common/enums";
+import { configuration } from "./config";
 
 interface SwaggerConfig {
     title: string;
@@ -33,7 +32,6 @@ export const initSwagger = (app: INestApplication) => {
     const ngrokUrl = config.ngrokUrl;
     
     // Sử dụng ngrok URL nếu có, nếu không dùng localhost
-    const baseUrl = ngrokUrl || localUrl;
     const servers = ngrokUrl ? [ngrokUrl, localUrl] : [localUrl];
 
     // Tạo base document
@@ -52,7 +50,6 @@ export const initSwagger = (app: INestApplication) => {
         app,
         documentBuilder.build(),
         {
-        extraModels,
             operationIdFactory: (_controllerKey: string, methodKey: string) => methodKey,
         },
     );
@@ -69,7 +66,12 @@ export const initSwagger = (app: INestApplication) => {
             title: 'Heroic API - Customer',
             description: 'Heroic API Documentation for Customer',
             path: 'docs-customer',
-            includeTags: [SWAGGER_TAG_ENUM.CUSTOMER],
+            includeTags: [
+                ROUTER_TAG_ENUM.PROVINCE_CITY,
+                ROUTER_TAG_ENUM.DISTRICTS,
+                ROUTER_TAG_ENUM.WARDS,
+                ROUTER_TAG_ENUM.REGISTER,
+            ],
         },
     ];
 

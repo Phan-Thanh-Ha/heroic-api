@@ -1,18 +1,5 @@
 # Hướng Dẫn Prisma Từ Cơ Bản Đến Nâng Cao
 
-## Mục Lục
-1. [Giới Thiệu Prisma](#1-giới-thiệu-prisma)
-2. [Cài Đặt và Cấu Hình](#2-cài-đặt-và-cấu-hình)
-3. [Schema Prisma - Cơ Bản](#3-schema-prisma---cơ-bản)
-4. [Các Loại Dữ Liệu và Attributes](#4-các-loại-dữ-liệu-và-attributes)
-5. [Relations (Quan Hệ)](#5-relations-quan-hệ)
-6. [Prisma Client - Query Cơ Bản](#6-prisma-client---query-cơ-bản)
-7. [Query Nâng Cao](#7-query-nâng-cao)
-8. [Transactions](#8-transactions)
-9. [Migrations](#9-migrations)
-10. [Best Practices](#10-best-practices)
-
----
 
 ## 1. Giới Thiệu Prisma
 
