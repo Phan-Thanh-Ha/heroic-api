@@ -2,6 +2,7 @@ import { LoggerService } from '@logger';
 import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CustomersRespository } from './customers.respository';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { formatDateToYMD, toUnixByTimeZone } from '@utils';
 
 @Injectable()
 export class CustomersService {
@@ -14,14 +15,19 @@ export class CustomersService {
 
 
 
-  async create(createCustomerDto: CreateCustomerDto) {
+  async create(createCustomerDto: CreateCustomerDto, timeZone?: string) {
     try {
-      const result = await this.customersRepository.create(createCustomerDto);
-      return result;
+      const customer = await this.customersRepository.create(createCustomerDto);
+
+      return {
+        ...customer,
+        // createdAt trả về dạng Unix theo đúng múi giờ client gửi lên
+        createdAt: toUnixByTimeZone(customer.createdAt, timeZone),
+        // dateOfBirth trả về dạng yyyy-MM-dd (không kèm T...Z)
+        dateOfBirth: formatDateToYMD(customer.dateOfBirth),
+      };
     } catch (error) {
       this.loggerService.error(this.context, 'create', error);
-      // Nếu repository đã ném HttpException (ví dụ: BadRequestException - Email đã tồn tại)
-      // thì giữ nguyên, không wrap thành 500
       if (error instanceof HttpException) {
         throw error;
       }

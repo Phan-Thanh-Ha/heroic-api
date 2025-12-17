@@ -1,6 +1,5 @@
 import { LoggerService } from '@logger';
 import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { formatDateToYMD } from '@utils';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { RegisterRespository } from './register.respository';
 
@@ -19,7 +18,6 @@ export class RegisterService {
       return {
         data: {
           ...customer,
-          dateOfBirth: formatDateToYMD((customer as any).dateOfBirth),
         },
       };
     } catch (error) {

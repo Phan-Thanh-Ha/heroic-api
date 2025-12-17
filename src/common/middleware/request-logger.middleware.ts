@@ -35,6 +35,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
       userAgent: req.headers['user-agent'],
       referer: req.headers['referer'],
       host: req.headers['host'],
+      timeZone: req.headers['x-timezone'],
     });
     next();
   }

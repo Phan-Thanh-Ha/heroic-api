@@ -16,13 +16,13 @@ import { ProvidersModule, providerApp } from './providers';
 	],
 	providers: [...providerApp],
 })
-export class AppModule {}
-// export class AppModule implements NestModule {
-// 	configure(consumer: MiddlewareConsumer) {
-// 		// Use named wildcard param (no leading prefix because global prefix adds /v1)
-// 		consumer.apply(RequestLoggerMiddleware).forRoutes({
-// 			path: '/*path',
-// 			method: RequestMethod.ALL,
-// 		});
-// 	}
-// }
+
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		// Use named wildcard param (no leading prefix because global prefix adds /v1)
+		consumer.apply(RequestLoggerMiddleware).forRoutes({
+			path: '/*path',
+			method: RequestMethod.ALL,
+		});
+	}
+}

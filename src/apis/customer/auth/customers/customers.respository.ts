@@ -1,9 +1,9 @@
 import { LoggerService } from "@logger";
 import { ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
-import { generateCustomerCode, generateUUID, parseBirthdayToDate } from "@utils";
+import { convertDdMmYyyyToUTCDate, generateCustomerCode, generateUUID } from "@utils";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
-
+import bcrypt from "bcryptjs";
 @Injectable()
 export class CustomersRespository {
 
@@ -32,6 +32,8 @@ export class CustomersRespository {
     //#region Tạo mới khách hàng
     private async createCustomer(createCustomerDto: CreateCustomerDto) {
         try {
+            const dateOfBirthToSave = convertDdMmYyyyToUTCDate(createCustomerDto.birthday);
+            const passwordHashed = await bcrypt.hash(createCustomerDto.password, 10);
             // Cần id trước rồi mới sinh được mã KHyyMMdd0001 (dựa trên id)
             const customer = await this.prisma.$transaction(async (tx) => {
                 // 1. Insert trước để lấy id
@@ -46,8 +48,9 @@ export class CustomersRespository {
                         email: createCustomerDto.email,
                         address: createCustomerDto.address,
                         phoneNumber: createCustomerDto.phoneNumber,
-                        dateOfBirth: parseBirthdayToDate(createCustomerDto.birthday),
-                        password: createCustomerDto.password,
+                        dateOfBirth: dateOfBirthToSave as any,
+                        password: passwordHashed,
+                        typeLogin: createCustomerDto.typeLogin,
                     },
                 });
 
@@ -63,7 +66,12 @@ export class CustomersRespository {
                 return updatedCustomer;
             });
 
-            return customer;
+            const { password, ...rest } = customer as any;
+            const dataResponse = {
+                ...rest,
+            };
+
+            return dataResponse;
         } catch (error) {
             this.loggerService.error(this.context, 'createCustomer', error);
             throw error;
@@ -77,7 +85,10 @@ export class CustomersRespository {
             // Kiểm tra email đã tồn tại chưa
             const existingCustomer = await this.checkEmailExists(createCustomerDto.email);
             if (existingCustomer) {
-                throw new ConflictException('Email đã tồn tại');
+                throw new ConflictException({
+                    message: 'Email đã tồn tại',
+                    errorCode: 'CONFLICT',
+                });
             }
             // Tạo mới khách hàng với mã KHyyMMdd0001, KHyyMMdd0002, ...
             const newCustomer = await this.createCustomer(createCustomerDto);

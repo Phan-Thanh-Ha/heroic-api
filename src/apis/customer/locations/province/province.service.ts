@@ -14,11 +14,14 @@ export class ProvinceService {
         try {
             this.logger.log(this.context, 'getAllProvince');
             const provinces = await this.provinceRepository.getAllProvince();
-            return {
-                message: 'Lấy tất cả tỉnh thành thành công',
-                data: provinces,
-                total: provinces.length,
-            };
+            // Trả thẳng dữ liệu để interceptor bọc theo format chung:
+            // {
+            //   status: 'success',
+            //   code: 200,
+            //   message: 'Thành công',
+            //   data: { result: [...] } (với dữ liệu là mảng)
+            // }
+            return provinces;
         } catch (error) {
             this.logger.error(this.context, 'getAllProvince', error);
             throw error;

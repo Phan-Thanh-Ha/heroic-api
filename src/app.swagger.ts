@@ -28,11 +28,7 @@ const createSwaggerDocument = (
 
 export const initSwagger = (app: INestApplication) => {
     const config = configuration();
-    const localUrl = `http://localhost:${config.port}`;
     const ngrokUrl = config.ngrokUrl;
-    
-    // Sử dụng ngrok URL nếu có, nếu không dùng localhost
-    const servers = ngrokUrl ? [ngrokUrl, localUrl] : [localUrl];
 
     // Tạo base document
     const documentBuilder = new DocumentBuilder()
@@ -42,9 +38,9 @@ export const initSwagger = (app: INestApplication) => {
         .addBearerAuth();
     
     // Thêm tất cả servers
-    servers.forEach(server => {
-        documentBuilder.addServer(server);
-    });
+
+    documentBuilder.addServer(`http://localhost:${config.port}`);
+
     
     const baseDocument = SwaggerModule.createDocument(
         app,

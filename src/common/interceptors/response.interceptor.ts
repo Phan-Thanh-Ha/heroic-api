@@ -81,12 +81,18 @@ export class ResponseTransformInterceptor implements NestInterceptor {
                 }
 
                 // --- 3. Xử lý Phản hồi Đơn (Đối tượng hoặc Mảng) ---
+                // Trả thẳng data (có thể là object hoặc array) để client nhận trực tiếp:
+                // {
+                //   status,
+                //   code,
+                //   message,
+                //   data: [...] | { ... }
+                // }
                 return {
                     status: 'success',
                     code: finalStatusCode,
                     message: this.getMessage(finalStatusCode),
-                    // Nếu là mảng, đóng gói vào 'result' để nhất quán
-                    data: isArray ? { result: data } : data, 
+                    data: data,
                 };
             }),
         );

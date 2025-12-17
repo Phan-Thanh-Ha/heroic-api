@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { LoggerService } from '@logger';
@@ -13,10 +13,11 @@ export class CustomersController {
 
   @Post()
   async create(
-    @Body() createCustomerDto: CreateCustomerDto
+    @Body() createCustomerDto: CreateCustomerDto,
+    @Headers('x-timezone') timeZone?: string,
   ) {
     try {
-      return this.customersService.create(createCustomerDto);
+      return this.customersService.create(createCustomerDto, timeZone);
     } catch (error) {
       this.loggerService.error(this.context, 'create', error);
       throw error;
