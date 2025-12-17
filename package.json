@@ -9,6 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "debug": "cross-env NODE_ENV=development node --inspect=0.0.0.0:9229 node_modules/.bin/nest start --watch",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:dev:clean": "lsof -ti:3102 | xargs kill -9 2>/dev/null || true && cross-env NODE_ENV=development nest start --watch",
     "docker:up": "docker-compose up -d",

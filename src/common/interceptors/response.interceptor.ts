@@ -1,100 +1,67 @@
-import { 
-    CallHandler, 
-    ExecutionContext, 
-    Injectable, 
-    NestInterceptor, 
-    HttpStatus 
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core'; // <-- Đã sửa lỗi: Import Reflector từ @nestjs/core
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-// import { getMetadata } from '../helpers'; // Helper xử lý phân trang (nếu có)
-
-// Định nghĩa cấu trúc phản hồi toàn cục
-interface GlobalResponse<T> {
-    status: string; // "success"
-    code: number;
-    message: string;
-    data: T | null;
-}
+import { getMetadata } from '../helpers';
+import { ResponseFormat } from '../interfaces';
 
 @Injectable()
 export class ResponseTransformInterceptor implements NestInterceptor {
-    
-    // TIÊM REFLECTOR VÀO CONSTRUCTOR để đọc metadata
-    constructor(private reflector: Reflector) {} 
+	intercept(context: ExecutionContext, next: CallHandler): Observable<ResponseFormat> {
+		const http = context.switchToHttp();
+		const response = http.getResponse<Response>();
+		const request = http.getRequest<Request>();
+		const status = response.statusCode;
 
-    // Hàm lấy thông báo mặc định dựa trên Status Code
-    private getMessage(status: number): string {
-        if (status === HttpStatus.CREATED) return 'Tạo thành công';
-        if (status >= 200 && status < 300) return 'Thành công';
-        return 'Yêu cầu hoàn tất';
-    }
+		return next.handle().pipe(
+			map((data) => {
+				const isArray = Array.isArray(data);
+				const isPagination = isArray && data.length === 2 && typeof data[1] === 'number';
 
-    intercept(context: ExecutionContext, next: CallHandler): Observable<GlobalResponse<any>> {
-        const http = context.switchToHttp();
-        const response = http.getResponse<Response>();
-        // const request = http.getRequest<Request>(); // Không sử dụng request, có thể bỏ
+				if (isPagination) {
+					const { currentPage, limit, total, totalPage } = getMetadata(request, data);
 
-        // 1. LẤY STATUS CODE CHÍNH XÁC TỪ METADATA
-        const controllerStatus = this.reflector.get<number>(
-            '__httpCode__',
-            context.getHandler(),
-        );
-        
-        // Status Code HTTP cuối cùng: Ưu tiên metadata, sau đó là code hiện tại (response.statusCode), mặc định 200
-        const finalStatusCode = controllerStatus || response.statusCode || HttpStatus.OK; 
+					return {
+						status,
+						success: true,
+						code: status,
+						data: {
+							result: data[0],
+							currentPage,
+							limit,
+							total,
+							totalPage,
+						},
+					};
+				}
 
-        return next.handle().pipe(
-            map((data) => {
-                
-                // --- 1. Xử lý Dữ liệu rỗng ---
-                if (data === undefined || data === null) {
-                    return {
-                        status: 'success',
-                        code: finalStatusCode,
-                        message: this.getMessage(finalStatusCode),
-                        data: null,
-                    };
-                }
+				// Cho phép controller tự truyền message:
+				// return { result: ..., message: 'Lấy tỉnh thành công' }
+				if (!isArray && data && typeof data === 'object' && 'result' in (data as any)) {
+					const { result, message } = data as any;
+					const resultArray = Array.isArray(result) ? result : [result];
 
-                const isArray = Array.isArray(data);
-                
-                // --- 2. Xử lý Phân trang (Pagination) ---
-                // Giả định: Phân trang trả về mảng 2 phần tử: [danh sách items, tổng số items (number)]
-                const isPagination = isArray && data.length === 2 && typeof data[1] === 'number';
+					return {
+						status: 'success',
+						code: status,
+						success: true,
+						message,
+						data: {
+							result: resultArray,
+						},
+					};
+				}
 
-                if (isPagination) {
-                    // Logic tính toán metadata (nếu cần dùng getMetadata)
-                    // const { page, total_items, total_page, limit } = getMetadata(request, data);
-                    
-                    return {
-                        status: 'success',
-                        code: finalStatusCode,
-                        message: this.getMessage(finalStatusCode),
-                        data: {
-                            result: data[0], 
-                            totalCount: data[1] // Tổng số mục
-                        },
-                    };
-                }
+				return {
+					status: 'success',
+					code: status,
+					success: true,
+					data: {
+						result: isArray ? data : [data],
+					},
+				};
+			}),
+		);
+	}
 
-                // --- 3. Xử lý Phản hồi Đơn (Đối tượng hoặc Mảng) ---
-                // Trả thẳng data (có thể là object hoặc array) để client nhận trực tiếp:
-                // {
-                //   status,
-                //   code,
-                //   message,
-                //   data: [...] | { ... }
-                // }
-                return {
-                    status: 'success',
-                    code: finalStatusCode,
-                    message: this.getMessage(finalStatusCode),
-                    data: data,
-                };
-            }),
-        );
-    }
 }

@@ -27,12 +27,9 @@ export class WardsService {
   // }
   async findWardsByDistrictCode(districtCode: string) {
     try {
-      const data = await this.wardsRepository.findWardsByDistrictCode(districtCode);
-      return {
-        message: 'Lấy danh sách phường/xã thành công',
-        data: data,
-        total: data.length,
-      };
+      // Trả thẳng danh sách để interceptor bọc:
+      // data: { result: [...], total: n }
+      return await this.wardsRepository.findWardsByDistrictCode(districtCode);
     } catch (error) {
       this.logger.error(this.context, 'findWardsByDistrictCode', error);
       throw error;

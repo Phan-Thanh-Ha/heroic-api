@@ -35,13 +35,10 @@ export class DistrictsController {
   @ApiDistrictsFindByParentCode()
   async findDistrictsByProvinceCode(@Param('provinceCode') provinceCode: string) {
     try {
-    this.logger.log(this.context, 'findDistrictsByProvinceCode', provinceCode);
-    const data = await this.districtsService.findDistrictsByProvinceCode(provinceCode);
-    return {
-      message: '',
-      data: data,
-      total: data.length,
-    };
+      this.logger.log(this.context, 'findDistrictsByProvinceCode', provinceCode);
+      // Trả thẳng danh sách để interceptor bọc:
+      // data: { result: [...], total: n }
+      return await this.districtsService.findDistrictsByProvinceCode(provinceCode);
     } catch (error) {
       this.logger.error(this.context, 'findDistrictsByProvinceCode', error);
       throw error;

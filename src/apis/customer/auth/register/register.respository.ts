@@ -18,6 +18,7 @@ export class RegisterRespository {
 		try {
 			const result = await this.customersService.create({
 				...createRegisterDto,
+				typeRegister: createRegisterDto.typeRegister,
 			});
 			return result;
 

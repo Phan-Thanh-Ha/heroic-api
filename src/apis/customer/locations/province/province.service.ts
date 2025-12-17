@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@logger';
 import { ProvinceRepository } from './province.respository';
+import { HTTP_STATUS_ENUM } from '@common';
 
 @Injectable()
 export class ProvinceService {
@@ -21,7 +22,11 @@ export class ProvinceService {
             //   message: 'Thành công',
             //   data: { result: [...] } (với dữ liệu là mảng)
             // }
-            return provinces;
+            const result = {
+                result: provinces,
+                message: 'Lấy danh sách thành phố thành công',
+            }
+            return result;
         } catch (error) {
             this.logger.error(this.context, 'getAllProvince', error);
             throw error;

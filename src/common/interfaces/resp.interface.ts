@@ -1,6 +1,15 @@
+export interface PaginationMeta {
+	total?: number;
+	currentPage?: number;
+	limit?: number;
+	totalPage?: number;
+}
+
 export interface ResponseFormat {
-	status: number;
+	success?: boolean;
+	status: string | number;
 	message?: string;
+	code?: number;
 	data: {
 		result: any[];
 		currentPage?: number;
@@ -9,3 +18,4 @@ export interface ResponseFormat {
 		limit?: number;
 	};
 }
+

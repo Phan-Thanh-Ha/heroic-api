@@ -50,7 +50,7 @@ export class CustomersRespository {
                         phoneNumber: createCustomerDto.phoneNumber,
                         dateOfBirth: dateOfBirthToSave as any,
                         password: passwordHashed,
-                        typeLogin: createCustomerDto.typeLogin,
+                        typeRegister: createCustomerDto.typeRegister,
                     },
                 });
 

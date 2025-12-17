@@ -67,6 +67,7 @@ export const initSwagger = (app: INestApplication) => {
                 ROUTER_TAG_ENUM.DISTRICTS,
                 ROUTER_TAG_ENUM.WARDS,
                 ROUTER_TAG_ENUM.REGISTER,
+                ROUTER_TAG_ENUM.LOGIN,
             ],
         },
     ];

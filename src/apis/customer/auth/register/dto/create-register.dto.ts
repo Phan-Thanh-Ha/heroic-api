@@ -72,10 +72,10 @@ export class CreateRegisterDto {
     @IsNotEmpty({ message: 'fullAddress không được để trống' })
     fullAddress!: string;
 
-    //TypeLogin
-    @IsString({ message: 'typeLogin phải là chuỗi' })
-    @IsNotEmpty({ message: 'typeLogin không được để trống' })
-    typeLogin!: string;
+    //TypeRegister
+    @IsString({ message: 'typeRegister phải là chuỗi' })
+    @IsNotEmpty({ message: 'typeRegister không được để trống' })
+    typeRegister!: string;
 
 }
 

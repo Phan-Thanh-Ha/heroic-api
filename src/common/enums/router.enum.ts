@@ -6,6 +6,8 @@ export enum ROUTER_ENUM {
 
     // Register
     REGISTER = 'customers/auth/register',
+    LOGIN = 'customers/auth/login',
+    LOGIN_WITH_GOOGLE = 'customers/auth/login/google',
 }
 
 export enum ROUTER_TAG_ENUM {
@@ -17,4 +19,6 @@ export enum ROUTER_TAG_ENUM {
     
     // Register
     REGISTER = 'Register',
+    LOGIN = 'Login',
+    LOGIN_GOOGLE = 'Login_Google',
 }
