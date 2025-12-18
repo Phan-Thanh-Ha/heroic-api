@@ -14,8 +14,8 @@ model Wards {
   district_code  String   @db.Char(3)
 
   district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
-
+  customers Customer[] // Quan hệ 1-N với bảng customers
+  
   @@index([code])
   @@index([name])
   @@index([slug])

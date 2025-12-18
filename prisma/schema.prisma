@@ -3,34 +3,9 @@ generator client {
   output   = "../generated/prisma"
 }
 
-// Datasource cấu hình chuẩn cho Prisma runtime & CLI
 datasource db {
   provider = "mysql"
 }
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
-
-// ============================================
-// LOCATIONS MODULE - Districts
-// ============================================
 
 model Districts {
   id             Int      @id @default(autoincrement())
@@ -45,7 +20,7 @@ model Districts {
 
   province Provinces @relation(fields: [province_code], references: [code]) // Quan hệ N-1 với Provinces
   wards    Wards[] // Quan hệ 1-N với bảng wards
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+  customers Customer[] // Quan hệ 1-N với bảng customers
 
   @@index([province_code])
   @@map("districts")
@@ -65,7 +40,7 @@ model Provinces {
 
 
   districts Districts[] // Quan hệ 1-N với bảng districts
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+  customers Customer[] // Quan hệ 1-N với bảng customers
 
   @@index([code])
   @@index([name])
@@ -92,8 +67,8 @@ model Wards {
   district_code  String   @db.Char(3)
 
   district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
-
+  customers Customer[] // Quan hệ 1-N với bảng customers
+  
   @@index([code])
   @@index([name])
   @@index([slug])
@@ -103,28 +78,6 @@ model Wards {
   @@index([path_with_type])
   @@index([district_code])
   @@map("wards")
-}
-
-model CustomerAddress {
-    id         Int @id @default(autoincrement()) @map("id")
-    customerId Int @map("customer_id")
-
-    fullAddress String  @db.Text @map("full_address")
-
-    provinceId Int @map("province_id")
-    districtId Int @map("district_id")
-    wardId     Int @map("ward_id")
-
-    province Provinces @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
-    district Districts @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
-    ward     Wards     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
-    customer Customer  @relation("CustomerAddress", fields: [customerId], references: [id])
-
-    @@index([customerId])
-    @@index([provinceId])
-    @@index([districtId])
-    @@index([wardId])
-    @@map("customer_address")
 }
 
 model Customer {
@@ -144,12 +97,23 @@ model Customer {
   dateOfBirth     DateTime? @map("date_of_birth") @db.Date // Ngày sinh khách hàng
   loyaltyPoints   Int       @default(0) @map("loyalty_points") // Điểm thưởng khách hàng
   customerGroupId Int?      @map("customer_group_id") // Nhóm khách hàng
-  createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(6) // Ngày tạo khách hàng
+  googleId        String?   @map("google_id") @db.Char(255) // Google ID khách hàng
+  facebookId      String?   @map("facebook_id") @db.Char(255) // Facebook ID khách hàng
+  provinceId      Int?      @map("province_id") // ID tỉnh thành khách hàng
+  districtId      Int?      @map("district_id") // ID huyện khách hàng
+  wardId          Int?      @map("ward_id") // ID xã phường khách hàng
 
-  addresses CustomerAddress[] @relation("CustomerAddress") // Quan hệ 1-N với bảng customer_address
+  province Provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
+  district Districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
+  ward     Wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
+
+  createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(6) // Ngày tạo khách hàng
 
   @@index([id])
   @@index([customerCode])
   @@index([fullName])
+  @@index([provinceId])
+  @@index([districtId])
+  @@index([wardId])
   @@map("customers")
 }

@@ -9,13 +9,6 @@ export class DistrictsService {
     private readonly districtsRepository: DistrictsRepository,
     private readonly logger: LoggerService,
   ) {}
-  // create(createDistrictsDto: CreateDistrictsDto) {
-  //   return 'This action adds a new districts';
-  // }
-
-  // findAll() {
-  //   return `This action returns all districts`;
-  // }
 
   async findDistrictsByProvinceCode(provinceCode: string) {
     try {
@@ -25,12 +18,4 @@ export class DistrictsService {
       throw error;
     }
   }
-
-  // update(id: number, updateDistrictsDto: UpdateDistrictsDto) {
-  //   return `This action updates a #${id} districts`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} districts`;
-  // }
 }

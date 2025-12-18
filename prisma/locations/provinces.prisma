@@ -12,7 +12,7 @@ model Provinces {
 
 
   districts Districts[] // Quan hệ 1-N với bảng districts
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+  customers Customer[] // Quan hệ 1-N với bảng customers
 
   @@index([code])
   @@index([name])

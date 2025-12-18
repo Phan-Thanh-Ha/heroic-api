@@ -1,13 +1,14 @@
 import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { RegisterService } from './register.service';
 import { ApiRegister } from './swagger/register.swagger';
 import { LoggerService } from '@logger';
+import { Request } from 'express';
 
-@Controller(ROUTER_ENUM.REGISTER)
-@ApiTags(ROUTER_TAG_ENUM.REGISTER)
+@Controller(ROUTER_ENUM.AUTH.CUSTOMER.REGISTER)
+@ApiTags(ROUTER_TAG_ENUM.AUTH.CUSTOMER.REGISTER)
 export class RegisterController {
   constructor(
     private readonly registerService: RegisterService,
@@ -18,38 +19,22 @@ export class RegisterController {
   @Post()
   @ApiRegister()
   @HttpCode(HTTP_STATUS_ENUM.CREATED)
-  async create(@Body() createRegisterDto: CreateRegisterDto) {
-    this.loggerService.log(this.context, 'create', createRegisterDto);
+  async register(
+    @Body() createRegisterDto: CreateRegisterDto,
+    @Req() req: Request & { timeZone?: string },
+  ) {
+    this.loggerService.log(this.context, 'register', createRegisterDto);
     try {
-      const customer = await this.registerService.create(createRegisterDto);
-        console.log("🚀 🇵 🇭: ~ customer:", customer)
-        // Loại bỏ password
-        // const { password, ...safeCustomerData } = customer.data;
-        // CHỈ TRẢ VỀ ĐỐI TƯỢNG DATA THUẦN TÚY (Plain Object)
-        return customer.data;
+      const result = await this.registerService.register(
+        createRegisterDto,
+        req.timeZone,
+      );
+      return result;
     } catch (error) {
-      this.loggerService.error(this.context, 'create', error);
+      this.loggerService.error(this.context, 'register', error);
       throw error;
     }
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.registerService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.registerService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateRegisterDto: UpdateRegisterDto) {
-  //   return this.registerService.update(+id, updateRegisterDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.registerService.remove(+id);
-  // }
 }
+

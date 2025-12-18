@@ -7,8 +7,8 @@ import { ApiWardsFindByDistrictCode } from './swagger/get-wards-by-parencode.swa
 import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller(ROUTER_ENUM.WARDS)
-@ApiTags(ROUTER_TAG_ENUM.WARDS)
+@Controller(ROUTER_ENUM.LOCATIONS.WARDS)
+@ApiTags(ROUTER_TAG_ENUM.LOCATIONS.WARDS)
 export class WardsController {
   private context = WardsController.name;
   constructor(private readonly wardsService: WardsService, private readonly logger: LoggerService) {}

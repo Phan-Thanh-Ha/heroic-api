@@ -1,7 +1,6 @@
-
 import { IsEmail, IsInt, IsNotEmpty, IsString, Min } from "class-validator";
 
-export class CreateCustomerDto {
+export class CreateAdminRegisterDto {
     @IsString({ message: 'email phải là chuỗi' })
     @IsNotEmpty({ message: 'email không được để trống' })
     @IsEmail({}, { message: 'email không hợp lệ' })
@@ -44,12 +43,6 @@ export class CreateCustomerDto {
     @IsNotEmpty({ message: 'password không được để trống' })
     password!: string;
 
-    //FacebookId
-    facebookId!: string;
-
-    //GoogleId
-    googleId!: string;
-
     //ProvinceId
     @IsInt({ message: 'provinceId phải là số nguyên' })
     @IsNotEmpty({ message: 'provinceId không được để trống' })
@@ -73,8 +66,9 @@ export class CreateCustomerDto {
     @IsNotEmpty({ message: 'fullAddress không được để trống' })
     fullAddress!: string;
 
-    //TypeRegister
-    @IsString({ message: 'typeRegister phải là chuỗi' })
-    @IsNotEmpty({ message: 'typeRegister không được để trống' })
-    typeRegister!: string;
+    //Role - Vai trò nhân viên
+    @IsString({ message: 'role phải là chuỗi' })
+    @IsNotEmpty({ message: 'role không được để trống' })
+    role!: string;
 }
+

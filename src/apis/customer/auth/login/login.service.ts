@@ -2,17 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '@logger';
-import { CustomersService } from '../customers/customers.service';
+import { LoginRepository } from './login.repository';
+import { LoginFacebookDto } from './dto/login-facebook.dto';
 
 @Injectable()
 export class LoginService {
   private context = LoginService.name;
   constructor(
+    private readonly loginRepository: LoginRepository,
     private readonly loggerService: LoggerService,
   ) { }
-  async login(loginDto: LoginDto) {
+
+  //#region Đăng nhập bằng email
+  async login(loginDto: LoginDto, _timeZone?: string) {
     try {
       this.loggerService.debug(this.context, 'login', loginDto);
+      // TODO: Implement login logic with email và password + timezone nếu cần
       return {
         message: 'Đăng nhập thành công bằng email',
         data: loginDto,
@@ -22,17 +27,37 @@ export class LoginService {
       throw error;
     }
   }
+  //#endregion
 
-  async loginWithGoogle(loginGoogleDto: LoginGoogleDto) {
+  //#region Đăng nhập bằng Google
+  async loginWithGoogle(loginGoogleDto: LoginGoogleDto, timeZone?: string) {
     try {
       this.loggerService.debug(this.context, 'loginWithGoogle', loginGoogleDto);
-      return {
-        message: 'Đăng nhập thành công với Google',
-        data: loginGoogleDto,
-      };
+      const result = await this.loginRepository.loginWithGoogle(
+        loginGoogleDto,
+        timeZone,
+      );
+      return result;
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithGoogle', error);
       throw error;
     }
   }
+  //#endregion
+
+  //#region Đăng nhập bằng Facebook
+  async loginWithFacebook(loginFacebookDto: LoginFacebookDto, timeZone?: string) {
+    try {
+      this.loggerService.debug(this.context, 'loginWithFacebook', loginFacebookDto);
+      const result = await this.loginRepository.loginWithFacebook(
+        loginFacebookDto,
+        timeZone,
+      );
+      return result;
+    } catch (error) {
+      this.loggerService.error(this.context, 'loginWithFacebook', error);
+      throw error;
+    }
+  }
+  //#endregion
 }

@@ -37,10 +37,8 @@ export const initSwagger = (app: INestApplication) => {
         .setVersion('1.0.0')
         .addBearerAuth();
     
-    // Thêm tất cả servers
-
-    documentBuilder.addServer(`http://localhost:${config.port}`);
-
+    // Không set cứng localhost ở đây để Swagger UI tự dùng origin hiện tại (window.location)
+    // => Khi bạn mở bằng http://192.168.x.x:3102 thì Try it out sẽ gọi đúng IP đó, không bị fix localhost.
     
     const baseDocument = SwaggerModule.createDocument(
         app,
@@ -63,11 +61,12 @@ export const initSwagger = (app: INestApplication) => {
             description: 'Heroic API Documentation for Customer',
             path: 'docs-customer',
             includeTags: [
-                ROUTER_TAG_ENUM.PROVINCE_CITY,
-                ROUTER_TAG_ENUM.DISTRICTS,
-                ROUTER_TAG_ENUM.WARDS,
-                ROUTER_TAG_ENUM.REGISTER,
-                ROUTER_TAG_ENUM.LOGIN,
+                ROUTER_TAG_ENUM.LOCATIONS.PROVINCE,
+                ROUTER_TAG_ENUM.LOCATIONS.DISTRICTS,
+                ROUTER_TAG_ENUM.LOCATIONS.WARDS,
+                ROUTER_TAG_ENUM.AUTH.CUSTOMER.REGISTER,
+                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN,
+                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_FACEBOOK,
             ],
         },
     ];

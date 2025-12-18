@@ -11,7 +11,7 @@ model Districts {
 
   province Provinces @relation(fields: [province_code], references: [code]) // Quan hệ N-1 với Provinces
   wards    Wards[] // Quan hệ 1-N với bảng wards
-  customerAddresses CustomerAddress[] // Quan hệ 1-N với bảng customer_address
+  customers Customer[] // Quan hệ 1-N với bảng customers
 
   @@index([province_code])
   @@map("districts")

@@ -1,6 +1,6 @@
 import { LoggerService } from '@logger';
 import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateRegisterDto } from './dto/create-register.dto';
+import { CreateAdminRegisterDto } from './dto/create-register.dto';
 import { RegisterRespository } from './register.respository';
 
 @Injectable()
@@ -11,29 +11,25 @@ export class RegisterService {
     private readonly registerRespository: RegisterRespository,
     private readonly loggerService: LoggerService,
   ) {}
-
-  //#region Đăng ký tài khoản khách hàng
-  async register(createRegisterDto: CreateRegisterDto, timeZone?: string) {
+  async create(createRegisterDto: CreateAdminRegisterDto) {
     try {
       this.loggerService.log(this.context, 'create-service', createRegisterDto);
-      const customer = await this.registerRespository.register(
-        createRegisterDto,
-        timeZone,
-      );
+      const staff = await this.registerRespository.create(createRegisterDto);
       return {
-        user: {...customer},
-        accessToken: '1234567890', // TODO: Generate JWT token thực tế
-        message: 'Đăng ký thành công',
+        data: {
+          ...staff,
+        },
       };
     } catch (error) {
-      this.loggerService.error(this.context, 'register', error);
+      this.loggerService.error(this.context, 'create', error);
+      // Nếu bên dưới đã ném HttpException (ví dụ: 400 Email đã tồn tại)
+      // thì giữ nguyên, không wrap thành 500
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new InternalServerErrorException('Đăng ký thất bại. Vui lòng thử lại sau.');
+      throw new InternalServerErrorException('Đăng ký nhân viên thất bại. Vui lòng thử lại sau.');
     }
     
   }
-  //#endregion
 }
 

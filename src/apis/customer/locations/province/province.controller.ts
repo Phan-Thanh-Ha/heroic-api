@@ -4,8 +4,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { ProvinceService } from './province.service';
 import { LoggerService } from '@logger';
 import { ApiProvinceGetAll } from './swagger/get-all-province.swagger';
-@Controller(ROUTER_ENUM.PROVINCE_CITY)
-@ApiTags(ROUTER_TAG_ENUM.PROVINCE_CITY)
+@Controller(ROUTER_ENUM.LOCATIONS.PROVINCE)
+@ApiTags(ROUTER_TAG_ENUM.LOCATIONS.PROVINCE)
 export class ProvinceController {
     private context = ProvinceController.name;
     constructor(private readonly provinceService: ProvinceService, private readonly logger: LoggerService) {}

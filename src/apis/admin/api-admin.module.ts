@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
+import { RegisterModule } from './auth/register/register.module';
 
-// Placeholder for admin routes/modules
 @Module({
-	imports: [],
+	imports: [
+		RegisterModule,
+	],
 })
 export class ApiAdminModule {}
 

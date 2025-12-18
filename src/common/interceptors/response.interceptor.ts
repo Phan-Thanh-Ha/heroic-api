@@ -3,65 +3,78 @@ import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getMetadata } from '../helpers';
-import { ResponseFormat } from '../interfaces';
 
 @Injectable()
 export class ResponseTransformInterceptor implements NestInterceptor {
-	intercept(context: ExecutionContext, next: CallHandler): Observable<ResponseFormat> {
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
 		const http = context.switchToHttp();
-		const response = http.getResponse<Response>();
 		const request = http.getRequest<Request>();
-		const status = response.statusCode;
+        const status = http.getResponse<Response>().statusCode;
 
 		return next.handle().pipe(
 			map((data) => {
-				const isArray = Array.isArray(data);
-				const isPagination = isArray && data.length === 2 && typeof data[1] === 'number';
-
+                // 1. Nếu data là kết quả phân trang (Array 2 phần tử: [items, total])
+                const isPagination = Array.isArray(data) && data.length === 2 && typeof data[1] === 'number';
 				if (isPagination) {
-					const { currentPage, limit, total, totalPage } = getMetadata(request, data);
-
+                    const metadata = getMetadata(request, data);
 					return {
-						status,
+                        status: 'success',
+                        code: status,
 						success: true,
-						code: status,
 						data: {
 							result: data[0],
-							currentPage,
-							limit,
-							total,
-							totalPage,
+                            ...metadata, // total, currentPage, limit, totalPage
 						},
 					};
 				}
 
-				// Cho phép controller tự truyền message:
-				// return { result: ..., message: 'Lấy tỉnh thành công' }
-				if (!isArray && data && typeof data === 'object' && 'result' in (data as any)) {
-					const { result, message } = data as any;
-					const resultArray = Array.isArray(result) ? result : [result];
-
+                // 2. Nếu data là một Mảng bình thường (không phân trang)
+                if (Array.isArray(data)) {
 					return {
 						status: 'success',
 						code: status,
 						success: true,
-						message,
 						data: {
-							result: resultArray,
+                            result: data,
 						},
 					};
 				}
 
+                // 3. Nếu data là một Object đơn lẻ (Profile, Detail, Login, Register)
+                if (data && typeof data === 'object') {
+                    const { message, result, ...rest } = data;
+                    
+                    // Nếu có result field (format cũ: { result: [...], message: '...' })
+                    if (result !== undefined) {
 				return {
 					status: 'success',
 					code: status,
 					success: true,
+                            message: message || 'Thành công',
 					data: {
-						result: isArray ? data : [data],
+                                result: Array.isArray(result) ? result : [result],
 					},
+                        };
+                    }
+                    
+                    // Format mới: { user: {...}, accessToken: '...', message: '...' }
+                    return {
+                        status: 'success',
+                        code: status,
+                        success: true,
+                        message: message || 'Thành công',
+                        data: rest, // Trả về object trực tiếp, không bọc mảng
+                    };
+                }
+
+                // 4. Các trường hợp còn lại (string, number, boolean)
+                return {
+                    status: 'success',
+                    code: status,
+                    success: true,
+                    data,
 				};
 			}),
 		);
 	}
-
 }
