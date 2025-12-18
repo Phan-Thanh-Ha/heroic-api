@@ -27,8 +27,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
         // response thường chứa { statusCode, message, error }
         const data: any = (exception as any).response; 
         
-        // --- 3. Xử lý Message và Ngôn ngữ (Giữ lại logic đa ngôn ngữ của bạn) ---
-        const lang = request.headers['accept-language'] || 'vi'; 
+        // --- 3. Xử lý Message và Ngôn ngữ (ưu tiên x-language, sau đó accept-language) ---
+        const rawLang =
+            (request.headers['x-language'] as string) ||
+            (request.headers['accept-language'] as string) ||
+            'vi';
+
+        const normalized = rawLang.split(',')[0].toLowerCase();
+        let lang: 'vi' | 'en' | 'cn' = 'vi';
+        if (normalized.startsWith('en')) lang = 'en';
+        else if (normalized.startsWith('vi')) lang = 'vi';
+        else if (normalized.startsWith('zh') || normalized.startsWith('cn')) lang = 'cn';
         const rawMessage = data?.message;
         
         // Message mặc định cho lỗi hệ thống hoặc lỗi validation

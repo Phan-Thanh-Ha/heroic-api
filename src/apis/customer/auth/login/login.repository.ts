@@ -4,6 +4,8 @@ import { PrismaService } from "@prisma";
 import { LoginGoogleDto } from "./dto/login-google.dto";
 import { formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@utils";
 import { LoginFacebookDto } from "./dto/login-facebook.dto";
+import { JwtService } from "@jwt";
+import { customerAuthSuccessTypes } from "@common";
 
 @Injectable()
 export class LoginRepository {
@@ -11,6 +13,7 @@ export class LoginRepository {
     constructor(
         private readonly prisma: PrismaService,
         private readonly loggerService: LoggerService,
+        private readonly jwtService: JwtService,
     ) { }
 
     //#region Kiểm tra email đã tồn tại chưa
@@ -69,12 +72,14 @@ export class LoginRepository {
                     data: { customerCode },
                 });
 
-                return updatedCustomer;
+                return {
+                    ...updatedCustomer,
+                };
             });
 
             const { password, ...rest } = customer as any;
             const dataResponse = {
-                ...rest,
+                ...rest
             };
 
             return dataResponse;
@@ -120,7 +125,6 @@ export class LoginRepository {
         try {
             // Kiểm tra email đã tồn tại chưa
             const existingCustomer = await this.checkEmailExists(loginGoogleDto.email);
-            console.log("🚀 🇵 🇭: ~ existingCustomer:", existingCustomer)
 
             if (existingCustomer) {
                 // Nếu đã tồn tại, kiểm tra googleId có khớp không
@@ -128,14 +132,28 @@ export class LoginRepository {
                     // Đăng nhập thành công với customer hiện có
                     const { password, ...customerResponse } = existingCustomer;
 
+                    // Tạo JWT token cho khách hàng
+                    const accessToken = await this.jwtService.signJwtCustomer({
+                        customerId: customerResponse.id,
+                        customerCode: customerResponse.customerCode,
+                        fullName: customerResponse.fullName,
+                        email: customerResponse.email,
+                        facebookId: customerResponse.facebookId,
+                        googleId: customerResponse.googleId,
+                    });
+                    
+
                     return {
-                        message: 'Đăng nhập với Google thành công',
-                        ...customerResponse,
-                        dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
-                        createdAt: toUnixByTimeZone(
-                            customerResponse.createdAt,
-                            timeZone,
-                        ),
+                        message: customerAuthSuccessTypes().AUTH_LOGIN_GOOGLE_SUCCESS.message,
+                        info: {
+                            ...customerResponse,
+                            dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
+                            createdAt: toUnixByTimeZone(
+                                customerResponse.createdAt,
+                                timeZone,
+                            ),
+                        },
+                        accessToken: accessToken,
                     };
                 } else {
                     // Email đã tồn tại nhưng googleId không khớp
@@ -145,7 +163,7 @@ export class LoginRepository {
                 // Chưa tồn tại, tạo customer mới
                 const newCustomer = await this.createCustomerWithGoogle(loginGoogleDto);
                 return {
-                    message: 'Đăng ký và đăng nhập với Google thành công',
+                    message: customerAuthSuccessTypes().AUTH_REGISTER_SUCCESS.message,
                     data: newCustomer,
                 };
             }
@@ -166,14 +184,27 @@ export class LoginRepository {
 
             if (existingByFacebook) {
                 const { password, ...customerResponse } = existingByFacebook;
+
+                // Tạo JWT token cho khách hàng
+                const accessToken = await this.jwtService.signJwtCustomer({
+                    customerId: customerResponse.id,
+                    customerCode: customerResponse.customerCode,
+                    fullName: customerResponse.fullName,
+                    email: customerResponse.email,
+                    facebookId: customerResponse.facebookId,
+                    googleId: customerResponse.googleId,
+                });
                 return {
-                    message: 'Đăng nhập với Facebook thành công',
-                    ...customerResponse,
-                    dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
-                    createdAt: toUnixByTimeZone(
-                        customerResponse.createdAt,
-                        timeZone,
-                    ),
+                    message: customerAuthSuccessTypes().AUTH_LOGIN_FACEBOOK_SUCCESS.message,
+                    data: {
+                        ...customerResponse,
+                        dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
+                        createdAt: toUnixByTimeZone(
+                            customerResponse.createdAt,
+                            timeZone,
+                        ),
+                    },
+                    accessToken: accessToken,
                 };
             }
 
@@ -215,7 +246,7 @@ export class LoginRepository {
             const newCustomer =
                 await this.createCustomerWithFacebook(loginFacebookDto);
             return {
-                message: 'Đăng ký và đăng nhập với Facebook thành công',
+                message: customerAuthSuccessTypes().AUTH_REGISTER_SUCCESS.message,
                 data: newCustomer,
             };
         } catch (error) {

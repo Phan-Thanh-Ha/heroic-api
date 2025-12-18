@@ -25,34 +25,19 @@ export class RequestLoggerMiddleware implements NestMiddleware {
   use(req: any, _res: any, next: () => void) {
     const { method, originalUrl, query, body } = req;
 
-    // Chuẩn hoá header timezone từ client
-    const rawTimeZone =
-      req.headers['x-timezone'] ??
-      req.headers['timezone'] ??
-      req.headers['time-zone'];
-
-    const timeZone =
-      typeof rawTimeZone === 'string'
-        ? rawTimeZone
-        : Array.isArray(rawTimeZone)
-          ? rawTimeZone[0]
-          : undefined;
-
-    // Gắn thẳng vào request để controller/service có thể dùng lại
-    req.timeZone = timeZone;
-
     const safeBody = maskSensitive(body);
     console.log('[REQ]', { 
       method,
       url: originalUrl,
-      params: JSON.stringify(req.params),
-      query: JSON.stringify(query),
-      body: JSON.stringify(safeBody),
+      params: req.params,
+      query: query,
+      body: safeBody,
       ip: req.ip,
       userAgent: req.headers['user-agent'],
       referer: req.headers['referer'],
       host: req.headers['host'],
-      timeZone,
+      timeZone: req.headers['x-timezone'],
+      language: req.headers['x-language']
     });
     next();
   }

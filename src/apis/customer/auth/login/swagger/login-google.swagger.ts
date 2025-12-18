@@ -1,5 +1,5 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiHeader, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { LoginGoogleDto } from "../dto/login-google.dto";
 
 export const ApiLoginWithGoogle = () => {

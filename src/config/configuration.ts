@@ -4,6 +4,7 @@ export const configuration = () => {
 	const dbUserName = process.env.DB_USERNAME;
 	const dbPassWord = process.env.DB_PASSWORD;
 	const dbName = process.env.DB_NAME;
+	const secretKey = process.env.SECRET_KEY;
 
 	return {
 		port: parseInt(process.env.PORT || '3102', 10),
@@ -13,5 +14,6 @@ export const configuration = () => {
 		dbPassWord,
 		dbName,
 		ngrokUrl: process.env.NGROK_URL || null,
+		secretKey,
 	};
 };
