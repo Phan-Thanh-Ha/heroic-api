@@ -25,7 +25,7 @@ model Customer {
   district Districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
   ward     Wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
 
-  createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(6) // Ngày tạo khách hàng
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo khách hàng
 
   @@index([id])
   @@index([customerCode])

@@ -1,13 +1,15 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '../../generated/prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
-import type { PoolConfig } from 'mariadb';
+import { PrismaClient, Prisma } from '../../generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { configuration } from '../config';
 
 @Injectable()
 export class PrismaService
     extends PrismaClient
     implements OnModuleInit, OnModuleDestroy {
+
+    private pool: Pool;
 
     constructor() {
         const config = configuration();
@@ -26,31 +28,27 @@ export class PrismaService
             );
         }
 
-        console.log('🔗 Connecting to database:', `${user}@${host}:${port}/${database}`);
+        // Tạo DATABASE_URL từ các biến môi trường nếu chưa có
+        const databaseUrl = process.env.DATABASE_URL || `postgresql://${user}:${password}@${host}:${port}/${database}`;
+        
+        // Set DATABASE_URL environment variable
+        process.env.DATABASE_URL = databaseUrl;
 
-        // Tạo PoolConfig với cấu hình từ environment variables
-        const poolConfig: PoolConfig = {
-            host,
-            port,
-            user,
-            password,
-            database,
-            connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
-            acquireTimeout: parseInt(process.env.DB_ACQUIRE_TIMEOUT || '60000', 10), // 60 seconds
-            idleTimeout: parseInt(process.env.DB_IDLE_TIMEOUT || '300000', 10), // 5 minutes
-            minimumIdle: parseInt(process.env.DB_MINIMUM_IDLE || '2', 10),
-            allowPublicKeyRetrieval: process.env.DB_ALLOW_PUBLIC_KEY_RETRIEVAL !== 'false', // Default: true
-        };
+        console.log('🔗 Connecting to PostgreSQL database:', `${user}@${host}:${port}/${database}`);
 
-        // Tạo adapter với PoolConfig
-        const adapter = new PrismaMariaDb(poolConfig, {
-            onConnectionError: (err) => {
-                console.error('❌ Database connection error (Adapter):', err);
-            },
+        // Với Prisma 7.x, BẮT BUỘC phải cung cấp adapter hoặc accelerateUrl
+        // Tạo PostgreSQL adapter với connection pool
+        // Phải tạo pool trước khi gọi super()
+        const pool = new Pool({
+            connectionString: databaseUrl,
         });
+        const adapter = new PrismaPg(pool);
 
-        // Gọi super() và truyền adapter vào
-        super({ adapter });
+        // Khởi tạo PrismaClient với adapter
+        super({ adapter } as Prisma.PrismaClientOptions);
+        
+        // Gán pool vào this sau khi super() đã được gọi
+        this.pool = pool;
     }
 
     /**
@@ -77,6 +75,10 @@ export class PrismaService
     async onModuleDestroy() {
         try {
             await this.$disconnect();
+            // Đóng connection pool
+            if (this.pool) {
+                await this.pool.end();
+            }
             console.log('🔌 Prisma disconnected from database.');
         } catch (error) {
             console.error('❌ Error disconnecting Prisma:', error);
