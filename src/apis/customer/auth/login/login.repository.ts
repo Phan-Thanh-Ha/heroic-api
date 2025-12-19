@@ -32,6 +32,20 @@ export class LoginRepository {
     }
     //#endregion
 
+    //#region Kiểm tra googleId đã tồn tại chưa
+    private async checkGoogleIdExists(googleId: string) {
+        try {
+            const customerGoogleId = await this.prisma.customer.findFirst({
+                where: { googleId },
+            });
+            return customerGoogleId;
+        } catch (error) {
+            this.loggerService.error(this.context, 'checkGoogleIdExists', error);
+            throw error;
+        }
+    }
+    //#endregion
+
     //#region Kiểm tra facebookId đã tồn tại chưa
     private async checkFacebookIdExists(facebookId: string) {
         try {
@@ -46,7 +60,7 @@ export class LoginRepository {
         }
     }
     //#endregion
-    
+
     //#region Tạo mới khách hàng + Mã (đăng ký qua Google)
     private async createCustomerWithGoogle(loginGoogleDto: LoginGoogleDto) {
         try {
@@ -99,7 +113,7 @@ export class LoginRepository {
                     customerCode: '',
                     fullName: loginFacebookDto.fullName,
                     avatarUrl: loginFacebookDto.avatarUrl,
-                    email : loginFacebookDto.email ?? '',
+                    email: loginFacebookDto.email ?? '',
                     typeRegister: 'Facebook',
                     facebookId: loginFacebookDto.facebookId,
                 },
@@ -121,69 +135,14 @@ export class LoginRepository {
     //#endregion
 
     //#region Đăng nhập với Google
-    async loginWithGoogle(loginGoogleDto: LoginGoogleDto, timeZone?: string) {
+    async loginWithGoogle(loginGoogleDto: LoginGoogleDto) {
         try {
-            // Kiểm tra email đã tồn tại chưa
-            const existingCustomer = await this.checkEmailExists(loginGoogleDto.email);
+            // Kiểm tra googleId đã tồn tại chưa
+            const existingGoogleId = await this.checkGoogleIdExists(loginGoogleDto.googleId);
 
-            if (existingCustomer) {
-                // Nếu đã tồn tại, kiểm tra googleId có khớp không
-                if (existingCustomer.googleId === loginGoogleDto.googleId) {
-                    // Đăng nhập thành công với customer hiện có
-                    const { password, ...customerResponse } = existingCustomer;
-
-                    // Tạo JWT token cho khách hàng
-                    const accessToken = await this.jwtService.signJwtCustomer({
-                        customerId: customerResponse.id,
-                        customerCode: customerResponse.customerCode,
-                        fullName: customerResponse.fullName,
-                        email: customerResponse.email,
-                        facebookId: customerResponse.facebookId,
-                        googleId: customerResponse.googleId,
-                    });
-                    
-
-                    return {
-                        message: customerAuthSuccessTypes().AUTH_LOGIN_GOOGLE_SUCCESS.message,
-                        info: {
-                            ...customerResponse,
-                            dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
-                            createdAt: toUnixByTimeZone(
-                                customerResponse.createdAt,
-                                timeZone,
-                            ),
-                        },
-                        accessToken: accessToken,
-                    };
-                } else {
-                    // Email đã tồn tại nhưng googleId không khớp
-                    throw new Error('Email đã được sử dụng với tài khoản khác');
-                }
-            } else {
-                // Chưa tồn tại, tạo customer mới
-                const newCustomer = await this.createCustomerWithGoogle(loginGoogleDto);
-                return {
-                    message: customerAuthSuccessTypes().AUTH_REGISTER_SUCCESS.message,
-                    data: newCustomer,
-                };
-            }
-        } catch (error) {
-            this.loggerService.error(this.context, 'loginWithGoogle', error);
-            throw error;
-        }
-    }
-    //#endregion
-
-    //#region Đăng nhập với Facebook
-    async loginWithFacebook(loginFacebookDto: LoginFacebookDto, timeZone?: string) {
-        try {
-            // 1. Kiểm tra theo facebookId (đã từng login FB trước đó)
-            const existingByFacebook = await this.checkFacebookIdExists(
-                loginFacebookDto.facebookId,
-            );
-
-            if (existingByFacebook) {
-                const { password, ...customerResponse } = existingByFacebook;
+            if (existingGoogleId) {
+                // Đăng nhập thành công với customer hiện có
+                const { password, ...customerResponse } = existingGoogleId;
 
                 // Tạo JWT token cho khách hàng
                 const accessToken = await this.jwtService.signJwtCustomer({
@@ -194,17 +153,68 @@ export class LoginRepository {
                     facebookId: customerResponse.facebookId,
                     googleId: customerResponse.googleId,
                 });
+
+                return {
+                    message: customerAuthSuccessTypes().AUTH_LOGIN_GOOGLE_SUCCESS.message,
+                    info: {
+                        ...customerResponse,
+                    },
+                    accessToken,
+                };
+            }
+
+            // Chưa tồn tại, tạo customer mới rồi đăng nhập luôn
+            const newCustomer = await this.createCustomerWithGoogle(loginGoogleDto);
+            const accessToken = await this.jwtService.signJwtCustomer({
+                customerId: newCustomer.id,
+                customerCode: newCustomer.customerCode,
+                fullName: newCustomer.fullName,
+                email: newCustomer.email,
+                facebookId: newCustomer.facebookId,
+                googleId: newCustomer.googleId,
+            });
+
+            return {
+                message: customerAuthSuccessTypes().AUTH_LOGIN_GOOGLE_SUCCESS.message,
+                info: {
+                    ...newCustomer,
+                },
+                accessToken,
+            };
+        } catch (error) {
+            this.loggerService.error(this.context, 'loginWithGoogle', error);
+            throw error;
+        }
+    }
+    //#endregion
+
+    //#region Đăng nhập với Facebook
+    async loginWithFacebook(loginFacebookDto: LoginFacebookDto) {
+        try {
+            // 1. Kiểm tra theo facebookId (đã từng login FB trước đó)
+            const existingByFacebook = await this.checkFacebookIdExists(
+                loginFacebookDto.facebookId,
+            );
+
+            // Nếu đã tồn tại facebookId → đăng nhập thành công
+            if (existingByFacebook) {
+                const { password, ...customerResponse } = existingByFacebook;
+
+                const accessToken = await this.jwtService.signJwtCustomer({
+                    customerId: customerResponse.id,
+                    customerCode: customerResponse.customerCode,
+                    fullName: customerResponse.fullName,
+                    email: customerResponse.email,
+                    facebookId: customerResponse.facebookId,
+                    googleId: customerResponse.googleId,
+                });
+
                 return {
                     message: customerAuthSuccessTypes().AUTH_LOGIN_FACEBOOK_SUCCESS.message,
-                    data: {
+                    info: {
                         ...customerResponse,
-                        dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
-                        createdAt: toUnixByTimeZone(
-                            customerResponse.createdAt,
-                            timeZone,
-                        ),
                     },
-                    accessToken: accessToken,
+                    accessToken,
                 };
             }
 
@@ -228,26 +238,42 @@ export class LoginRepository {
                     });
 
                     const { password, ...customerResponse } = updatedCustomer;
+                    const accessToken = await this.jwtService.signJwtCustomer({
+                        customerId: customerResponse.id,
+                        customerCode: customerResponse.customerCode,
+                        fullName: customerResponse.fullName,
+                        email: customerResponse.email,
+                        facebookId: customerResponse.facebookId,
+                        googleId: customerResponse.googleId,
+                    });
+
                     return {
-                        message: 'Liên kết Facebook và đăng nhập thành công',
-                        ...customerResponse,
-                        dateOfBirth: formatDateToYMD(
-                            customerResponse.dateOfBirth,
-                        ),
-                        createdAt: toUnixByTimeZone(
-                            customerResponse.createdAt,
-                            timeZone,
-                        ),
+                        message: customerAuthSuccessTypes().AUTH_LOGIN_FACEBOOK_SUCCESS.message,
+                        info: {
+                            ...customerResponse,
+                        },
+                        accessToken,
                     };
                 }
             }
 
-            // 3. Không tìm thấy email / facebookId → tạo khách hàng mới
-            const newCustomer =
-                await this.createCustomerWithFacebook(loginFacebookDto);
+            // 3. Không tìm thấy email / facebookId → tạo khách hàng mới rồi đăng nhập luôn
+            const newCustomer = await this.createCustomerWithFacebook(loginFacebookDto);
+            const accessToken = await this.jwtService.signJwtCustomer({
+                customerId: newCustomer.id,
+                customerCode: newCustomer.customerCode,
+                fullName: newCustomer.fullName,
+                email: newCustomer.email,
+                facebookId: newCustomer.facebookId,
+                googleId: newCustomer.googleId,
+            });
+
             return {
-                message: customerAuthSuccessTypes().AUTH_REGISTER_SUCCESS.message,
-                data: newCustomer,
+                message: customerAuthSuccessTypes().AUTH_LOGIN_FACEBOOK_SUCCESS.message,
+                info: {
+                    ...newCustomer,
+                },
+                accessToken,
             };
         } catch (error) {
             this.loggerService.error(this.context, 'loginWithFacebook', error);

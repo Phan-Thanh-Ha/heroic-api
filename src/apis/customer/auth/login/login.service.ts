@@ -4,6 +4,7 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '@logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
+import { formatDateToYMD, toUnixByTimeZone } from '@utils';
 
 @Injectable()
 export class LoginService {
@@ -32,12 +33,19 @@ export class LoginService {
   //#region Đăng nhập bằng Google
   async loginWithGoogle(loginGoogleDto: LoginGoogleDto, timeZone?: string) {
     try {
-      this.loggerService.debug(this.context, 'loginWithGoogle', loginGoogleDto);
+      this.loggerService.log(this.context, 'loginWithGoogle', loginGoogleDto);
       const result = await this.loginRepository.loginWithGoogle(
         loginGoogleDto,
-        timeZone,
       );
-      return result;
+      return {
+        message: result.message,
+        info: {
+          ...result.info,
+          dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
+          createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
+        },
+        accessToken: result.accessToken,
+      };
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithGoogle', error);
       throw error;
@@ -49,11 +57,17 @@ export class LoginService {
   async loginWithFacebook(loginFacebookDto: LoginFacebookDto, timeZone?: string) {
     try {
       this.loggerService.debug(this.context, 'loginWithFacebook', loginFacebookDto);
-      const result = await this.loginRepository.loginWithFacebook(
-        loginFacebookDto,
-        timeZone,
-      );
-      return result;
+
+      const result = await this.loginRepository.loginWithFacebook(loginFacebookDto);
+      return {
+        message: result.message,
+        info: {
+          ...result.info,
+          dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
+          createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
+        },
+        accessToken: result.accessToken,
+      };
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithFacebook', error);
       throw error;

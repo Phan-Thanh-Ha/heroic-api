@@ -44,13 +44,11 @@ export class LoginController {
   @HttpCode(HTTP_STATUS_ENUM.CREATED)
   async loginWithGoogle(
     @Body() loginGoogleDto: LoginGoogleDto,
-    @Req() req: Request & { timeZone?: string },
   ) {
-    this.loggerService.debug(this.context, 'loginWithGoogle', loginGoogleDto); 
+    this.loggerService.log(this.context, 'loginWithGoogle', loginGoogleDto); 
     try {
       return await this.loginService.loginWithGoogle(
         loginGoogleDto,
-        req.timeZone,
       );
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithGoogle', error);
@@ -67,12 +65,9 @@ export class LoginController {
     @Body() loginFacebookDto: LoginFacebookDto,
     @Req() req: Request & { timeZone?: string },
   ) {
-    this.loggerService.debug(this.context, 'loginWithFacebook', loginFacebookDto);
+    this.loggerService.log(this.context, 'loginWithFacebook', loginFacebookDto);
     try {
-      return await this.loginService.loginWithFacebook(
-        loginFacebookDto,
-        req.timeZone,
-      );
+      return await this.loginService.loginWithFacebook(loginFacebookDto,req.timeZone,);
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithFacebook', error);
       throw error;
