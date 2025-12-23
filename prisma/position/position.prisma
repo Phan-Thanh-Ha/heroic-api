@@ -1,0 +1,13 @@
+model Position {
+    id              Int      @id @default(autoincrement()) @map("id") // ID chức vụ
+    uuid            String   @unique @map("uuid") @db.Char(36) // UUID chức vụ
+    code            String   @unique @map("code") // Ví dụ: "SUPER_ADMIN", "ADMIN", "STAFF"
+    name            String   @map("name") // Tên chức vụ, ví dụ: "Quản trị viên cấp cao", "Trưởng nhóm bán hàng"
+    title           String   @map("title") // Ví dụ: "Quản trị cấp cao", "Trưởng nhóm bán hàng"
+    level           Int      @default(1) @map("level") // Số càng cao quyền càng lớn
+
+    // Quan hệ 1-N: Một chức vụ có nhiều nhân viên
+    employees       Employee[] @relation("PositionEmployees") 
+
+    @@map("positions")
+} 

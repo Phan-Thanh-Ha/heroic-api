@@ -119,3 +119,62 @@ model Customer {
   @@index([wardId])
   @@map("customers")
 }
+
+model Department {
+    id              Int      @id @default(autoincrement()) @map("id") // ID phòng ban
+    uuid            String   @unique @map("uuid") @db.Char(36) // UUID phòng ban
+    code            String   @unique @map("code") // Ví dụ: "SALES", "WAREHOUSE", "ACCOUNTING"
+    name            String   @map("name") // Ví dụ: "Phòng Kinh Doanh", "Phòng Kho"
+
+
+    employees Employee[] @relation("DepartmentEmployees") // Quan hệ với bảng Employee nhiều-nhiều 1 phòng ban có nhiều nhân viên
+    
+    @@map("departments")
+}
+
+model  Employee {
+    id            Int       @id @default(autoincrement()) @map("id") // ID nhân viên
+    uuid          String    @unique @map("uuid") @db.Char(36) // UUID nhân viên
+    code          String    @unique @map("code") @db.Char(50) // Mã nhân viên
+    fullName      String    @map("full_name") @db.VarChar(255) // Tên đầy đủ nhân viên
+    password      String    @map("password") @db.VarChar(255) // Mật khẩu nhân viên
+    email         String    @unique @map("email") @db.VarChar(100) // Email nhân viên
+    phoneNumber   String?   @map("phone") @db.VarChar(20) // Số điện thoại nhân viên
+    isActive    Boolean  @default(true) @map("is_active") // Trạng thái hoạt động của nhân viên
+
+
+   // Quan hệ với Position 1-nhân viên thuộc về 1 chức vụ
+    positionId   Int        @map("position_id")
+    position     Position   @relation("PositionEmployees", fields: [positionId], references: [id])
+
+    // quan hệ với Department 1-nhân viên thuộc về 1 phòng ban
+    departmentId Int        @map("department_id")
+    department   Department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
+
+    createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo nhân viên
+    createdById     Int?      @map("created_by_id") // ID nhân viên tạo
+
+    updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật nhân viên
+    updatedById     Int?      @map("updated_by_id") // ID nhân viên cập nhật
+
+    @@index([id])
+    @@index([code])
+    @@index([fullName])
+    @@index([positionId])
+    @@map("employees")
+    
+}
+
+model Position {
+    id              Int      @id @default(autoincrement()) @map("id") // ID chức vụ
+    uuid            String   @unique @map("uuid") @db.Char(36) // UUID chức vụ
+    code            String   @unique @map("code") // Ví dụ: "SUPER_ADMIN", "ADMIN", "STAFF"
+    name            String   @map("name") // Tên chức vụ, ví dụ: "Quản trị viên cấp cao", "Trưởng nhóm bán hàng"
+    title           String   @map("title") // Ví dụ: "Quản trị cấp cao", "Trưởng nhóm bán hàng"
+    level           Int      @default(1) @map("level") // Số càng cao quyền càng lớn
+
+    // Quan hệ 1-N: Một chức vụ có nhiều nhân viên
+    employees       Employee[] @relation("PositionEmployees") 
+
+    @@map("positions")
+}

@@ -16,7 +16,7 @@ export class RegisterController {
   ) { }
   private context = RegisterController.name;
 
-  @Post()
+  @Post('email')
   @ApiRegister()
   @HttpCode(HTTP_STATUS_ENUM.CREATED)
   async register(

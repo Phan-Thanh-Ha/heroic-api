@@ -5,6 +5,11 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "plugins": ["@nestjs/swagger/plugin"],
-    "assets": ["**/*.jpeg"]
+    "assets": [
+        "**/*.jpeg",
+        "**/*.hbs",
+        "mail/templates/**/*.tsx"
+    ],
+    "watchAssets": true
   }
 }

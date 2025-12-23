@@ -10,6 +10,8 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { Request } from 'express';
 import { ApiLoginWithFacebook } from './swagger/login-facebook.swagger';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ApiVerifyOtp } from './swagger/verify-otp.swagger';
 
 @Controller(ROUTER_ENUM.AUTH.CUSTOMER.LOGIN)
 @ApiTags(ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN)
@@ -73,4 +75,23 @@ export class LoginController {
       throw error;
     }
   }
+  //#endregion
+
+  //#region Xác thực OTP
+  @Post(ROUTER_ENUM.AUTH.CUSTOMER.VERIFY_OTP)
+  @ApiVerifyOtp()
+  @HttpCode(HTTP_STATUS_ENUM.OK)
+  async verifyOtp(
+    @Body() verifyOtpDto: VerifyOtpDto,
+    @Req() req: Request & { timeZone?: string},
+  ) {
+    this.loggerService.debug(this.context, 'verifyOtp', verifyOtpDto);
+    try {
+      return await this.loginService.verifyOtp(verifyOtpDto, req.timeZone);
+    } catch (error) {
+      this.loggerService.error(this.context, 'verifyOtp', error);
+      throw error;
+    }
+  }
+  //#endregion
 }

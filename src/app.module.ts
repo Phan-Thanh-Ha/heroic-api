@@ -5,6 +5,8 @@ import { ApiAdminModule } from './apis/admin';
 import { ApiCustomerModule } from './apis/customer';
 import { RequestLoggerMiddleware } from './common';
 import { ProvidersModule, providerApp } from './providers';
+import { MailModule } from './mail/mail.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
 	imports: [
@@ -13,6 +15,8 @@ import { ProvidersModule, providerApp } from './providers';
 		ApiAdminModule,
 		ApiCustomerModule,
 		ProvidersModule,
+		MailModule,
+		LoggerModule,
 	],
 	providers: [...providerApp],
 })

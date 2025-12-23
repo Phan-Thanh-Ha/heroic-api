@@ -25,6 +25,7 @@
 		"strict": false,
 		"esModuleInterop": true,
 		"strictPropertyInitialization": true,
+		"jsx": "react-jsx",
 		"paths": {
 			"@apis": ["src/apis"],
 			"@common": ["src/common"],

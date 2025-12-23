@@ -23,18 +23,24 @@ export class PrismaService
 
         // Kiểm tra thông tin bắt buộc
         if (!host || !user || !database) {
+            const missing: string[] = [];
+            if (!host) missing.push('DB_HOST');
+            if (!user) missing.push('DB_USERNAME');
+            if (!database) missing.push('DB_NAME');
             throw new Error(
-                'Database connection information is missing. Please set DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME in your .env file.',
+                `Database connection information is missing. Missing: ${missing.join(', ')}. Please set these in your .env.development file.`,
             );
         }
 
         // Tạo DATABASE_URL từ các biến môi trường nếu chưa có
-        const databaseUrl = process.env.DATABASE_URL || `postgresql://${user}:${password}@${host}:${port}/${database}`;
+        const databaseUrl = process.env.DATABASE_URL || `postgresql://${user}:${password ? '***' : '(no password)'}@${host}:${port}/${database}`;
         
-        // Set DATABASE_URL environment variable
-        process.env.DATABASE_URL = databaseUrl;
+        // Set DATABASE_URL environment variable (với password thực)
+        const actualDatabaseUrl = process.env.DATABASE_URL || `postgresql://${user}:${password}@${host}:${port}/${database}`;
+        process.env.DATABASE_URL = actualDatabaseUrl;
 
         console.log('🔗 Connecting to PostgreSQL database:', `${user}@${host}:${port}/${database}`);
+        console.log('   Connection string:', databaseUrl);
 
         // Với Prisma 7.x, BẮT BUỘC phải cung cấp adapter hoặc accelerateUrl
         // Tạo PostgreSQL adapter với connection pool
@@ -63,6 +69,11 @@ export class PrismaService
             console.log('✅ Prisma connected successfully.');
         } catch (error) {
             console.error('❌ Prisma connection error:', error);
+            console.error('💡 Kiểm tra:');
+            console.error('   1. Docker Desktop đã chạy chưa?');
+            console.error('   2. PostgreSQL container đã khởi động chưa? (docker ps | grep heroic-postgres)');
+            console.error('   3. DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME trong .env.development có đúng không?');
+            console.error('   4. Chạy: bash scripts/start-docker-and-postgres.sh');
             throw error;
         }
     }

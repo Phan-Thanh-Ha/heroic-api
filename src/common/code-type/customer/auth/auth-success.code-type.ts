@@ -5,6 +5,7 @@ interface CustomerAuthSuccessTypes {
 	AUTH_REGISTER_SUCCESS: SuccessType;
 	AUTH_LOGIN_GOOGLE_SUCCESS: SuccessType;
 	AUTH_LOGIN_FACEBOOK_SUCCESS: SuccessType;
+	AUTH_VERIFY_OTP_SUCCESS: SuccessType;
 }
 
 export const customerAuthSuccessTypes = function (): CustomerAuthSuccessTypes {
@@ -39,6 +40,14 @@ export const customerAuthSuccessTypes = function (): CustomerAuthSuccessTypes {
 				vi: 'Đăng nhập với Facebook thành công',
 				en: 'Login with Facebook successfully',
 				cn: '使用脸书登录成功',
+			},
+		},
+		AUTH_VERIFY_OTP_SUCCESS: {
+			success_code: 'AUTH_VERIFY_OTP_SUCCESS',
+			message: {
+				vi: 'Xác thực OTP thành công',
+				en: 'OTP verification successful',
+				cn: 'OTP验证成功',
 			},
 		},
 	};

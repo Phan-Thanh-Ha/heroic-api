@@ -12,12 +12,10 @@ export class RegisterRespository {
 		private readonly loggerService: LoggerService,
 	) { }
 
-	async create(createRegisterDto: CreateAdminRegisterDto) {
+	async register(createRegisterDto: CreateAdminRegisterDto) {
 		try {
-			// TODO: Implement staff/employee registration logic
-			// Hiện tại chưa có model Staff/Employee trong database
-			// Cần tạo model Staff/Employee trước khi implement logic này
-			this.loggerService.log(this.context, 'create', 'Staff registration - TODO: Implement when Staff model is created');
+
+			this.loggerService.log(this.context, 'register', 'Staff registration - TODO: Implement when Staff model is created');
 			
 			// Placeholder response
 			return {
