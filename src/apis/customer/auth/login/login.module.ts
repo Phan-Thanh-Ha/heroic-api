@@ -5,9 +5,10 @@ import { LoggerModule } from '@logger';
 import { PrismaModule } from '@prisma';
 import { LoginRepository } from './login.repository';
 import { JwtModule } from '@jwt';
+import { MailModule } from '../../../../mail/mail.module';
 
 @Module({
-  imports: [LoggerModule, PrismaModule, JwtModule ],
+  imports: [LoggerModule, PrismaModule, JwtModule, MailModule],
   controllers: [LoginController],
   providers: [LoginService, LoginRepository],
 })

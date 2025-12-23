@@ -1,0 +1,57 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+dist
+*.tsbuildinfo
+
+# Môi trường và Bí mật (Bảo mật)
+.env
+.env.development
+.env.production
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Test
+coverage
+.nyc_output
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Documentation
+docx
+README.md
+
+# Scripts - KHÔNG ignore vì cần merge-prisma-schema.js để build
+# scripts
+
+# Generated files (will be regenerated in container)
+generated/prisma
+

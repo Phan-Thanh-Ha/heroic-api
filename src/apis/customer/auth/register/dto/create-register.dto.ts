@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty, IsString, Min } from "class-validator";
+import { IsEmail, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Min } from "class-validator";
 
 export class CreateRegisterDto {
     @IsString({ message: 'email phải là chuỗi' })
@@ -19,9 +19,7 @@ export class CreateRegisterDto {
     fullName!: string;
     
     // Avatar
-    @IsString({ message: 'avatarUrl phải là chuỗi' })
-    @IsNotEmpty({ message: 'avatarUrl không được để trống' })
-    avatarUrl!: string;
+    avatarUrl?: string;
 
     // Address
     @IsString({ message: 'address phải là chuỗi' })
@@ -33,9 +31,6 @@ export class CreateRegisterDto {
     @IsNotEmpty({ message: 'phoneNumber không được để trống' })
     phoneNumber!: string;
 
-    //Birthday
-    @IsString({ message: 'birthday phải là chuỗi' })
-    @IsNotEmpty({ message: 'birthday không được để trống' })
     birthday!: string;
 
     // Mật khẩu

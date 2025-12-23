@@ -18,6 +18,9 @@ interface CustomerAuthErrorTypes {
 	NOT_HAVE_PASSWORD: ErrorType;
 	INCORRECT_PASSWORD_TOO_MANY_TIMES: ErrorType;
 	PASSWORD_TIMES: ErrorType;
+	OTP_INCORRECT: ErrorType;
+	OTP_NOT_FOUND: ErrorType;
+	OTP_EXPIRED: ErrorType;
 }
 
 export const customerAuthErrorTypes = function (_id?: string,): CustomerAuthErrorTypes {
@@ -156,6 +159,30 @@ export const customerAuthErrorTypes = function (_id?: string,): CustomerAuthErro
 				vi: `Số lần nhập còn lại ${_id}`,
 				en: `Remaining number of entries ${_id}`,
 				cn: `剩余条目数 ${_id}`,
+			},
+		},
+		OTP_INCORRECT: {
+			error_code: 'OTP_INCORRECT',
+			message: {
+				vi: 'Mã OTP không đúng',
+				en: 'OTP code is incorrect',
+				cn: 'OTP代码不正确',
+			},
+		},
+		OTP_NOT_FOUND: {
+			error_code: 'OTP_NOT_FOUND',
+			message: {
+				vi: 'Không tìm thấy mã OTP. Vui lòng đăng nhập lại để nhận mã OTP mới',
+				en: 'OTP code not found. Please login again to receive a new OTP code',
+				cn: '未找到OTP代码。请重新登录以接收新的OTP代码',
+			},
+		},
+		OTP_EXPIRED: {
+			error_code: 'OTP_EXPIRED',
+			message: {
+				vi: 'Mã OTP đã hết hạn. Vui lòng đăng nhập lại để nhận mã OTP mới',
+				en: 'OTP code has expired. Please login again to receive a new OTP code',
+				cn: 'OTP代码已过期。请重新登录以接收新的OTP代码',
 			},
 		},
 	};

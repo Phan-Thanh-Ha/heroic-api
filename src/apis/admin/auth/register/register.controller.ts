@@ -18,13 +18,13 @@ export class RegisterController {
   @Post()
   @ApiRegister()
   @HttpCode(HTTP_STATUS_ENUM.CREATED)
-  async create(@Body() createRegisterDto: CreateAdminRegisterDto) {
-    this.loggerService.log(this.context, 'create', createRegisterDto);
+  async register(@Body() createRegisterDto: CreateAdminRegisterDto) {
+    this.loggerService.log(this.context, 'register', createRegisterDto);
     try {
-      const staff = await this.registerService.create(createRegisterDto);
+      const staff = await this.registerService.register(createRegisterDto);
       return staff.data;
     } catch (error) {
-      this.loggerService.error(this.context, 'create', error);
+      this.loggerService.error(this.context, 'register', error);
       throw error;
     }
   }

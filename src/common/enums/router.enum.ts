@@ -1,15 +1,18 @@
 
 export const ROUTER_ENUM = {
+    EMAIL: 'email',
     AUTH: {
         CUSTOMER: {
             LOGIN: 'customers/auth/login',
             LOGIN_WITH_EMAIL: 'email',
             LOGIN_WITH_GOOGLE: 'google',
             LOGIN_WITH_FACEBOOK: 'facebook',
+            VERIFY_OTP: 'verify-otp',
             REGISTER: 'customers/auth/register',
         },
         ADMIN: {
             REGISTER: 'admin/auth/register',
+            LOGIN_CODE: 'EmployeesCode',
         },
     },
 
@@ -18,40 +21,8 @@ export const ROUTER_ENUM = {
         DISTRICTS: 'customers/locations/districts',
         WARDS: 'customers/locations/wards',
     },
-} as const;
 
-/**
- * Router Tag Enum - Định nghĩa các tags cho Swagger documentation
- * Sử dụng object structure để nhất quán với ROUTER_ENUM
- */
-export const ROUTER_TAG_ENUM = {
-    // ============================================
-    // MODULE TAGS
-    // ============================================
-    ADMIN: 'Admin',
-    CUSTOMER: 'Customer',
-    
-    // ============================================
-    // AUTHENTICATION TAGS
-    // ============================================
-    AUTH: {
-        CUSTOMER: {
-            LOGIN: 'Login',
-            LOGIN_GOOGLE: 'Login_Google',
-            LOGIN_FACEBOOK: 'Login_Facebook',
-            REGISTER: 'Register',
-        },
-        ADMIN: {
-            REGISTER: 'Register',
-        },
-    },
-    
-    // ============================================
-    // LOCATIONS TAGS
-    // ============================================
-    LOCATIONS: {
-        PROVINCE: 'Province',
-        DISTRICTS: 'Districts',
-        WARDS: 'Wards',
+    UPLOAD: {
+        IMAGE: 'customers/upload/image',
     },
 } as const;

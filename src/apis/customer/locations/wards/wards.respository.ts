@@ -11,14 +11,6 @@ export class WardsRepository {
         try {
             return await this.prisma.wards.findMany({
                 where: { district_code: districtCode },
-                select: {
-                    id: true,
-                    code: true,
-                    name: true,
-                    slug: true,
-                    type: true,
-                    name_with_type: true,
-                },
                 orderBy: {
                     name: 'asc',
                 },

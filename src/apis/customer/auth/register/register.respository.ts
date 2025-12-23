@@ -1,5 +1,5 @@
 import { LoggerService } from "@logger";
-import { ConflictException, Injectable } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import { CreateRegisterDto } from "./dto/create-register.dto";
 import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@utils";
@@ -34,24 +34,30 @@ export class RegisterRespository {
             // Cần id trước rồi mới sinh được mã KHyyMMdd0001 (dựa trên id)
                 const customer = await this.prisma.$transaction(async (tx) => {
                 // 1. Insert trước để lấy id
+                // Chỉ insert các trường hợp lệ, loại bỏ facebookId, googleId, fullAddress
+                // Normalize typeRegister thành 'Email' (chữ E hoa) để nhất quán
+                const customerData: any = {
+                    uuid: generateUUID(),
+                    customerCode: '',
+                    firstName: createRegisterDto.firstName,
+                    lastName: createRegisterDto.lastName,
+                    fullName: createRegisterDto.fullName,
+                    avatarUrl: createRegisterDto.avatarUrl,
+                    email: createRegisterDto.email,
+                    address: createRegisterDto.address,
+                    phoneNumber: createRegisterDto.phoneNumber,
+                    dateOfBirth: dateOfBirthToSave,
+                    password: passwordHashed,
+                    typeRegister: 'Email', // Luôn là 'Email' cho endpoint này
+                    provinceId: createRegisterDto.provinceId,
+                    districtId: createRegisterDto.districtId,
+                    wardId: createRegisterDto.wardId,
+                };
+
+                // Endpoint này chỉ dành cho đăng ký Email, không có facebookId/googleId
+
                 const createdCustomer = await tx.customer.create({
-                    data: {
-                        uuid: generateUUID(),
-                        customerCode: '',
-                        firstName: createRegisterDto.firstName,
-                        lastName: createRegisterDto.lastName,
-                        fullName: createRegisterDto.fullName,
-                        avatarUrl: createRegisterDto.avatarUrl,
-                        email: createRegisterDto.email,
-                        address: createRegisterDto.address,
-                        phoneNumber: createRegisterDto.phoneNumber,
-                        dateOfBirth: dateOfBirthToSave,
-                        password: passwordHashed,
-                        typeRegister: createRegisterDto.typeRegister,
-                        provinceId: createRegisterDto.provinceId,
-                        districtId: createRegisterDto.districtId,
-                        wardId: createRegisterDto.wardId,
-                    },
+                    data: customerData,
                 });
 
                 // Sinh mã từ id vừa insert
@@ -68,8 +74,12 @@ export class RegisterRespository {
 
             const { password, ...customerResponse } = customer;
 
+			// Trim customerCode để loại bỏ khoảng trắng thừa từ Char(50)
+			const trimmedCustomerCode = customerResponse.customerCode?.trim() || customerResponse.customerCode;
+
 			return {
 				...customerResponse,
+				customerCode: trimmedCustomerCode,
 				dateOfBirth: formatDateToYMD(customerResponse.dateOfBirth),
 				createdAt: toUnixByTimeZone(customerResponse.createdAt, timeZone),
 			};

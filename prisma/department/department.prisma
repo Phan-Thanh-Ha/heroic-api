@@ -1,0 +1,11 @@
+model Department {
+    id              Int      @id @default(autoincrement()) @map("id") // ID phòng ban
+    uuid            String   @unique @map("uuid") @db.Char(36) // UUID phòng ban
+    code            String   @unique @map("code") // Ví dụ: "SALES", "WAREHOUSE", "ACCOUNTING"
+    name            String   @map("name") // Ví dụ: "Phòng Kinh Doanh", "Phòng Kho"
+
+
+    employees Employee[] @relation("DepartmentEmployees") // Quan hệ với bảng Employee nhiều-nhiều 1 phòng ban có nhiều nhân viên
+    
+    @@map("departments")
+}

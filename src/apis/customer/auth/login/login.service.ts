@@ -4,6 +4,7 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '@logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { formatDateToYMD, toUnixByTimeZone } from '@utils';
 
 @Injectable()
@@ -15,13 +16,19 @@ export class LoginService {
   ) { }
 
   //#region Đăng nhập bằng email
-  async login(loginDto: LoginDto, _timeZone?: string) {
+  async login(loginDto: LoginDto, timeZone?: string) {
     try {
       this.loggerService.debug(this.context, 'login', loginDto);
-      // TODO: Implement login logic with email và password + timezone nếu cần
+      const result = await this.loginRepository.loginWithEmail(loginDto);
       return {
-        message: 'Đăng nhập thành công bằng email',
-        data: loginDto,
+        message: result.message,
+        info: {
+          ...result.info,
+          dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
+          createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
+        },
+        accessToken: result.accessToken,
+        otpCode: result.otpCode,
       };
     } catch (error) {
       this.loggerService.error(this.context, 'login', error);
@@ -45,6 +52,7 @@ export class LoginService {
           createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
         },
         accessToken: result.accessToken,
+        otpCode: result.otpCode,
       };
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithGoogle', error);
@@ -67,9 +75,30 @@ export class LoginService {
           createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
         },
         accessToken: result.accessToken,
+        otpCode: result.otpCode,
       };
     } catch (error) {
       this.loggerService.error(this.context, 'loginWithFacebook', error);
+      throw error;
+    }
+  }
+  //#endregion
+
+  //#region Xác thực OTP
+  async verifyOtp(verifyOtpDto: VerifyOtpDto, timeZone?: string) {
+    try {
+      this.loggerService.debug(this.context, 'verifyOtp', verifyOtpDto);
+      const result = await this.loginRepository.verifyOtp(verifyOtpDto);
+      return {
+        message: result.message,
+        info: {
+          ...result.info,
+          dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
+          createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
+        },
+      };
+    } catch (error) {
+      this.loggerService.error(this.context, 'verifyOtp', error);
       throw error;
     }
   }

@@ -54,7 +54,9 @@ export const initSwagger = (app: INestApplication) => {
             title: 'Heroic API - Admin',
             description: 'Heroic API Documentation for Admin',
             path: 'docs-admin',
-            includeTags: [SWAGGER_TAG_ENUM.ADMIN],
+            includeTags: [
+                ROUTER_TAG_ENUM.AUTH.ADMIN.REGISTER, // 'Register_Admin'
+            ],
         },
         {
             title: 'Heroic API - Customer',
@@ -67,6 +69,8 @@ export const initSwagger = (app: INestApplication) => {
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.REGISTER,
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN,
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_FACEBOOK,
+                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_GOOGLE,
+                ROUTER_TAG_ENUM.UPLOAD.IMAGE,
             ],
         },
     ];

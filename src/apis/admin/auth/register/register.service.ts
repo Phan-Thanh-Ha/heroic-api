@@ -11,10 +11,10 @@ export class RegisterService {
     private readonly registerRespository: RegisterRespository,
     private readonly loggerService: LoggerService,
   ) {}
-  async create(createRegisterDto: CreateAdminRegisterDto) {
+  async register(createRegisterDto: CreateAdminRegisterDto) {
     try {
-      this.loggerService.log(this.context, 'create-service', createRegisterDto);
-      const staff = await this.registerRespository.create(createRegisterDto);
+      this.loggerService.log(this.context, 'register-service', createRegisterDto);
+      const staff = await this.registerRespository.register(createRegisterDto);
       return {
         data: {
           ...staff,

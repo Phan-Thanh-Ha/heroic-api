@@ -3,13 +3,13 @@ services:
     container_name: heroic-postgres
     image: postgres:16-alpine
     restart: unless-stopped
+    # Docker sẽ đọc file từ biến ENV_FILE truyền vào từ lệnh run
     env_file:
-      - .env.development
+      - ${ENV_FILE}
     environment:
-      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME:-postgres}
-      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
@@ -17,17 +17,32 @@ services:
       - ./docker/postgres/init:/docker-entrypoint-initdb.d
     networks:
       - heroic-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-postgres}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
+  api:
+    container_name: heroic-api
+    profiles: ["deploy"] 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    ports:
+      - "3102:3102"
+    volumes:
+      - /Users/phanha/Desktop/Project/Heroic/heroic-images:/app/uploads
+      - ./logs:/app/logs
+    networks:
+      - heroic-network
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
-    driver: local
 
 networks:
   heroic-network:
     driver: bridge
-
