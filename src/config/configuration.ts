@@ -12,7 +12,7 @@ export const configuration = () => {
 	const resendFromName = process.env.RESEND_FROM_NAME || 'Heroic API';
 
 	return {
-		port: parseInt(process.env.PORT || '3102', 10),
+		port: parseInt(process.env.PORT || '3103', 10),
 		dbHost,
 		dbPort: parseInt(dbPort, 10),
 		dbUserName,

@@ -3,10 +3,10 @@ export const ROUTER_ENUM = {
     EMAIL: 'email',
     AUTH: {
         CUSTOMER: {
-            LOGIN: 'customers/auth/login',
-            LOGIN_WITH_EMAIL: 'email',
-            LOGIN_WITH_GOOGLE: 'google',
-            LOGIN_WITH_FACEBOOK: 'facebook',
+            LOGIN: 'customers/auth',
+            LOGIN_WITH_EMAIL: 'login/email',
+            LOGIN_WITH_GOOGLE: 'login/google',
+            LOGIN_WITH_FACEBOOK: 'login/facebook',
             VERIFY_OTP: 'verify-otp',
             REGISTER: 'customers/auth/register',
         },

@@ -7,7 +7,8 @@
     "plugins": ["@nestjs/swagger/plugin"],
     "assets": [
         "**/*.jpeg",
-        "**/*.hbs" 
+        "**/*.hbs",
+        "mail/templates/**/*.tsx"
     ],
     "watchAssets": true
   }

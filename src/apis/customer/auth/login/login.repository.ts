@@ -295,24 +295,14 @@ export class LoginRepository {
                 // Vẫn tiếp tục với OTP đã tạo, không throw error để không làm gián đoạn login
             }
 
-            // Tạo JWT token cho khách hàng
-            const accessToken = await this.jwtService.signJwtCustomer({
-                customerId: customerResponse.id,
-                customerCode: trimmedCustomerCode,
-                fullName: customerResponse.fullName,
-                email: customerResponse.email,
-                facebookId: customerResponse.facebookId,
-                googleId: customerResponse.googleId,
-            });
-
+            // Không tạo token ở đây, token chỉ được cấp sau khi verify OTP thành công
             return {
                 message: customerAuthSuccessTypes().AUTH_LOGIN_SUCCESS.message,
                 info: {
                     ...customerResponse,
                     customerCode: trimmedCustomerCode,
                 },
-                accessToken,
-                otpCode,
+                otpCode, // Chỉ trả về OTP để user verify
             };
         } catch (error) {
             this.loggerService.error(this.context, 'loginWithEmail', error);
@@ -457,24 +447,41 @@ export class LoginRepository {
     //#region Xác thực OTP
     async verifyOtp(verifyOtpDto: VerifyOtpDto) {
         try {
-            // Kiểm tra email đã tồn tại chưa
-            const existingCustomer = await this.checkEmailExists(verifyOtpDto.email);
+            // Trim OTP để loại bỏ khoảng trắng thừa
+            const trimmedOtpCode = verifyOtpDto.otpCode?.trim() || verifyOtpDto.otpCode;
 
+            // Query trực tiếp trong database với điều kiện email và otpCode
+            // Database sẽ tự động so sánh otpCode, không cần so sánh trong code
+            const existingCustomer = await this.prisma.customer.findFirst({
+                where: {
+                    email: verifyOtpDto.email,
+                    otpCode: trimmedOtpCode, // Query với điều kiện otpCode chính xác
+                },
+            });
+
+            // Nếu không tìm thấy, kiểm tra xem email có tồn tại không để phân biệt lỗi
             if (!existingCustomer) {
-                throw new BadRequestException(
-                    customerAuthErrorTypes().AUTH_INCORRECT,
-                );
-            }
+                // Kiểm tra email có tồn tại không
+                const emailExists = await this.checkEmailExists(verifyOtpDto.email);
+                if (!emailExists) {
+                    throw new BadRequestException(
+                        customerAuthErrorTypes().AUTH_INCORRECT,
+                    );
+                }
 
-            // Kiểm tra OTP có tồn tại không
-            if (!existingCustomer.otpCode) {
-                throw new BadRequestException(
-                    customerAuthErrorTypes().OTP_NOT_FOUND,
-                );
-            }
+                // Email tồn tại nhưng OTP không khớp hoặc không có OTP
+                const customerWithOtp = await this.prisma.customer.findUnique({
+                    where: { email: verifyOtpDto.email },
+                    select: { otpCode: true },
+                });
 
-            // So sánh OTP
-            if (existingCustomer.otpCode !== verifyOtpDto.otpCode) {
+                if (!customerWithOtp?.otpCode) {
+                    throw new BadRequestException(
+                        customerAuthErrorTypes().OTP_NOT_FOUND,
+                    );
+                }
+
+                // OTP không đúng
                 throw new BadRequestException(
                     customerAuthErrorTypes().OTP_INCORRECT,
                 );
@@ -491,12 +498,23 @@ export class LoginRepository {
             // Trim customerCode để loại bỏ khoảng trắng thừa từ Char(50)
             const trimmedCustomerCode = customerResponse.customerCode?.trim() || customerResponse.customerCode;
 
+            // Tạo JWT token cho khách hàng sau khi verify OTP thành công
+            const accessToken = await this.jwtService.signJwtCustomer({
+                customerId: customerResponse.id,
+                customerCode: trimmedCustomerCode,
+                fullName: customerResponse.fullName,
+                email: customerResponse.email,
+                facebookId: customerResponse.facebookId,
+                googleId: customerResponse.googleId,
+            });
+
             return {
                 message: customerAuthSuccessTypes().AUTH_VERIFY_OTP_SUCCESS.message,
                 info: {
                     ...customerResponse,
                     customerCode: trimmedCustomerCode,
                 },
+                accessToken,
             };
         } catch (error) {
             this.loggerService.error(this.context, 'verifyOtp', error);

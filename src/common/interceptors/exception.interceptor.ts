@@ -1,15 +1,16 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, HttpException } from "@nestjs/common";
 import { HttpAdapterHost } from "@nestjs/core";
 import { Request } from 'express'; 
-// Lưu ý: Cần Inject LoggerService vào constructor nếu bạn muốn ghi log lỗi 500
+import { LoggerService } from "@logger";
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
     
     // Lấy HttpAdapterHost để giao tiếp với nền tảng HTTP (Express/Fastify)
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
-    
-    // Ghi chú: Nếu bạn cần logging chi tiết lỗi, hãy Inject LoggerService vào đây.
+    constructor(
+        private readonly httpAdapterHost: HttpAdapterHost,
+        private readonly logger: LoggerService
+    ) {}
 
     catch(exception: unknown, host: ArgumentsHost): void {
         
@@ -69,8 +70,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
             // LỖI 500: Lỗi code/hệ thống. 
             // KHÔNG BAO GIỜ TRẢ VỀ DATA THÔ/STACK TRACE CHO CLIENT
             
-            // Nếu bạn có LoggerService, hãy log (exception) đầy đủ ở đây
-            // console.error(exception); 
+            // Log chi tiết lỗi để debug
+            this.logger.error(
+                'AllExceptionsFilter',
+                `Internal Server Error: ${request.method} ${request.url}`,
+                {
+                    error: exception instanceof Error ? exception.message : String(exception),
+                    stack: exception instanceof Error ? exception.stack : undefined,
+                    response: data,
+                }
+            );
 
             responseBody.message = 'Đã xảy ra lỗi hệ thống không xác định. Vui lòng thử lại sau.';
             responseBody.error = 'Internal Server Error';

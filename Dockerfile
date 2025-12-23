@@ -58,11 +58,11 @@ COPY --from=builder /app/prisma ./prisma
 RUN mkdir -p /app/uploads
 
 # Expose port (default NestJS port, adjust if needed)
-EXPOSE 3102
+EXPOSE 3103
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3102/v1/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "require('http').get('http://localhost:3103/v1/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start application
 CMD ["node", "dist/main.js"]

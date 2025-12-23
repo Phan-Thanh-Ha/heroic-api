@@ -3,9 +3,8 @@ services:
     container_name: heroic-postgres
     image: postgres:16-alpine
     restart: unless-stopped
-    # Docker sẽ đọc file từ biến ENV_FILE truyền vào từ lệnh run
     env_file:
-      - ${ENV_FILE}
+      - ${ENV_FILE:-.env.development} # Mặc định là .env.development nếu không truyền
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -17,7 +16,13 @@ services:
       - ./docker/postgres/init:/docker-entrypoint-initdb.d
     networks:
       - heroic-network
-
+    healthcheck:
+      # Sử dụng $$ để ép Docker đọc biến môi trường nội bộ của Container
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
   api:
     container_name: heroic-api
     profiles: ["deploy"] 
@@ -26,11 +31,11 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
-      - ${ENV_FILE}
+      - ${ENV_FILE:-.env.development}
     environment:
       - NODE_ENV=${NODE_ENV}
     ports:
-      - "3102:3102"
+      - "3103:3103"
     volumes:
       - /Users/phanha/Desktop/Project/Heroic/heroic-images:/app/uploads
       - ./logs:/app/logs

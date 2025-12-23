@@ -68,3 +68,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Uploaded files
 /uploads
 !/uploads/.gitkeep
+
+# Email preview output
+/email-preview

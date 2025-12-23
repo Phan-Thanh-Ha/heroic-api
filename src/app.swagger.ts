@@ -38,7 +38,7 @@ export const initSwagger = (app: INestApplication) => {
         .addBearerAuth();
     
     // Không set cứng localhost ở đây để Swagger UI tự dùng origin hiện tại (window.location)
-    // => Khi bạn mở bằng http://192.168.x.x:3102 thì Try it out sẽ gọi đúng IP đó, không bị fix localhost.
+    // => Khi bạn mở bằng http://192.168.x.x:3103 thì Try it out sẽ gọi đúng IP đó, không bị fix localhost.
     
     const baseDocument = SwaggerModule.createDocument(
         app,

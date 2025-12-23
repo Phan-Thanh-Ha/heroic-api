@@ -27,8 +27,7 @@ export class LoginService {
           dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
           createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
         },
-        accessToken: result.accessToken,
-        otpCode: result.otpCode,
+        otpCode: result.otpCode, // Chỉ trả về OTP, token sẽ được cấp sau khi verify OTP
       };
     } catch (error) {
       this.loggerService.error(this.context, 'login', error);
@@ -96,6 +95,7 @@ export class LoginService {
           dateOfBirth: formatDateToYMD(result.info?.dateOfBirth),
           createdAt: toUnixByTimeZone(result.info?.createdAt, timeZone),
         },
+        accessToken: result.accessToken,
       };
     } catch (error) {
       this.loggerService.error(this.context, 'verifyOtp', error);

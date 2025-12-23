@@ -11,5 +11,6 @@ import { MailModule } from '../../../../mail/mail.module';
   imports: [LoggerModule, PrismaModule, JwtModule, MailModule],
   controllers: [LoginController],
   providers: [LoginService, LoginRepository],
+  exports: [LoginService],
 })
 export class LoginModule {}

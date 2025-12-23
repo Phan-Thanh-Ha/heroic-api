@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { configuration } from './config';
 import { AllExceptionsFilter } from './common';
 import { ValidationProvider, logSwaggerUrls } from './providers';
+import { LoggerService } from './logger';
 import cookieParser from 'cookie-parser';
 import { initSwagger } from './app.swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -21,7 +22,7 @@ async function bootstrap() {
   }
 
   // Cấu hình Static Assets để xem ảnh từ Browser
-  // Ví dụ: http://localhost:3102/v1/uploads/image.jpg
+  // Ví dụ: http://localhost:3103/v1/uploads/image.jpg
   app.useStaticAssets(uploadsPath, {
     prefix: '/v1/uploads/',
   });
@@ -31,13 +32,14 @@ async function bootstrap() {
   initSwagger(app);
 
   const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  const logger = app.get(LoggerService);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter, logger));
   const validationProvider = app.get(ValidationProvider);
   app.useGlobalPipes(validationProvider.createValidationPipe());
 
   app.enableCors({ origin: '*', credentials: true });
 
-  const port = configuration().port || 3102;
+  const port = configuration().port || 3103;
   await app.listen(port, '0.0.0.0');
 
   logSwaggerUrls(port, { admin: '/docs-admin', customer: '/docs-customer' });
