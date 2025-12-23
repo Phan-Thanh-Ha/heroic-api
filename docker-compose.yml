@@ -7,8 +7,8 @@ services:
       - .env.development
     environment:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password123}
+      POSTGRES_DB: ${DB_NAME:-heroic_db}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "${DB_PORT:-5432}:5432"
@@ -18,10 +18,32 @@ services:
     networks:
       - heroic-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-heroic_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    profiles: ["deploy"]
+
+  heroic-api:
+    container_name: heroic-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    restart: unless-stopped
+    env_file:
+      - .env.development
+    environment:
+      PORT: ${PORT:-3103}
+    ports:
+      - "3103:3103"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - heroic-network
+    profiles: ["deploy"]
 
 volumes:
   postgres_data:
@@ -30,4 +52,3 @@ volumes:
 networks:
   heroic-network:
     driver: bridge
-

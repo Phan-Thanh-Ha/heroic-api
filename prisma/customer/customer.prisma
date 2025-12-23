@@ -20,6 +20,8 @@ model Customer {
   provinceId      Int?      @map("province_id") // ID tỉnh thành khách hàng
   districtId      Int?      @map("district_id") // ID huyện khách hàng
   wardId          Int?      @map("ward_id") // ID xã phường khách hàng
+  otpCode         String?   @map("otp_code") @db.VarChar(10) // Mã OTP khách hàng
+  otpExpiredAt    DateTime? @map("otp_expired_at") @db.Timestamptz(6) // Thời gian hết hạn OTP khách hàng
 
   province Provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
   district Districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
