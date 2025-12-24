@@ -3,6 +3,7 @@ import { ProvinceModule, DistrictsModule, WardsModule } from '@locations';
 import { LoginModule } from './auth/login/login.module';
 import { RegisterModule } from './auth/register/register.module';
 import { UploadModule } from '../../upload/upload.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
 	imports: [
@@ -12,6 +13,7 @@ import { UploadModule } from '../../upload/upload.module';
 		LoginModule,
 		RegisterModule,
 		UploadModule,
+		CustomerModule,
 	],
 })
 export class ApiCustomerModule {}

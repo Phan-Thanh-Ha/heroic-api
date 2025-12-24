@@ -71,6 +71,8 @@ export const initSwagger = (app: INestApplication) => {
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_FACEBOOK,
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_GOOGLE,
                 ROUTER_TAG_ENUM.UPLOAD.IMAGE,
+                'test'
+                // ROUTER_TAG_ENUM.CUSTOMERS.LISTCUSTOMER,
             ],
         },
     ];

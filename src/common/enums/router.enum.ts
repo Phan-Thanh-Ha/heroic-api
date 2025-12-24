@@ -25,4 +25,8 @@ export const ROUTER_ENUM = {
     UPLOAD: {
         IMAGE: 'customers/upload/image',
     },
+
+    CUSTOMERS:{
+        LISTCUSTOMER :'customers/customer/list'
+    },
 } as const;

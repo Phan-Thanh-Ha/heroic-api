@@ -52,5 +52,9 @@ export const ROUTER_TAG_ENUM = {
     UPLOAD: {
         IMAGE: 'Upload_Image',
     },
+
+    // CUSTOMERS: {
+    //     LISTCUSTOMER: 'List_Customer',
+    // },
 } as const;
 
