@@ -12,7 +12,7 @@ export const ROUTER_ENUM = {
         },
         ADMIN: {
             REGISTER: 'admin/auth/register',
-            LOGIN_CODE: 'EmployeesCode',
+            LOGIN: 'admin/auth/login',
         },
     },
 

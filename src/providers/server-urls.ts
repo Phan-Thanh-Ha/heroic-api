@@ -14,7 +14,10 @@ export const getLocalIps = (): string[] => {
 /**
  * Log local and LAN URLs for Swagger docs
  */
-export const logSwaggerUrls = (port: number, paths: { admin: string; customer: string }) => {
+export const logSwaggerUrls = (
+  port: number,
+  paths: { admin?: string; customer?: string; docs?: string },
+) => {
   const localIps = getLocalIps();
   const baseUrl = `http://localhost:${port}`;
   const lanUrls = localIps.map((ip) => `http://${ip}:${port}`);
@@ -22,16 +25,29 @@ export const logSwaggerUrls = (port: number, paths: { admin: string; customer: s
   console.log(`\n📖 Swagger Documentation:`);
   if (localIps.length > 0) {
     console.log(`   LAN IPs: ${localIps.join(', ')}`);
+  }
+
+  // Hiển thị docs chính (có dropdown chọn definition)
+  if (paths.docs) {
+    console.log(`   Docs (Main): ${baseUrl}${paths.docs}`);
     lanUrls.forEach((url) => {
-      console.log(`   LAN Base:    ${url}`);
+      console.log(`   LAN Docs: ${url}${paths.docs}`);
     });
   }
-  console.log(`   Admin:   ${baseUrl}${paths.admin}`);
-  console.log(`   Customer: ${baseUrl}${paths.customer}`);
-  lanUrls.forEach((url) => {
-    console.log(`   LAN Admin:   ${url}${paths.admin}`);
-    console.log(`   LAN Customer: ${url}${paths.customer}`);
-  });
+  
+  // Hiển thị các definitions riêng lẻ
+  if (paths.admin) {
+    console.log(`   Admin:   ${baseUrl}${paths.admin}`);
+    lanUrls.forEach((url) => {
+      console.log(`   LAN Admin: ${url}${paths.admin}`);
+    });
+  }
+  if (paths.customer) {
+    console.log(`   Customer: ${baseUrl}${paths.customer}`);
+    lanUrls.forEach((url) => {
+      console.log(`   LAN Customer: ${url}${paths.customer}`);
+    });
+  }
   console.log('');
 };
 

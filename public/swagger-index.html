@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heroic API Documentation</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.10.3/swagger-ui.css" />
+    <style>
+        html {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+        body {
+            margin:0;
+            background: #fafafa;
+        }
+        .swagger-ui .topbar {
+            display: none;
+        }
+        .definition-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .definition-selector-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .definition-selector label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .definition-selector select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 200px;
+            cursor: pointer;
+            background: #fff;
+            font-family: inherit;
+        }
+        .definition-selector select:hover {
+            border-color: #3b4151;
+        }
+        .swagger-ui {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="definition-selector">
+        <div class="definition-selector-content">
+            <label for="definition-select">Chọn API Definition:</label>
+            <select id="definition-select">
+                <option value="docs_admin">Heroic API - Admin</option>
+                <option value="docs_customer">Heroic API - Customer</option>
+            </select>
+        </div>
+    </div>
+    <div id="swagger-ui"></div>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5.10.3/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.10.3/swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function() {
+            // Lấy definition từ URL parameter hoặc localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const savedDefinition = localStorage.getItem('swagger-definition') || 'docs_admin';
+            const currentDefinition = urlParams.get('primaryName') || savedDefinition;
+
+            const definitions = {
+                docs_admin: {
+                    url: '/docs-admin/swagger.json',
+                    name: 'Heroic API - Admin'
+                },
+                docs_customer: {
+                    url: '/docs-customer/swagger.json',
+                    name: 'Heroic API - Customer'
+                }
+            };
+
+            const selector = document.getElementById('definition-select');
+            selector.value = currentDefinition;
+
+            function loadSwagger(definitionName) {
+                const definition = definitions[definitionName];
+                if (!definition) return;
+
+                // Clear existing UI
+                document.getElementById('swagger-ui').innerHTML = '';
+
+                // Initialize Swagger UI
+                window.ui = SwaggerUIBundle({
+                    url: definition.url,
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: "StandaloneLayout",
+                    requestInterceptor: (req) => {
+                        if (!req.headers) req.headers = {};
+                        req.headers['ngrok-skip-browser-warning'] = 'true';
+                        return req;
+                    },
+                    onComplete: function() {
+                        console.log('Swagger UI loaded:', definitionName);
+                    },
+                    onFailure: function(data) {
+                        console.error('Failed to load Swagger UI:', data);
+                    }
+                });
+            }
+
+            // Load initial definition
+            loadSwagger(currentDefinition);
+
+            // Handle selector change
+            selector.addEventListener('change', function(e) {
+                const selectedDefinition = e.target.value;
+                localStorage.setItem('swagger-definition', selectedDefinition);
+                
+                // Update URL without reload
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('primaryName', selectedDefinition);
+                window.history.pushState({}, '', newUrl);
+                
+                // Load new definition
+                loadSwagger(selectedDefinition);
+            });
+
+            // Handle browser back/forward
+            window.addEventListener('popstate', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const definition = urlParams.get('primaryName') || savedDefinition;
+                selector.value = definition;
+                loadSwagger(definition);
+            });
+        };
+    </script>
+</body>
+</html>
+

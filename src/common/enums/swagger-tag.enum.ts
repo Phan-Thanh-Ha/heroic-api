@@ -34,6 +34,7 @@ export const ROUTER_TAG_ENUM = {
         },
         ADMIN: {
             REGISTER: 'Register_Admin',
+            LOGIN: 'Login_Admin',
         },
     },
     
