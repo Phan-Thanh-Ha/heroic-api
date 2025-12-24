@@ -37,6 +37,7 @@ export class UploadController {
 			file: file?.originalname,
 			size: file?.size,
 			folder: query.folder,
+			
 		});
 		try {
 			const result = await this.uploadService.uploadImage(file, query.folder);

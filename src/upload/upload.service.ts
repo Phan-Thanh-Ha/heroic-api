@@ -1,7 +1,6 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
 import { v4 as uuidv4 } from 'uuid';
 import { UploadFolderType } from './dto/upload-image.dto';
 
@@ -121,10 +120,10 @@ export class UploadService {
 		}
 
 		// Trả về URL để client có thể truy cập
-		// Nếu có folder, URL sẽ bao gồm folder: /v1/uploads/avatar/filename.jpg
+		// Nếu có folder, URL sẽ bao gồm folder: /uploads/avatar/filename.jpg
 		const url = targetFolderName
-			? `/v1/uploads/${targetFolderName}/${uniqueFilename}`
-			: `/v1/uploads/${uniqueFilename}`;
+			? `/uploads/${targetFolderName}/${uniqueFilename}`
+			: `/uploads/${uniqueFilename}`;
 
 		return {
 			url,

@@ -32,6 +32,7 @@
     "prisma:pull": "npm run prisma:merge && prisma db pull",
     "prisma:push": "npm run prisma:merge && prisma db push",
     "prisma:sync": "npm run prisma:merge && npm run prisma:push && npm run prisma:generate",
+    "prisma:sync:studio": "node scripts/sync-prisma-studio.js",
     "email:preview": "tsx scripts/preview-email.ts"
   },
   "dependencies": {
