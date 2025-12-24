@@ -19,7 +19,7 @@ export const ROUTER_TAG_ENUM = {
     // MODULE TAGS
     // ============================================
     ADMIN: 'Admin',
-    CUSTOMER: 'Customer',
+    // CUSTOMER: 'Customer',
     EMAIL   : 'Email',
     
     // ============================================
@@ -34,7 +34,6 @@ export const ROUTER_TAG_ENUM = {
         },
         ADMIN: {
             REGISTER: 'Register_Admin',
-            LOGIN: 'Login_Admin',
         },
     },
     
@@ -54,8 +53,8 @@ export const ROUTER_TAG_ENUM = {
         IMAGE: 'Upload_Image',
     },
 
-    // CUSTOMERS: {
-    //     LISTCUSTOMER: 'List_Customer',
-    // },
+    CUSTOMERS: {
+        LISTCUSTOMER: 'List_Customer',
+    },
 } as const;
 

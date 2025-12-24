@@ -28,17 +28,14 @@ const createSwaggerDocument = (
 
 export const initSwagger = (app: INestApplication) => {
     const config = configuration();
-    const ngrokUrl = config.ngrokUrl;
+    // const ngrokUrl = config.ngrokUrl; // Có thể dùng nếu cần set Server URL cụ thể
 
-    // Tạo base document
+    // 1. Tạo base document (chứa tất cả các định nghĩa)
     const documentBuilder = new DocumentBuilder()
         .setTitle('Heroic API')
         .setDescription('Heroic API Documentation')
         .setVersion('1.0.0')
         .addBearerAuth();
-    
-    // Không set cứng localhost ở đây để Swagger UI tự dùng origin hiện tại (window.location)
-    // => Khi bạn mở bằng http://192.168.x.x:3103 thì Try it out sẽ gọi đúng IP đó, không bị fix localhost.
     
     const baseDocument = SwaggerModule.createDocument(
         app,
@@ -48,14 +45,16 @@ export const initSwagger = (app: INestApplication) => {
         },
     );
 
-    // Cấu hình Swagger cho từng module
+    // 2. Cấu hình các phân đoạn (Modules) Swagger
     const swaggerConfigs: SwaggerConfig[] = [
         {
             title: 'Heroic API - Admin',
             description: 'Heroic API Documentation for Admin',
             path: 'docs-admin',
             includeTags: [
-                ROUTER_TAG_ENUM.AUTH.ADMIN.REGISTER, // 'Register_Admin'
+                ROUTER_TAG_ENUM.AUTH.ADMIN.REGISTER,
+                // ROUTER_TAG_ENUM.AUTH.ADMIN.LOGIN,
+                // ROUTER_TAG_ENUM.AUTH.ADMIN.EMPLOYEES,
             ],
         },
         {
@@ -71,24 +70,25 @@ export const initSwagger = (app: INestApplication) => {
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_FACEBOOK,
                 ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_GOOGLE,
                 ROUTER_TAG_ENUM.UPLOAD.IMAGE,
-                'test'
-                // ROUTER_TAG_ENUM.CUSTOMERS.LISTCUSTOMER,
+                ROUTER_TAG_ENUM.CUSTOMERS.LISTCUSTOMER,
             ],
         },
     ];
 
-    // Setup Swagger UI cho từng module
+    // 3. Khởi tạo Swagger UI cho từng cấu hình
     swaggerConfigs.forEach((config) => {
         const document = createSwaggerDocument(baseDocument, config);
+        
         SwaggerModule.setup(config.path, app, document, {
-            customSiteTitle: `${config.title} Documentation`,
+            customSiteTitle: `${config.title} Documentation`, // Đã thêm dấu huyền (backticks)
             swaggerOptions: {
-                // Tự động thêm header vào tất cả requests từ Swagger UI
+                // Tự động thêm header để tránh trang cảnh báo của ngrok nếu đang dùng tunnel
                 requestInterceptor: (req: any) => {
                     if (!req.headers) req.headers = {};
                     req.headers['ngrok-skip-browser-warning'] = 'true';
                     return req;
                 },
+                persistAuthorization: true, // Giữ token khi reload trang
             },
         });
     });

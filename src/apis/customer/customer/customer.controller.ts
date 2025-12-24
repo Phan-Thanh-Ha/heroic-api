@@ -6,7 +6,7 @@ import { ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller(ROUTER_ENUM.CUSTOMERS.LISTCUSTOMER)
-@ApiTags('text')
+@ApiTags(ROUTER_TAG_ENUM.CUSTOMERS.LISTCUSTOMER)
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
