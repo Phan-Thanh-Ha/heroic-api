@@ -7,7 +7,10 @@ import { UploadFolderType } from '../dto/upload-image.dto';
  */
 export const ApiUploadMultipleImages = () => {
 	return applyDecorators(
-		ApiOperation({ summary: 'Upload multiple images' }),
+		ApiOperation({ 
+			summary: 'Upload multiple images',
+			description: 'Upload nhiều ảnh cùng lúc (tối đa 10 files). Field name trong form-data PHẢI là "files" (không phải "file" hay tên khác).',
+		}),
 		ApiQuery({
 			name: 'folder',
 			enum: UploadFolderType,
@@ -19,6 +22,7 @@ export const ApiUploadMultipleImages = () => {
 		ApiBody({
 			schema: {
 				type: 'object',
+				required: ['files'],
 				properties: {
 					files: {
 						type: 'array',
@@ -26,7 +30,7 @@ export const ApiUploadMultipleImages = () => {
 							type: 'string',
 							format: 'binary',
 						},
-						description: 'Image files (JPEG, PNG, GIF, WebP - Max 5MB each)',
+						description: 'Image files (JPEG, PNG, GIF, WebP - Max 5MB each). Field name PHẢI là "files" (không phải "file" hay tên khác).',
 					},
 				},
 			},

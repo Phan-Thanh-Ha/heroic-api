@@ -7,7 +7,10 @@ import { UploadFolderType } from '../dto/upload-image.dto';
  */
 export const ApiUploadSingleImage = () => {
 	return applyDecorators(
-		ApiOperation({ summary: 'Upload single image' }),
+		ApiOperation({ 
+			summary: 'Upload single image',
+			description: 'Upload một ảnh đơn.'
+		}),
 		ApiQuery({
 			name: 'folder',
 			enum: UploadFolderType,
@@ -19,6 +22,7 @@ export const ApiUploadSingleImage = () => {
 		ApiBody({
 			schema: {
 				type: 'object',
+				required: ['file'],
 				properties: {
 					file: {
 						type: 'string',

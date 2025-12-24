@@ -52,12 +52,8 @@ export class UploadService {
 		}
 	}
 
-	/**
-	 * Đảm bảo thư mục con (theo folder type) tồn tại
-	 * @param folder Loại thư mục từ enum (avatar, banner, product)
-	 * @returns Đường dẫn đầy đủ đến thư mục con
-	 */
-	private ensureFolderExists(folder?: UploadFolderType): string {
+	//#region Kiểm tra thư mục tồn tại
+	private ensureFolderExists(folder?: UploadFolderType) {
 		// Đảm bảo thư mục gốc tồn tại
 		this.ensureUploadDirectoryExists();
 
@@ -73,9 +69,9 @@ export class UploadService {
 		if (!fs.existsSync(folderPath)) {
 			try {
 				fs.mkdirSync(folderPath, { recursive: true });
-				console.log(`✅ Created folder: ${folderPath}`);
+				console.log(`Created folder: ${folderPath}`);
 			} catch (error) {
-				console.error(`❌ Failed to create folder: ${folderPath}`, error);
+				console.error(`Failed to create folder: ${folderPath}`, error);
 				throw new BadRequestException(`Cannot create folder: ${error.message}`);
 			}
 		}
@@ -83,20 +79,18 @@ export class UploadService {
 		return folderPath;
 	}
 
-	/**
-	 * Upload image và trả về URL
-	 * @param file File cần upload
-	 * @param folder Loại thư mục từ enum (avatar, banner, product)
-	 */
+	//#endregion
+
+	//#region Upload image
 	async uploadImage(
 		file: Express.Multer.File,
 		folder?: UploadFolderType,
-	): Promise<{ url: string; filename: string }> {
+	) {
 		if (!file) {
 			throw new BadRequestException('No file uploaded');
 		}
 
-		// Validate file type
+		// Nhận biết file type có phải là ảnh không
 		const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 		if (!allowedMimeTypes.includes(file.mimetype)) {
 			throw new BadRequestException(
@@ -137,16 +131,13 @@ export class UploadService {
 			filename: uniqueFilename,
 		};
 	}
+	//#endregion
 
-	/**
-	 * Upload multiple images
-	 * @param files Danh sách files cần upload
-	 * @param folder Loại thư mục từ enum (avatar, banner, product)
-	 */
+	//#region Upload multiple images
 	async uploadMultipleImages(
 		files: Express.Multer.File[],
 		folder?: UploadFolderType,
-	): Promise<{ urls: string[]; filenames: string[] }> {
+	) {
 		if (!files || files.length === 0) {
 			throw new BadRequestException('No files uploaded');
 		}
@@ -158,5 +149,6 @@ export class UploadService {
 			filenames: results.map((r) => r.filename),
 		};
 	}
+	//#endregion
 }
 

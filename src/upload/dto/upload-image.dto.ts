@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
@@ -33,8 +33,19 @@ export class UploadImageDto {
 	})
 	@IsOptional()
 	@IsEnum(UploadFolderType, {
-		message: `folder phải là một trong các giá trị: ${Object.values(UploadFolderType).join(', ')}`,
+		message: `folder phải là một trong các folder được định nghĩa sẵn`,
 	})
 	folder?: UploadFolderType;
+	
+
+	// Mã Khách Hàng
+	@ApiPropertyOptional({
+		description: 'Mã Khách Hàng',
+		example: 'KH2512170001',
+	})
+	@IsOptional()
+	@IsString()
+	@IsNotEmpty()
+	customerCode?: string;
 }
 

@@ -1,10 +1,11 @@
 services:
+  # --- DỊCH VỤ CƠ SỞ DỮ LIỆU ---
   postgres:
     container_name: heroic-postgres
     image: postgres:16-alpine
     restart: unless-stopped
-    env_file:
-      - ${ENV_FILE:-.env.development} # Mặc định là .env.development nếu không truyền
+    # Không dùng biến ${ENV_FILE} ở đây để tránh lỗi 'stat: no such file'
+    # Docker sẽ tự dùng các biến từ file bạn truyền qua câu lệnh terminal
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -14,14 +15,35 @@ services:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/postgres/init:/docker-entrypoint-initdb.d
     networks:
       - heroic-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # --- DỊCH VỤ UPLOAD TÁCH RIÊNG ---
+  heroic-upload:
+    container_name: heroic-upload
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3104:3104"
+    # Truyền trực tiếp các biến cần thiết từ file .env vào trong container
+    environment:
+      - UPLOAD_PATH=/app/uploads
+      - PORT=3104
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      # Nếu UPLOAD_PATH trống, nó sẽ mặc định dùng ./heroic-images trong thư mục hiện tại
+      - ${UPLOAD_PATH:-./heroic-images}:/app/uploads
+    networks:
+      - heroic-network
 
 volumes:
   postgres_data:

@@ -24,7 +24,7 @@ async function bootstrap() {
   // Cấu hình Static Assets để xem ảnh từ Browser
   // Ví dụ: http://localhost:3103/v1/uploads/image.jpg
   app.useStaticAssets(uploadsPath, {
-    prefix: '/v1/uploads/',
+    prefix: '/uploads/',
   });
 
   app.setGlobalPrefix('/v1');

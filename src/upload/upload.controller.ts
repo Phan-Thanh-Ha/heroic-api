@@ -34,11 +34,10 @@ export class UploadController {
 		@Query() query: UploadImageDto,
 	) {
 		this.loggerService.log(this.context, 'uploadSingleImage', {
-			filename: file?.originalname,
+			file: file?.originalname,
 			size: file?.size,
 			folder: query.folder,
 		});
-		
 		try {
 			const result = await this.uploadService.uploadImage(file, query.folder);
 			return result;
