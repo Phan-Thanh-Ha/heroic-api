@@ -15,16 +15,10 @@ export const ROUTER_TAG_ENUM = {
     MAIL: {
         SEND_OTP: 'Send_OTP',
     },
-    // ============================================
-    // MODULE TAGS
-    // ============================================
     ADMIN: 'Admin',
     CUSTOMER: 'Customer',
     EMAIL   : 'Email',
-    
-    // ============================================
-    // AUTHENTICATION TAGS
-    // ============================================
+
     AUTH: {
         CUSTOMER: {
             LOGIN: 'Login',
@@ -35,6 +29,7 @@ export const ROUTER_TAG_ENUM = {
         ADMIN: {
             REGISTER: 'Register_Admin',
             LOGIN: 'Login_Admin',
+            EMPLOYEES: 'Employees',
         },
     },
     

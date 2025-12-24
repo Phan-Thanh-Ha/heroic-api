@@ -1,11 +1,13 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { LoggerService } from '@logger';
-import { HTTP_STATUS_ENUM } from '@common';
+import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiLogin } from 'src/apis/customer/auth/login/swagger/login.swagger';
 import { LoginService } from './login.service';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('login')
+@Controller(ROUTER_ENUM.AUTH.ADMIN.LOGIN)
+@ApiTags(ROUTER_TAG_ENUM.AUTH.ADMIN.LOGIN)
 export class LoginController {
   constructor(
     private readonly loggerService: LoggerService,
@@ -13,7 +15,7 @@ export class LoginController {
   ) {}
   private context = LoginController.name;
 
-  @Post('admin/login')
+  @Post()
   @ApiLogin()
   @HttpCode(HTTP_STATUS_ENUM.OK)
   async login(@Body() loginDto: LoginDto) {
