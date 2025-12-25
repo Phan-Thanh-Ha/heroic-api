@@ -6,3 +6,5 @@ export * from './swagger';
 export * from './middleware';
 export * from './constant';
 export * from './code-type';
+export * from './decorators';
+export * from './apis-routes';

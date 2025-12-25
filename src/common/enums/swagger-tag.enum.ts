@@ -33,18 +33,12 @@ export const ROUTER_TAG_ENUM = {
         },
     },
     
-    // ============================================
-    // LOCATIONS TAGS
-    // ============================================
     LOCATIONS: {
         PROVINCE: 'Province',
         DISTRICTS: 'Districts',
         WARDS: 'Wards',
     },
 
-    // ============================================
-    // UPLOAD TAGS
-    // ============================================
     UPLOAD: {
         IMAGE: 'Upload_Image',
     },

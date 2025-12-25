@@ -1,14 +1,13 @@
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
-import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { APP_ROUTES, AppController,ApiPost, ResponseMessage, customerAuthSuccessTypes, HTTP_STATUS_ENUM } from '@common';
+import { LoggerService } from '@logger';
+import { Body, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { RegisterService } from './register.service';
 import { ApiRegister } from './swagger/register.swagger';
-import { LoggerService } from '@logger';
-import { Request } from 'express';
+import { RegisterEntity } from './entities/register.entity';
 
-@Controller(ROUTER_ENUM.AUTH.CUSTOMER.REGISTER)
-@ApiTags(ROUTER_TAG_ENUM.AUTH.CUSTOMER.REGISTER)
+@AppController(APP_ROUTES.AUTH.CUSTOMER.REGISTER)
 export class RegisterController {
   constructor(
     private readonly registerService: RegisterService,
@@ -16,24 +15,17 @@ export class RegisterController {
   ) { }
   private context = RegisterController.name;
 
-  @Post('email')
-  @ApiRegister()
-  @HttpCode(HTTP_STATUS_ENUM.CREATED)
+  @ApiPost('email', {
+    summary: 'Đăng ký tài khoản khách hàng',
+    swagger: ApiRegister(),
+    response: RegisterEntity
+  })
+  @ResponseMessage(customerAuthSuccessTypes().AUTH_REGISTER_SUCCESS.message)
   async register(
     @Body() createRegisterDto: CreateRegisterDto,
     @Req() req: Request & { timeZone?: string },
   ) {
-    this.loggerService.log(this.context, 'register', createRegisterDto);
-    try {
-      const result = await this.registerService.register(
-        createRegisterDto,
-        req.timeZone,
-      );
-      return result;
-    } catch (error) {
-      this.loggerService.error(this.context, 'register', error);
-      throw error;
-    }
+    return await this.registerService.register(createRegisterDto, req.timeZone);
   }
 
 }
