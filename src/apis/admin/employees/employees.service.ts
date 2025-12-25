@@ -1,32 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { LoggerService } from '@logger';
+import { EmployeesRepository } from './employees.repository';
 
 @Injectable()
 export class EmployeesService {
+  // Định nghĩa context để log (nếu cần dùng cho các logic nghiệp vụ phức tạp khác)
   private context = EmployeesService.name;
+
   constructor(
+    private readonly employeesRepository: EmployeesRepository,
     private readonly loggerService: LoggerService,
   ) {}
-  create(createEmployeeDto: CreateEmployeeDto) {
-    this.loggerService.log(this.context, 'create', createEmployeeDto);
-    return 'This action adds a new employee';
+  
+  //#region Tạo nhân viên
+  async createEmployee(createEmployeeDto: CreateEmployeeDto) {
+    const employee = await this.employeesRepository.createEmployee(createEmployeeDto);
+    return {
+      data: employee,
+    };
   }
+  //#endregion
 
-  // findAll() {
-  //   return `This action returns all employees`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} employee`;
-  // }
-
-  // update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-  //   return `This action updates a #${id} employee`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} employee`;
-  // }
+  //#region Lấy danh sách nhân viên
+  async getListEmployees() {
+    const employees = await this.employeesRepository.getListEmployees();
+    return {
+      data: employees,
+    };
+  }
+  //#endregion
+  
 }

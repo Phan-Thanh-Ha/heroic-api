@@ -8,6 +8,8 @@ interface AdminAuthErrorTypes {
 	AUTH_TOKEN_INACTIVE: ErrorType;
 	NO_PERMISSION: ErrorType;
 	USER_IS_BLOCKED: ErrorType;
+	AUTH_EMPLOYEE_CODE_EXISTS: ErrorType;
+	AUTH_EMPLOYEE_EMAIL_EXISTS: ErrorType;
 }
 
 export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
@@ -66,6 +68,22 @@ export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
 				vi: 'Tài khoản admin đã bị khóa',
 				en: 'Admin user is blocked',
 				cn: '管理员账号已被锁定',
+			},
+		},
+		AUTH_EMPLOYEE_CODE_EXISTS: {
+			error_code: 'ADMIN_AUTH_EMPLOYEE_CODE_EXISTS',
+			message: {
+				vi: 'Mã nhân viên đã tồn tại',
+				en: 'Employee code already exists',
+				cn: '员工代码已存在',
+			},
+		},
+		AUTH_EMPLOYEE_EMAIL_EXISTS: {
+			error_code: 'ADMIN_AUTH_EMPLOYEE_EMAIL_EXISTS',
+			message: {
+				vi: 'Email nhân viên đã tồn tại',
+				en: 'Employee email already exists',
+				cn: '员工邮箱已存在',
 			},
 		},
 	};

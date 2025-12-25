@@ -13,32 +13,32 @@ import { Request } from 'express';
 export class AllExceptionsFilter implements ExceptionFilter {
     private readonly logger = new Logger(AllExceptionsFilter.name);
 
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) { }
+    constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
     catch(exception: unknown, host: ArgumentsHost): void {
         const { httpAdapter } = this.httpAdapterHost;
         const ctx = host.switchToHttp();
         const request = ctx.getRequest<Request>();
 
-        // 1. Xác định Status Code
+        // --- 1. Xác định Status Code ---
         const httpStatus =
             exception instanceof HttpException
                 ? exception.getStatus()
                 : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        // 2. Lấy nội dung lỗi thô (Response từ Service/Repo)
+        // --- 2. Lấy Dữ liệu phản hồi thô (Exception Response) ---
         const exceptionResponse =
             exception instanceof HttpException
                 ? exception.getResponse()
                 : { message: 'Internal Server Error' };
 
-        // Ép kiểu data về object để xử lý
+        // Ép kiểu về object để dễ xử lý
         const data =
             typeof exceptionResponse === 'object' && exceptionResponse !== null
                 ? (exceptionResponse as any)
                 : { message: exceptionResponse };
 
-        // 3. Xác định Ngôn ngữ (Ưu tiên header x-language -> accept-language -> mặc định vi)
+        // --- 3. Xử lý Ngôn ngữ (Language) ---
         const rawLang =
             (request.headers['x-language'] as string) ||
             (request.headers['accept-language'] as string) ||
@@ -49,62 +49,64 @@ export class AllExceptionsFilter implements ExceptionFilter {
         if (normalized.startsWith('en')) lang = 'en';
         else if (normalized.startsWith('zh') || normalized.startsWith('cn')) lang = 'cn';
 
-        // 4. LOGIC TÌM MESSAGE CHÍNH XÁC
-        // Tìm nơi chứa các key ngôn ngữ (vi, en...)
-        // Nếu data.message là object {vi, en...} thì lấy nó, nếu không thì lấy chính data
-        const translationSource = (typeof data.message === 'object' && data.message !== null && !Array.isArray(data.message))
-            ? data.message
-            : data;
+        // --- 4. Logic lấy Message thông minh (SỬA ĐỔI QUAN TRỌNG) ---
+        
+        // Trường hợp 1: data chính là object { vi, en } (Lỗi Custom từ Repo)
+        // Trường hợp 2: data.message là object { vi, en }
+        // Trường hợp 3: data.message là array (Lỗi Validation của NestJS)
+        // Trường hợp 4: data.message là string thường
+        
+        const messageSource = data.message || data; // Ưu tiên data.message, nếu không có thì lấy chính data
 
         const defaultMessage =
             httpStatus === HttpStatus.BAD_REQUEST
                 ? 'Dữ liệu không hợp lệ.'
                 : 'Đã xảy ra lỗi hệ thống.';
 
-        // Thứ tự ưu tiên lấy message:
-        // 1. Lấy đúng ngôn ngữ (ví dụ: data.vi)
-        // 2. Lấy ngôn ngữ mặc định 'vi' nếu không tìm thấy ngôn ngữ kia
-        // 3. Lấy data.message nếu nó là string
-        // 4. Lấy phần tử đầu tiên nếu data.message là array (Lỗi Validation của Nest)
-        // 5. Lấy message mặc định
+        // Ưu tiên theo thứ tự: 
+        // 1. Đúng ngôn ngữ -> 2. String gốc -> 3. Phần tử đầu của mảng (nếu là validation) -> 4. Mặc định
         const message =
-            translationSource?.[lang] ||           // Tìm đúng ngôn ngữ (ví dụ: .vi)
-            translationSource?.['vi'] ||           // Fallback về tiếng Việt
+            messageSource?.[lang] || 
             (typeof data.message === 'string' ? data.message : undefined) ||
             (Array.isArray(data.message) ? data.message[0] : undefined) ||
             defaultMessage;
 
-        // 5. Xây dựng Response Body chuẩn
+        // --- 5. Xây dựng Response Body Chuẩn ---
         const responseBody: any = {
             statusCode: httpStatus,
-            message: message, // Message này giờ đã là Tiếng Việt/Anh chuẩn
+            message: message,
             timestamp: new Date().toISOString(),
-            path: request.url,
+            path: request.url, // Thêm path để biết lỗi ở API nào
         };
 
-        // 6. Xử lý chi tiết các loại lỗi
+        // --- 6. Xử lý chi tiết theo từng loại lỗi ---
+
         if (httpStatus === HttpStatus.BAD_REQUEST) {
-            // Nếu là lỗi Validation (Class-validator trả về mảng)
+            // Xử lý Validation Error (class-validator)
             if (Array.isArray(data.message)) {
                 responseBody.error = 'Validation Error';
-                responseBody.errors = data.message;
+                responseBody.errors = data.message; // Trả về danh sách chi tiết các trường lỗi
             } else {
-                // Lỗi logic nghiệp vụ (ví dụ: trùng mã nhân viên)
                 responseBody.error = data.error || 'Bad Request';
             }
-        } else if (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
-            // Log lỗi 500 ra console server
+        } 
+        else if (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
+            // LOG LỖI 500 CHI TIẾT ĐỂ DEBUG (Không show cho Client)
             this.logger.error(
                 `[${request.method}] ${request.url}`,
                 exception instanceof Error ? exception.stack : String(exception),
             );
+            
+            // Ghi đè message cho client để bảo mật
             responseBody.message = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
             responseBody.error = 'Internal Server Error';
-        } else {
+        } 
+        else {
+            // Các lỗi khác (401, 403, 404...)
             responseBody.error = data.error || 'Error';
         }
 
-        // 7. Trả về Response
+        // --- 7. Trả về response ---
         httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
     }
 }

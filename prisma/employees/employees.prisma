@@ -1,32 +1,37 @@
-model  Employee {
-    id            Int       @id @default(autoincrement()) @map("id") // ID nhân viên
-    uuid          String    @unique @map("uuid") @db.Char(36) // UUID nhân viên
-    code          String    @unique @map("code") @db.Char(50) // Mã nhân viên
-    fullName      String    @map("full_name") @db.VarChar(255) // Tên đầy đủ nhân viên
-    password      String    @map("password") @db.VarChar(255) // Mật khẩu nhân viên
-    email         String    @unique @map("email") @db.VarChar(100) // Email nhân viên
-    phoneNumber   String?   @map("phone") @db.VarChar(20) // Số điện thoại nhân viên
-    isActive    Boolean  @default(true) @map("is_active") // Trạng thái hoạt động của nhân viên
+model Employee {
+    id          Int       @id @default(autoincrement()) @map("id") // ID nhân viên
+    uuid        String    @unique @map("uuid") @db.Char(36) // UUID nhân viên
+    code        String    @unique @map("code") // Mã nhân viên
+    fullName    String    @map("full_name") @db.VarChar(255) // Tên đầy đủ nhân viên
+    password    String    @map("password") @db.VarChar(255) // Mật khẩu nhân viên
+    email       String    @unique @map("email") @db.VarChar(100) // Email nhân viên
+    phoneNumber String?   @map("phone") @db.VarChar(20) // Số điện thoại nhân viên
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của nhân viên
+    dob         DateTime? @map("dob") @db.Date // Ngày sinh nhân viên
 
-
-   // Quan hệ với Position 1-nhân viên thuộc về 1 chức vụ
-    positionId   Int        @map("position_id")
-    position     Position   @relation("PositionEmployees", fields: [positionId], references: [id])
+    // Quan hệ với Position 1-nhân viên thuộc về 1 chức vụ
+    positionId Int      @map("position_id")
+    position   Position @relation("PositionEmployees", fields: [positionId], references: [id])
 
     // quan hệ với Department 1-nhân viên thuộc về 1 phòng ban
     departmentId Int        @map("department_id")
     department   Department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
 
-    createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo nhân viên
-    createdById     Int?      @map("created_by_id") // ID nhân viên tạo
+    //CCCD
+    identity_number    String? @map("identity_number") @db.VarChar(20) // Số CCCD nhân viên
+    place_of_origin    String? @map("place_of_origin") @db.VarChar(255) // Quê quán
+    place_of_residence String? @map("place_of_residence") @db.VarChar(255) // Nơi ở hiện tại
 
-    updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật nhân viên
-    updatedById     Int?      @map("updated_by_id") // ID nhân viên cập nhật
+    cccdNumber  String?  @map("cccd_number") @db.VarChar(20) // Số CCCD nhân viên
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo nhân viên
+    createdById Int?     @map("created_by_id") // ID nhân viên tạo
+
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật nhân viên
+    updatedById Int?     @map("updated_by_id") // ID nhân viên cập nhật
 
     @@index([id])
     @@index([code])
     @@index([fullName])
     @@index([positionId])
     @@map("employees")
-    
 }

@@ -23,7 +23,6 @@ export class RegisterService {
       return {
         user: {...customer},
         accessToken: '1234567890', // TODO: Generate JWT token thực tế
-        message: 'Đăng ký thành công',
       };
     } catch (error) {
       this.loggerService.error(this.context, 'register', error);
