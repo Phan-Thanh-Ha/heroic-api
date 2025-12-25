@@ -5,9 +5,10 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiCreateEmployeeSwagger } from './swagger/login.swagger';
+import { AppController,APP_ROUTES } from '@common';
 
-@Controller(ROUTER_ENUM.AUTH.ADMIN.EMPLOYEES)
-@ApiTags(ROUTER_TAG_ENUM.AUTH.ADMIN.EMPLOYEES)
+
+@AppController(APP_ROUTES.AUTH.ADMIN.EMPLOYEES)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 

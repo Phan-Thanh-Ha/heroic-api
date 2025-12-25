@@ -1,17 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
-import { WardsService } from './wards.service';
-import { CreateWardDto } from './dto/create-ward.dto';
-import { UpdateWardDto } from './dto/update-ward.dto';
-import { LoggerService } from '@logger';
+import { ApiGet, AppController, HTTP_STATUS_ENUM, ResponseMessage, wardSuccessTypes } from '@common';
+import { Get, HttpCode, Param } from '@nestjs/common';
+import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
 import { ApiWardsFindByDistrictCode } from './swagger/get-wards-by-parencode.swagger';
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
-import { ApiTags } from '@nestjs/swagger';
-
-@Controller(ROUTER_ENUM.LOCATIONS.WARDS)
-@ApiTags(ROUTER_TAG_ENUM.LOCATIONS.WARDS)
+import { WardsService } from './wards.service';
+ 
+@AppController(APP_ROUTES.LOCATIONS.WARDS)
 export class WardsController {
-  private context = WardsController.name;
-  constructor(private readonly wardsService: WardsService, private readonly logger: LoggerService) {}
+  constructor(private readonly wardsService: WardsService) {}
 
   // @Post()
   // create(@Body() createWardDto: CreateWardDto) {
@@ -23,10 +18,11 @@ export class WardsController {
   //   return this.wardsService.findAll();
   // }
 
-  //URL: /api/v1/locations/wards/:districtCode
-  @Get('/:districtCode')
-  @HttpCode(HTTP_STATUS_ENUM.OK)
-  @ApiWardsFindByDistrictCode()
+  @ApiGet('/:districtCode', {
+    summary: 'Lấy danh sách xã/phường theo mã quận/huyện',
+    swagger: ApiWardsFindByDistrictCode()
+  })
+  @ResponseMessage(wardSuccessTypes().FIND_WARDS_BY_DISTRICT_CODE.message)
   async findWardsByDistrictCode(@Param('districtCode') districtCode: string) {
     return await this.wardsService.findWardsByDistrictCode(districtCode);
   }

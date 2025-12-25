@@ -1,9 +1,9 @@
 import { LoggerService } from "@logger";
-import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
-import { CreateRegisterDto } from "./dto/create-register.dto";
 import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@utils";
 import bcrypt from "bcryptjs";
+import { CreateRegisterDto } from "./dto/create-register.dto";
 
 
 @Injectable()

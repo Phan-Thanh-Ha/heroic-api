@@ -1,89 +1,70 @@
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
+import { ApiPost, APP_ROUTES, AppController } from '@common';
 import { LoggerService } from '@logger';
-import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { LoginFacebookDto } from './dto/login-facebook.dto';
+import { LoginGoogleDto } from './dto/login-google.dto';
+import { LoginDto } from './dto/login.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { LoginService } from './login.service';
 import { ApiLogin } from './swagger';
-import { LoginDto } from './dto/login.dto';
-import { ApiLoginWithGoogle } from './swagger/login-google.swagger';
-import { LoginGoogleDto } from './dto/login-google.dto';
-import { Request } from 'express';
 import { ApiLoginWithFacebook } from './swagger/login-facebook.swagger';
-import { LoginFacebookDto } from './dto/login-facebook.dto';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ApiLoginWithGoogle } from './swagger/login-google.swagger';
 import { ApiVerifyOtp } from './swagger/verify-otp.swagger';
 
-@Controller(ROUTER_ENUM.AUTH.CUSTOMER.LOGIN)
-@ApiTags(ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN)
+@AppController(APP_ROUTES.AUTH.CUSTOMER.LOGIN)
 export class LoginController {
   private context = LoginController.name;
   constructor(
     private readonly loggerService: LoggerService,
-    private readonly loginService: LoginService 
-  ) {}
+    private readonly loginService: LoginService
+  ) { }
 
   //#region Đăng nhập bằng email
-  @Post(ROUTER_ENUM.AUTH.CUSTOMER.LOGIN_WITH_EMAIL)
-  @ApiLogin()
-  @HttpCode(HTTP_STATUS_ENUM.OK)
+  @ApiPost('email', {
+    summary: 'Đăng nhập bằng email',
+    swagger: ApiLogin()
+  })
   async login(
     @Body() loginDto: LoginDto,
     @Req() req: Request & { timeZone?: string },
   ) {
-    this.loggerService.debug(this.context, 'login', loginDto);
-    try {
-      return await this.loginService.login(loginDto, req.timeZone);
-    } catch (error) {
-      this.loggerService.error(this.context, 'login', error);
-      throw error;
-    }
+    return await this.loginService.login(loginDto, req.timeZone);
   }
   //#endregion
 
   //#region Đăng nhập bằng Google
-  @Post(ROUTER_ENUM.AUTH.CUSTOMER.LOGIN_WITH_GOOGLE)
-  @ApiLoginWithGoogle()
-  @HttpCode(HTTP_STATUS_ENUM.CREATED)
-  async loginWithGoogle(
-    @Body() loginGoogleDto: LoginGoogleDto,
-  ) {
-    this.loggerService.log(this.context, 'loginWithGoogle', loginGoogleDto); 
-    try {
-      return await this.loginService.loginWithGoogle(
-        loginGoogleDto,
-      );
-    } catch (error) {
-      this.loggerService.error(this.context, 'loginWithGoogle', error);
-      throw error;
-    }
+  @ApiPost('google', {
+    summary: 'Đăng nhập bằng Google',
+    swagger: ApiLoginWithGoogle() // Truyền decorator swagger vào
+  })
+  async loginWithGoogle(@Body() dto: LoginGoogleDto) {
+    // KHÔNG try-catch, KHÔNG logger thủ công
+    return await this.loginService.loginWithGoogle(dto);
   }
   //#endregion
 
   //#region Đăng nhập bằng Facebook
-  @Post(ROUTER_ENUM.AUTH.CUSTOMER.LOGIN_WITH_FACEBOOK)
-  @ApiLoginWithFacebook()
-  @HttpCode(HTTP_STATUS_ENUM.CREATED)
+  @ApiPost('facebook', {
+    summary: 'Đăng nhập bằng Facebook',
+    swagger: ApiLoginWithFacebook()
+  })
   async loginWithFacebook(
-    @Body() loginFacebookDto: LoginFacebookDto,
-    @Req() req: Request & { timeZone?: string },
+    @Body() dto: LoginFacebookDto,
+    @Req() req: any, // Dùng type Request custom của bạn
   ) {
-    this.loggerService.log(this.context, 'loginWithFacebook', loginFacebookDto);
-    try {
-      return await this.loginService.loginWithFacebook(loginFacebookDto,req.timeZone,);
-    } catch (error) {
-      this.loggerService.error(this.context, 'loginWithFacebook', error);
-      throw error;
-    }
+    return await this.loginService.loginWithFacebook(dto, req.timeZone);
   }
   //#endregion
 
   //#region Xác thực OTP
-  @Post(ROUTER_ENUM.AUTH.CUSTOMER.VERIFY_OTP)
-  @ApiVerifyOtp()
-  @HttpCode(HTTP_STATUS_ENUM.OK)
+  @ApiPost('verify-otp', {
+    summary: 'Xác thực OTP',
+    swagger: ApiVerifyOtp()
+  })
   async verifyOtp(
     @Body() verifyOtpDto: VerifyOtpDto,
-    @Req() req: Request & { timeZone?: string},
+    @Req() req: Request & { timeZone?: string },
   ) {
     this.loggerService.debug(this.context, 'verifyOtp', verifyOtpDto);
     try {

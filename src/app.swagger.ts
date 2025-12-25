@@ -1,6 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { ROUTER_TAG_ENUM, SWAGGER_TAG_ENUM } from "./common/enums";
+import { ADMIN_TAG_LIST, CUSTOMER_TAG_LIST } from "./common/apis-routes/api.routes"; // Import từ file routes đã tối ưu
 import { filterDocumentByTags } from "./common/swagger";
 import { configuration } from "./config";
 
@@ -28,18 +28,40 @@ const createSwaggerDocument = (
 
 export const initSwagger = (app: INestApplication) => {
     const config = configuration();
-    const ngrokUrl = config.ngrokUrl;
+    // const ngrokUrl = config.ngrokUrl;
 
-    // Tạo base document
+    // 1. CẤU HÌNH BUILDER (Đã thêm Global Parameters)
     const documentBuilder = new DocumentBuilder()
         .setTitle('Heroic API')
         .setDescription('Heroic API Documentation')
         .setVersion('1.0.0')
-        .addBearerAuth();
+        .addBearerAuth()
+        // --- THÊM MỚI: Header Language ---
+        .addGlobalParameters({
+            in: 'header',
+            required: false, // false để backend tự fallback về default nếu không gửi
+            name: 'x-language',
+            schema: {
+                type: 'string',
+                example: 'vi',
+                default: 'vi',
+                description: 'Ngôn ngữ phản hồi (vi, en, cn)',
+            },
+        })
+        // --- THÊM MỚI: Header TimeZone ---
+        .addGlobalParameters({
+            in: 'header',
+            required: false,
+            name: 'x-time-zone',
+            schema: {
+                type: 'string',
+                example: 'Asia/Ho_Chi_Minh',
+                default: 'Asia/Ho_Chi_Minh',
+                description: 'Múi giờ của Client',
+            },
+        });
     
-    // Không set cứng localhost ở đây để Swagger UI tự dùng origin hiện tại (window.location)
-    // => Khi bạn mở bằng http://192.168.x.x:3103 thì Try it out sẽ gọi đúng IP đó, không bị fix localhost.
-    
+    // 2. Tạo Base Document (Chứa tất cả API + Header Config ở trên)
     const baseDocument = SwaggerModule.createDocument(
         app,
         documentBuilder.build(),
@@ -48,42 +70,32 @@ export const initSwagger = (app: INestApplication) => {
         },
     );
 
-    // Cấu hình Swagger cho từng module
     const swaggerConfigs: SwaggerConfig[] = [
         {
             title: 'Heroic API - Admin',
             description: 'Heroic API Documentation for Admin',
             path: 'docs-admin',
-            includeTags: [
-                ROUTER_TAG_ENUM.AUTH.ADMIN.REGISTER, // 'Register_Admin'
-                ROUTER_TAG_ENUM.AUTH.ADMIN.LOGIN, // 'Login_Admin'
-                ROUTER_TAG_ENUM.AUTH.ADMIN.EMPLOYEES, // 'Employees'
-            ],
+            includeTags: ADMIN_TAG_LIST,
         },
         {
             title: 'Heroic API - Customer',
             description: 'Heroic API Documentation for Customer',
             path: 'docs-customer',
-            includeTags: [
-                ROUTER_TAG_ENUM.LOCATIONS.PROVINCE,
-                ROUTER_TAG_ENUM.LOCATIONS.DISTRICTS,
-                ROUTER_TAG_ENUM.LOCATIONS.WARDS,
-                ROUTER_TAG_ENUM.AUTH.CUSTOMER.REGISTER,
-                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN,
-                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_FACEBOOK,
-                ROUTER_TAG_ENUM.AUTH.CUSTOMER.LOGIN_GOOGLE,
-                ROUTER_TAG_ENUM.UPLOAD.IMAGE,
-            ],
+            includeTags: CUSTOMER_TAG_LIST,
         },
     ];
 
-    // Setup Swagger UI cho từng module
+    // Tạo mảng để hứng các URL JSON cho thanh Select
+    const explorerUrls: any[] = [];
+
     swaggerConfigs.forEach((config) => {
+        // Lọc document con từ baseDocument (Header x-language sẽ được kế thừa)
         const document = createSwaggerDocument(baseDocument, config);
+        
+        // 1. Setup các trang con (để NestJS sinh ra file JSON ngầm)
         SwaggerModule.setup(config.path, app, document, {
             customSiteTitle: `${config.title} Documentation`,
             swaggerOptions: {
-                // Tự động thêm header vào tất cả requests từ Swagger UI
                 requestInterceptor: (req: any) => {
                     if (!req.headers) req.headers = {};
                     req.headers['ngrok-skip-browser-warning'] = 'true';
@@ -91,5 +103,27 @@ export const initSwagger = (app: INestApplication) => {
                 },
             },
         });
+
+        // 2. Thu thập đường dẫn JSON vào mảng explorer
+        explorerUrls.push({
+            name: config.path, // Tên hiển thị trong Dropdown
+            url: `/${config.path}-json`,
+        });
+    });
+
+    // --- TẠO TRANG TỔNG HỢP (HUB) ---
+    SwaggerModule.setup('docs', app, baseDocument, {
+        explorer: true, // Bật thanh Select
+        customSiteTitle: 'Heroic API Hub',
+        swaggerOptions: {
+            urls: explorerUrls,
+            'urls.primaryName': explorerUrls[0].name, // Mặc định chọn cái đầu tiên
+            validatorUrl: 'none',
+            requestInterceptor: (req: any) => {
+                if (!req.headers) req.headers = {};
+                req.headers['ngrok-skip-browser-warning'] = 'true';
+                return req;
+            },
+        },
     });
 };
