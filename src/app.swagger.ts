@@ -117,13 +117,22 @@ export const initSwagger = (app: INestApplication) => {
         customSiteTitle: 'Heroic API Hub',
         swaggerOptions: {
             urls: explorerUrls,
-            'urls.primaryName': explorerUrls[0].name, // Mặc định chọn cái đầu tiên
-            validatorUrl: 'none',
-            requestInterceptor: (req: any) => {
-                if (!req.headers) req.headers = {};
-                req.headers['ngrok-skip-browser-warning'] = 'true';
-                return req;
-            },
+            'urls.primaryName': explorerUrls[0].name,
+            persistAuthorization: true,//
+            displayRequestDuration: true,
+            filter: true,
+            docExpansion: 'list',// Bật thanh Select
+            theme: 'monokai',
+            tryItOutEnabled: true, // Bật try it out 
+            tagsSorter: 'alpha', // Sắp xếp tags theo alphabet
+            defaultModelsExpandDepth: -1,  // Ẩn bảng danh sách Schemas ở dưới cùng (cho gọn trang)
+            deepLinking: true,
         },
+        customCss: `
+        .swagger-ui .wrapper { max-width: 1460px; padding: 0 20px; }
+        .swagger-ui .topbar { background-color: #000; border-bottom: 3px solid #ed1c24; }
+        .swagger-ui .info .title { color: #ed1c24; font-family: 'Segoe UI', sans-serif; }
+        .opblock-summary-path { font-weight: bold !important; }
+    `
     });
 };
