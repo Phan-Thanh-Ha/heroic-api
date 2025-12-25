@@ -22,14 +22,9 @@ async function bootstrap() {
   }
 
   // Cấu hình Static Assets để xem ảnh từ Browser
-  // Ví dụ: http://localhost:3103/uploads/image.jpg
+  // Ví dụ: http://localhost:3103/v1/uploads/image.jpg
   app.useStaticAssets(uploadsPath, {
     prefix: '/uploads/',
-  });
-
-  // Serve static files từ thư mục public (cho Swagger custom JS)
-  app.useStaticAssets(join(process.cwd(), 'public'), {
-    prefix: '/public',
   });
 
   app.setGlobalPrefix('/v1');
@@ -47,6 +42,6 @@ async function bootstrap() {
   const port = configuration().port || 3103;
   await app.listen(port, '0.0.0.0');
 
-  logSwaggerUrls(port, { docs: '/docs' });
+  logSwaggerUrls(port, { admin: '/docs-admin', customer: '/docs-customer' });
 }
 bootstrap();

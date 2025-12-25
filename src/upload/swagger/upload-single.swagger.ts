@@ -40,7 +40,7 @@ export const ApiUploadSingleImage = () => {
 				properties: {
 					url: {
 						type: 'string',
-						example: '/uploads/avatar/123e4567-e89b-12d3-a456-426614174000.jpg',
+						example: '/v1/uploads/avatar/123e4567-e89b-12d3-a456-426614174000.jpg',
 					},
 					filename: {
 						type: 'string',

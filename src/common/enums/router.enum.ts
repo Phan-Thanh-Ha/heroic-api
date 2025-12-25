@@ -11,8 +11,9 @@ export const ROUTER_ENUM = {
             REGISTER: 'customers/auth/register',
         },
         ADMIN: {
-            REGISTER: 'admin/auth/register',
-            LOGIN: 'admin/auth/login',
+            REGISTER: 'admins/auth/register',
+            LOGIN: 'admins/auth/login',
+            EMPLOYEES: 'admins/employees',
         },
     },
 
@@ -27,6 +28,6 @@ export const ROUTER_ENUM = {
     },
 
     CUSTOMERS:{
-        LISTCUSTOMER :'customers/customer/list'
+        LISTCUSTOMER :'customer/customer/list'
     },
 } as const;

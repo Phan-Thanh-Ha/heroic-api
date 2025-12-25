@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+
 
 @Injectable()
 export class CustomerService {
@@ -8,8 +7,8 @@ export class CustomerService {
   //   return 'This action adds a new customer';
   // }
 
-  findAll() {
-    return `This action returns all customer`;
+  getListCustomer() {
+    return `this customerServic`;
   }
 
   // findOne(id: number) {
