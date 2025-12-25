@@ -15,9 +15,9 @@ export const APP_ROUTES = {
             REGISTER: { path: 'customers/auth/register', tag: 'Auth_Customer' },
         },
         ADMIN: {
-            REGISTER: { path: 'admins/auth/register', tag: 'Auth_Admin' },
-            LOGIN: { path: 'admins/auth/login', tag: 'Auth_Admin' },
-            EMPLOYEES: { path: 'admins/employees', tag: 'Admin_Employees' },
+            REGISTER: { path: 'admins/register', tag: 'Register_Admin' },
+            LOGIN: { path: 'admins/login', tag: 'Login_Admin' },
+            EMPLOYEES: { path: 'admins/employees', tag: 'Employees_Admin' },
         },
     },
     LOCATIONS: {
