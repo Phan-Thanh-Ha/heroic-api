@@ -1,25 +1,35 @@
-import { Controller, Get} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 
-import { ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
+import { ApiGet, APP_ROUTES, AppController, ResponseMessage, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiCustomerGetList } from './swagger/get-customer-list.swagger';
+import { customerSuccessTypes } from 'src/common/code-type/customers/customer-success.code-type';
 
-@Controller(ROUTER_ENUM.CUSTOMERS.LISTCUSTOMER)
-@ApiTags(ROUTER_TAG_ENUM.CUSTOMERS.LISTCUSTOMER)
+@AppController(APP_ROUTES.CUSTOMER.LIST)
 export class CustomerController {
   private context = CustomerController.name;
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerService: CustomerService) { }
 
   // @Post()
   // create(@Body() createCustomerDto: CreateCustomerDto) {
   //   return this.customerService.create(createCustomerDto);
   // }
-
-  @Get()
-  getListCustomer() {
-    return this.customerService.getListCustomer() 
-    
+  //get
+  @ApiGet('', {
+    summary: 'Lấy danh sách khách hàng',
+    swagger: ApiCustomerGetList()
+  })
+  @ResponseMessage(customerSuccessTypes().GET_CUSTOMER_LIST.message)
+  async getCustomerList() {
+      return await this.customerService.getCustomerList();
   }
+   
+
+
+
+
+
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
