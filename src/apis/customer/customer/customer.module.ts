@@ -11,3 +11,4 @@ import { PrismaService } from '@prisma';
   providers: [CustomerService,CustomerRepository, PrismaService],
 })
 export class CustomerModule {}
+ 

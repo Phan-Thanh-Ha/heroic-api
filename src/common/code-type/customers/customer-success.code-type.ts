@@ -14,4 +14,4 @@ export const customerSuccessTypes = function (): CustomerSuccessTypes {
             },
         },
     };
-};
+}; 

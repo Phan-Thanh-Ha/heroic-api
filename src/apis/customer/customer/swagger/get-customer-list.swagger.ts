@@ -11,6 +11,6 @@ export const ApiCustomerGetList = () => {
             name: 'token',
             required: true,
             schema: { type: 'string'},
-        }),
+        }),  
     )
-};
+}; 
