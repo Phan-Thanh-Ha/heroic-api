@@ -16,7 +16,7 @@ export const ROUTER_TAG_ENUM = {
         SEND_OTP: 'Send_OTP',
     },
     ADMIN: 'Admin',
-    CUSTOMER: 'Customer',
+    // CUSTOMER: 'Customer',
     EMAIL   : 'Email',
 
     AUTH: {
@@ -41,6 +41,10 @@ export const ROUTER_TAG_ENUM = {
 
     UPLOAD: {
         IMAGE: 'Upload_Image',
+    },
+
+    CUSTOMERS: {
+        LISTCUSTOMER: 'List_Customer',
     },
 } as const;
 
