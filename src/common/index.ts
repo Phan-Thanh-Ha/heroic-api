@@ -8,3 +8,4 @@ export * from './constant';
 export * from './code-type';
 export * from './decorators';
 export * from './apis-routes';
+export * from './dto';

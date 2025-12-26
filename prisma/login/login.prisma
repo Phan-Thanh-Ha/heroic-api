@@ -1,0 +1,18 @@
+model Login {
+    id         Int      @id @default(autoincrement()) @map("id")
+    uuid       String   @unique @map("uuid")
+
+    employeeId Int      @unique @map("employee_id")
+    employee   Employee @relation(fields: [employeeId], references: [id]) // Quan hệ 1-1 với Employee
+
+    employeeCode String   @map("employee_code") // Mã nhân viên
+    createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+    // Quan hệ: Một user có thể có nhiều bản ghi login details
+    loginDetails LoginDetails[]  // Quan hệ 1-N với LoginDetails
+
+    @@index([uuid])
+    @@index([employeeCode])
+    @@index([createdAt])
+    @@map("logins")
+}

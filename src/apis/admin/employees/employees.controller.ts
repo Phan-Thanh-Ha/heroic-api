@@ -1,10 +1,11 @@
-import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM } from '@common';
-import { Body, HttpCode, HttpException, InternalServerErrorException, Post } from '@nestjs/common';
+import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
+import { Body, Query } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
-import { ResponseMessage } from '@common';
-import { ApiGetListEmployeeSwagger,ApiCreateEmployeeSwagger } from './swagger';
+import { ApiCreateEmployeeSwagger, ApiGetListEmployeeSwagger } from './swagger';
+import { QueryUserDto } from './dto';
+import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';
 
 @AppController(APP_ROUTES.AUTH.ADMIN.EMPLOYEES)
 export class EmployeesController {
@@ -27,8 +28,9 @@ export class EmployeesController {
     response: [Employee],
     status: HTTP_STATUS_ENUM.OK,
   })
-  async listEmployees() {
-    return await this.employeesService.getListEmployees();
+  @ResponseMessage(adminEmployeeSuccessTypes().ADMIN_EMPLOYEE_GET_LIST_SUCCESS.message)
+  async listEmployees(@Query() query: QueryUserDto) {
+    return await this.employeesService.getListEmployees(query);
   }
 
   // @Get()

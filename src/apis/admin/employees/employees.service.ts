@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { LoggerService } from '@logger';
 import { EmployeesRepository } from './employees.repository';
+import { DefaultQueryDto } from '@common';
 
 @Injectable()
 export class EmployeesService {
@@ -23,11 +24,8 @@ export class EmployeesService {
   //#endregion
 
   //#region Lấy danh sách nhân viên
-  async getListEmployees() {
-    const employees = await this.employeesRepository.getListEmployees();
-    return {
-      data: employees,
-    };
+  async getListEmployees(query: DefaultQueryDto) {
+    return await this.employeesRepository.getListEmployees(query);
   }
   //#endregion
   

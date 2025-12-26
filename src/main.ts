@@ -47,6 +47,6 @@ async function bootstrap() {
   const port = configuration().port || 3103;
   await app.listen(port, '0.0.0.0');
 
-  logSwaggerUrls(port, { admin: '/docs-admin', customer: '/docs-customer' });
+  logSwaggerUrls(port, '/docs');
 }
 bootstrap();

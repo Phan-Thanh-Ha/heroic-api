@@ -10,6 +10,8 @@ interface AdminAuthErrorTypes {
 	USER_IS_BLOCKED: ErrorType;
 	AUTH_EMPLOYEE_CODE_EXISTS: ErrorType;
 	AUTH_EMPLOYEE_EMAIL_EXISTS: ErrorType;
+
+	AUTH_GET_LIST_EMPLOYEES_FAILED: ErrorType;
 }
 
 export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
@@ -84,6 +86,14 @@ export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
 				vi: 'Email nhân viên đã tồn tại',
 				en: 'Employee email already exists',
 				cn: '员工邮箱已存在',
+			},
+		},
+		AUTH_GET_LIST_EMPLOYEES_FAILED: {
+			error_code: 'ADMIN_AUTH_GET_LIST_EMPLOYEES_FAILED',
+			message: {
+				vi: 'Lấy danh sách nhân viên thất bại',
+				en: 'Get list employees failed',
+				cn: '获取员工列表失败',
 			},
 		},
 	};
