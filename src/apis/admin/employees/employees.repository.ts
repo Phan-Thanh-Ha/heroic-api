@@ -117,7 +117,7 @@ export class EmployeesRepository {
             
             // Trả về kết quả
             return {
-                result: employeesListWithNames,
+                items: employeesListWithNames,
                 total: totalCount,
             };
     
