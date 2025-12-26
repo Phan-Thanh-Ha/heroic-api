@@ -40,7 +40,8 @@
 			"@providers/*": ["src/providers/*"],
 			"@locations": ["src/apis/customer/locations"],
 			"@prisma": ["src/prisma"],
-			"@utils": ["src/common/utils"]
+			"@utils": ["src/common/utils"],
+			"@interfaces": ["src/common/interfaces"]
 		}
 	},
 	"exclude": ["./node_modules/**"],

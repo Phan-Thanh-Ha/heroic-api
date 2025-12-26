@@ -15,104 +15,81 @@ export class ResponseTransformInterceptor implements NestInterceptor {
         const request = http.getRequest<Request>();
         const status = http.getResponse<Response>().statusCode;
 
-        // 1. Lấy Message từ Decorator (Đang là Object {vi, en...} hoặc String)
+        // 1. Lấy Message từ Decorator
         const decoratorMessage = this.reflector.getAllAndOverride<any>(RESPONSE_MESSAGE, [
             context.getHandler(),
             context.getClass(),
         ]);
 
-        // 2. Xác định ngôn ngữ (Lấy từ Middleware đã gán vào req.lang hoặc parse lại header)
-        // (Nếu bạn đã dùng Middleware ở bước trước thì dùng req.lang cho gọn)
+        // 2. Xác định ngôn ngữ
         const lang = (request as any).lang || request.headers['x-language'] || 'vi';
 
         return next.handle().pipe(
             map((data) => {
-                // --- BƯỚC QUAN TRỌNG NHẤT: CHUẨN HOÁ MESSAGE TRƯỚC ---
-                
-                // Mặc định lấy từ Decorator
+                // --- CHUẨN HOÁ MESSAGE ---
                 let rawMessage = decoratorMessage || 'Thành công';
 
-                // Nếu Service có trả về message riêng -> Ưu tiên message của Service
                 if (data && typeof data === 'object' && data.message) {
                     rawMessage = data.message;
                 }
 
-                // Xử lý chọn ngôn ngữ: Biến Object thành String duy nhất
                 const finalMessage = (typeof rawMessage === 'object')
                     ? (rawMessage[lang] || rawMessage['vi'] || JSON.stringify(rawMessage))
                     : rawMessage;
+                // -------------------------
 
-                // -----------------------------------------------------
-
-                // Case 1: Data null/undefined
-                if (!data) return { 
-                    status: 'success', 
-                    code: status, 
-                    success: true, 
-                    message: finalMessage, // Đã là string
-                    data: null 
+                // Cấu trúc response cơ bản
+                const baseResponse = {
+                    status: 'success',
+                    code: status,
+                    success: true,
+                    message: finalMessage,
                 };
 
-                // Case 2: Pagination [items, total]
+                // Case 1: Data null/undefined
+                if (!data) {
+                    return { ...baseResponse, data: null };
+                }
+
+                // --- CASE 2: PAGINATION  ---
+                // Kiểm tra nếu data là mảng dạng [Data[], Count]
                 const isPagination = Array.isArray(data) && data.length === 2 && typeof data[1] === 'number';
                 if (isPagination) {
                     const metadata = getMetadata(request, data);
                     return {
-                        status: 'success',
-                        code: status,
-                        success: true,
-                        message: finalMessage, // Đã là string
+                        ...baseResponse,
                         data: {
-                            result: data[0],
-                            ...metadata,
+                            items: data[0],
+                            meta: metadata
                         },
                     };
                 }
 
-                // Case 3: Array (Danh sách tỉnh thành rơi vào đây)
+                // Case 3: Array thường (Ví dụ danh sách tỉnh thành, không phân trang)
                 if (Array.isArray(data)) {
                     return {
-                        status: 'success',
-                        code: status,
-                        success: true,
-                        message: finalMessage, // <--- ĐÃ SỬA: Dùng string đã lọc thay vì object gốc
-                        data: { result: data },
+                        ...baseResponse,
+                        data: { 
+                            items: data 
+                        },
                     };
                 }
 
-                // Case 4: Object
+                // Case 4: Object (Create/Update/GetOne)
                 if (typeof data === 'object') {
-                    // Loại bỏ field 'message' cũ trong data để tránh dư thừa
-                    const { message, result, ...rest } = data;
-
-                    if (result !== undefined) {
-                        return {
-                            status: 'success',
-                            code: status,
-                            success: true,
-                            message: finalMessage,
-                            data: {
-                                result: Array.isArray(result) ? result : [result],
-                            },
-                        };
-                    }
-
+                    // Loại bỏ field 'message' trong data để tránh dư thừa (vì đã đưa lên finalMessage rồi)
+                    const { message, ...rest } = data;
+                    
                     return {
-                        status: 'success',
-                        code: status,
-                        success: true,
-                        message: finalMessage,
-                        data: rest,
+                        ...baseResponse,
+                        data: rest, 
                     };
                 }
 
-                // Case 5: Primitive
+                // Case 5: Primitive (String, Number, Boolean)
                 return { 
-                    status: 'success', 
-                    code: status, 
-                    success: true, 
-                    message: finalMessage, 
-                    data 
+                    ...baseResponse,
+                    data: data 
                 };
             }),
         );

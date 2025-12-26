@@ -3,11 +3,11 @@ import { LoggerService } from "@logger";
 import { PrismaService } from "@prisma";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { generateUUID, generateHashedDefaultPassword } from "@utils";
-import { adminAuthErrorTypes } from "@common"; // File chứa định nghĩa lỗi
+import { adminAuthErrorTypes, DefaultQueryDto, paginationToQuery } from "@common"; // File chứa định nghĩa lỗi
 
 @Injectable()
 export class EmployeesRepository {
-
+    private context = EmployeesRepository.name;
     constructor(
         private readonly loggerService: LoggerService,
         private readonly prisma: PrismaService,
@@ -45,9 +45,9 @@ export class EmployeesRepository {
             identity_number: createEmployeeDto.identityNumber,
             uuid: generateUUID(),
             password: passwordHashed,
-            code: createEmployeeDto.employeeCode, 
+            code: createEmployeeDto.employeeCode,
             dob: createEmployeeDto.birthday,
-            
+
             position: {
                 connect: { id: createEmployeeDto.positionId }
             },
@@ -63,12 +63,32 @@ export class EmployeesRepository {
     //#endregion
 
     //#region Lấy danh sách nhân viên
-    async getListEmployees() {
-        // Lấy danh sách nhưng không lấy password
-        return await this.prisma.employee.findMany({
-            omit: { password: true }, // Chỉ định bỏ qua cột password
-            orderBy: { id: 'desc' },
-        });
+    async getListEmployees(query: DefaultQueryDto) {
+        try {
+            // 1. Lấy tham số skip và take từ helper
+            const { skip, take } = paginationToQuery(query);
+
+            // 2. Chạy song song: Query dữ liệu (có skip/take) và Đếm tổng số bản ghi
+            const [employeesList, totalCount] = await Promise.all([
+                this.prisma.employee.findMany({
+                    omit: { password: true },
+                    where: {}, // Nếu sau này có tìm kiếm (search), điền vào đây
+                    orderBy: { id: 'desc' },
+                    skip: skip,     
+                    take: take as number, 
+                }),
+                this.prisma.employee.count({
+                    where: {}, // Nhớ khớp điều kiện where với findMany ở trên nếu có search
+                }),
+            ]);
+
+            // 3. Trả về format [Data, Total] để Interceptor/Controller xử lý tiếp
+            return [employeesList, totalCount];
+
+        } catch (error) {
+            this.loggerService.error(this.context, error.message, error);
+            throw new BadRequestException(adminAuthErrorTypes().AUTH_GET_LIST_EMPLOYEES_FAILED);
+        }
     }
     //#endregion
 

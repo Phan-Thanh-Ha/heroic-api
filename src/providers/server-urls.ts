@@ -2,6 +2,7 @@ import os from 'os';
 
 /**
  * Get local IP addresses
+ * (Giữ nguyên hàm này của bạn)
  */
 export const getLocalIps = (): string[] => {
   const ifaces = os.networkInterfaces();
@@ -12,45 +13,28 @@ export const getLocalIps = (): string[] => {
 };
 
 /**
- * Log local and LAN URLs for Swagger docs
+ * Log local and LAN URLs for Swagger docs (Updated)
+ * @param port Port của ứng dụng
+ * @param docPath Đường dẫn docs (ví dụ: '/docs')
  */
-export const logSwaggerUrls = (port: number, paths: { admin: string; customer: string }) => {
+export const logSwaggerUrls = (port: number, docPath: string) => {
   const localIps = getLocalIps();
   const baseUrl = `http://localhost:${port}`;
-  const lanUrls = localIps.map((ip) => `http://${ip}:${port}`);
 
   console.log(`\n📖 Swagger Documentation:`);
-  if (localIps.length > 0) {
-    console.log(`   LAN IPs: ${localIps.join(', ')}`);
-    lanUrls.forEach((url) => {
-      console.log(`   LAN Base:    ${url}`);
-    });
-  }
-  console.log(`   Admin:   ${baseUrl}${paths.admin}`);
-  console.log(`   Customer: ${baseUrl}${paths.customer}`);
-  lanUrls.forEach((url) => {
-    console.log(`   LAN Admin:   ${url}${paths.admin}`);
-    console.log(`   LAN Customer: ${url}${paths.customer}`);
-  });
-  console.log('');
-};
+  
+  // 1. Log Localhost
+  console.log(`   Local:    ${baseUrl}${docPath}`);
 
-/**
- * Log local and LAN URLs for Prisma Studio
- */
-export const logPrismaStudioUrls = (port: number) => {
-  const localIps = getLocalIps();
-  const baseUrl = `http://localhost:${port}`;
-  const lanUrls = localIps.map((ip) => `http://${ip}:${port}`);
-
-  console.log(`\n📊 Prisma Studio URLs:`);
-  console.log(`   Localhost: ${baseUrl}`);
+  // 2. Log LAN IPs nếu có
   if (localIps.length > 0) {
-    console.log(`   LAN IPs: ${localIps.join(', ')}`);
-    lanUrls.forEach((url) => {
-      console.log(`   LAN:     ${url}`);
+    console.log(`   LAN IPs:  ${localIps.join(', ')}`);
+    
+    localIps.forEach((ip) => {
+      const lanBaseUrl = `http://${ip}:${port}`;
+      console.log(`   LAN Base: ${lanBaseUrl}`);
+      console.log(`   LAN Docs: ${lanBaseUrl}${docPath}`);
     });
   }
   console.log('');
 };
-
