@@ -13,13 +13,20 @@ export const APP_ROUTES = {
             LOGIN: { path: 'customers/auth/login', tag: 'Login_Customer' },
             LOGIN_GOOGLE: { path: 'customers/auth/login/google', tag: 'Auth_Customer' },
             REGISTER: { path: 'customers/auth/register', tag: 'Auth_Customer' },
+            
         },
         ADMIN: {
             REGISTER: { path: 'admins/register', tag: 'Register_Admin' },
             LOGIN: { path: 'admins/auth/', tag: 'Login_Admin' },
             EMPLOYEES: { path: 'admins/employees', tag: 'Employees_Admin' },
         },
+    
     },
+
+    CUSTOMER:{
+        LIST:{path: 'customer/customerlist', tag: 'Customer_List'}
+    },
+
     LOCATIONS: {
         PROVINCE: { path: 'customers/locations/province', tag: 'Locations' },
         DISTRICTS: { path: 'customers/locations/districts', tag: 'Locations' },
@@ -54,4 +61,5 @@ export const CUSTOMER_TAG_LIST = [
     ...getUniqueTags(APP_ROUTES.AUTH.CUSTOMER),
     ...getUniqueTags(APP_ROUTES.LOCATIONS),
     ...getUniqueTags(APP_ROUTES.UPLOAD),
+    ...getUniqueTags(APP_ROUTES.CUSTOMER),
 ];

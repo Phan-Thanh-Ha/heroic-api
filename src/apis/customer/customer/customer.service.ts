@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { CustomerRepository } from './customer.repository';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 
 @Injectable()
 export class CustomerService {
-  // create(createCustomerDto: CreateCustomerDto) {
-  //   return 'This action adds a new customer';
-  // }
+  constructor(
+          private readonly customerRepository: CustomerRepository,
+      ) {}
 
-  getListCustomer() {
-    return `this customerServic`;
+  async getCustomerList() {
+    return this.customerRepository.getCustomerList();
   }
+ 
+  update(id: number, updateCustomerDto: UpdateCustomerDto) {
+    return `This action updates a #${id} customer`;
+  }
+    
 
   // findOne(id: number) {
   //   return `This action returns a #${id} customer`;

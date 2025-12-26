@@ -59,6 +59,10 @@ export function ApiPost(path: string, options: ApiEndpointOptions) {
     return createApiDecorator(RequestMethod.POST, path, options);
 }
 
+export function ApiPatch(path: string, options: ApiEndpointOptions) {
+    return createApiDecorator(RequestMethod.POST, path, options);
+}
+
 export function ApiPut(path: string, options: ApiEndpointOptions) {
     return createApiDecorator(RequestMethod.PUT, path, options);
 }
