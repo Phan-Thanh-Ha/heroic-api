@@ -4,6 +4,7 @@ import { PrismaService } from "@prisma";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { generateUUID, generateHashedDefaultPassword } from "@utils";
 import { adminAuthErrorTypes, DefaultQueryDto, paginationToQuery } from "@common"; // File chứa định nghĩa lỗi
+import { Prisma } from "generated/prisma";
 
 @Injectable()
 export class EmployeesRepository {
@@ -65,26 +66,61 @@ export class EmployeesRepository {
     //#region Lấy danh sách nhân viên
     async getListEmployees(query: DefaultQueryDto) {
         try {
-            // 1. Lấy tham số skip và take từ helper
-            const { skip, take } = paginationToQuery(query);
-
-            // 2. Chạy song song: Query dữ liệu (có skip/take) và Đếm tổng số bản ghi
-            const [employeesList, totalCount] = await Promise.all([
-                this.prisma.employee.findMany({
-                    omit: { password: true },
-                    where: {}, // Nếu sau này có tìm kiếm (search), điền vào đây
-                    orderBy: { id: 'desc' },
-                    skip: skip,     
-                    take: take as number, 
-                }),
-                this.prisma.employee.count({
-                    where: {}, // Nhớ khớp điều kiện where với findMany ở trên nếu có search
-                }),
+            const { search } = query
+    
+            // Điều kiện lọc
+            const whereCondition: Prisma.EmployeeWhereInput = {
+                ...(search ? {
+                    OR: [
+                        { fullName: { contains: search, mode: 'insensitive' } },
+                        { code: { contains: search, mode: 'insensitive' } },
+                        { email: { contains: search, mode: 'insensitive' } },
+                        { phoneNumber: { contains: search, mode: 'insensitive' } },
+                        { identity_number: { contains: search, mode: 'insensitive' } },
+                    ],
+                } : {}),
+            };
+    
+            // Query lấy danh sách nhân viên
+            const findManyQuery = this.prisma.employee.findMany({
+                where: whereCondition,
+                omit: { password: true },
+                include: {
+                    department: true,
+                    position: true,
+                },
+                orderBy: { id: 'desc' },
+            });
+    
+            // Query đếm tổng số lượng nhân viên
+            const countQuery = this.prisma.employee.count({
+                where: whereCondition,
+            });
+    
+            // Thực thi song song
+            const [employeesList, totalCount] = await this.prisma.$transaction([
+                findManyQuery,
+                countQuery
             ]);
-
-            // 3. Trả về format [Data, Total] để Interceptor/Controller xử lý tiếp
-            return [employeesList, totalCount];
-
+    
+            // Làm phẳng dữ liệu
+            const employeesListWithNames = employeesList.map((emp) => {
+                const { department, position, ...rest } = emp;
+                return {
+                    ...rest,
+                    departmentId: department?.id || null,
+                    departmentName: department?.name || null,
+                    positionId: position?.id || null,
+                    positionName: position?.name || null,
+                };
+            });
+            
+            // Trả về kết quả
+            return {
+                result: employeesListWithNames,
+                total: totalCount,
+            };
+    
         } catch (error) {
             this.loggerService.error(this.context, error.message, error);
             throw new BadRequestException(adminAuthErrorTypes().AUTH_GET_LIST_EMPLOYEES_FAILED);

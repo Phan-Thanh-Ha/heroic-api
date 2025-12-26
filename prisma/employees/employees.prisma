@@ -30,6 +30,10 @@ model Employee {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật nhân viên
     updatedById Int?     @map("updated_by_id") // ID nhân viên cập nhật
 
+    // Quan hệ với Login
+    loginId Int?     @map("login_id")
+    login   Login?   
+
     @@index([id])
     @@index([code])
     @@index([fullName])
