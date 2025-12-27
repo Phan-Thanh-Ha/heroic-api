@@ -24,7 +24,7 @@ export const APP_ROUTES = {
     },
 
     CUSTOMER:{
-        LIST:{path: 'customer/customerlist', tag: 'Customer_List'}
+        LIST:{path: 'customers/list', tag: 'Customer_List'}
     },
 
     LOCATIONS: {
