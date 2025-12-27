@@ -16,13 +16,14 @@
     # Xử lý gộp schema (nếu có)
     RUN node scripts/merge-prisma-schema.js || echo "Merge skipped"
     
-    # --- KHU VỰC QUAN TRỌNG ĐỂ SỬA LỖI ---
-    # Khai báo ARG: Railway sẽ tự động truyền giá trị từ tab Variables vào đây lúc BUILD
+    # --- GIẢI PHÁP CHO LỖI BIẾN MÔI TRƯỜNG ---
+    # Khai báo ARG: Railway sẽ tự động truyền DATABASE_URL từ tab Variables vào đây lúc BUILD
     ARG DATABASE_URL
     
-    # Chạy Prisma generate với biến đã được nạp
-    RUN DATABASE_URL=$DATABASE_URL npx prisma generate --no-engine
-    # -------------------------------------
+    # Chạy Prisma generate. 
+    # Bỏ --no-engine vì phiên bản Prisma của bạn báo lỗi "unknown option"
+    RUN DATABASE_URL=$DATABASE_URL npx prisma generate
+    # ----------------------------------------
     
     # Build dự án NestJS ra thư mục dist
     RUN yarn build
@@ -37,23 +38,23 @@
     COPY package.json yarn.lock* ./
     RUN yarn install --production --non-interactive --ignore-engines
     
-    # 1. Copy các file thực thi và cấu hình
+    # 1. Copy các file thực thi và cấu hình đã build từ Stage 1
     COPY --from=builder /app/dist ./dist
     COPY --from=builder /app/prisma ./prisma
     
-    # 2. Copy thư mục generated/prisma (Custom output của bạn)
+    # 2. Copy thư mục generated/prisma (Nơi chứa Prisma Client đã tạo)
     COPY --from=builder /app/generated ./generated
     
-    # 3. Copy các thư viện Prisma lõi
+    # 3. Copy các thư viện Prisma cần thiết
     COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
     COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
     
-    # Thiết lập biến môi trường chạy
+    # Thiết lập biến môi trường
     ENV NODE_ENV=production
     
-    # Khớp với cổng bạn đã cấu hình trên Railway (mặc định nên là 3104 hoặc dùng biến PORT)
+    # Khớp với cổng bạn đã cấu hình (Mặc định 3104)
     EXPOSE 3104
     
-    # Lệnh khởi chạy: Migrate database trước khi start server
-    # Sử dụng biến PORT của Railway để linh hoạt
+    # Lệnh khởi chạy: Tự động chạy migrate database và khởi động server
+    # Railway sẽ cung cấp biến PORT cho quá trình chạy
     CMD npx prisma migrate deploy && node dist/main.js
