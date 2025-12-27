@@ -20,7 +20,7 @@ export class UploadService {
         const fileName = `${Date.now()}-${file.originalname}`;
         const filePath = `${folder}/${fileName}`; // Cấu trúc thư mục trong bucket hoặc local
 
-        if (!isProduction) {
+        if (isProduction) {
             // --- CHẾ ĐỘ PRODUCTION (SUPABASE) ---
             const { data, error } = await this.supabase.storage
                 .from(process.env.SUPABASE_BUCKET_NAME || '')
