@@ -17,11 +17,8 @@
     RUN node scripts/merge-prisma-schema.js || echo "Merge skipped"
     
     # --- GIẢI PHÁP CHO LỖI BIẾN MÔI TRƯỜNG ---
-    # Khai báo ARG: Railway sẽ tự động truyền DATABASE_URL từ tab Variables vào đây lúc BUILD
     ARG DATABASE_URL
-    
-    # Chạy Prisma generate. 
-    # Bỏ --no-engine vì phiên bản Prisma của bạn báo lỗi "unknown option"
+    # Generate Prisma Client vào thư mục /app/generated/prisma
     RUN DATABASE_URL=$DATABASE_URL npx prisma generate
     # ----------------------------------------
     
@@ -34,27 +31,28 @@
     RUN apk add --no-cache openssl
     WORKDIR /app
     
-    # Chỉ cài đặt dependencies cần thiết cho runtime (giúp image nhẹ hơn)
+    # Chỉ cài đặt dependencies cần thiết cho runtime
     COPY package.json yarn.lock* ./
     RUN yarn install --production --non-interactive --ignore-engines
     
-    # 1. Copy các file thực thi và cấu hình đã build từ Stage 1
+    # 1. Copy các file thực thi đã build
     COPY --from=builder /app/dist ./dist
     COPY --from=builder /app/prisma ./prisma
     
-    # 2. Copy thư mục generated/prisma (Nơi chứa Prisma Client đã tạo)
+    # 2. COPY QUAN TRỌNG: Vì bạn dùng custom output, mọi thứ nằm ở đây
+    # Thư mục này chứa Prisma Client đã được generate hoàn chỉnh
     COPY --from=builder /app/generated ./generated
     
-    # 3. Copy các thư viện Prisma cần thiết
+    # 3. Copy thư viện @prisma (chứa engine và các file phụ trợ)
     COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-    COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
     
-    # Thiết lập biến môi trường
+    # --- LƯU Ý: Đã bỏ dòng copy node_modules/.prisma vì nó không tồn tại khi dùng custom output ---
+    
+    # Thiết lập biến môi trường chạy
     ENV NODE_ENV=production
     
-    # Khớp với cổng bạn đã cấu hình (Mặc định 3104)
+    # Cổng mặc định
     EXPOSE 3104
     
-    # Lệnh khởi chạy: Tự động chạy migrate database và khởi động server
-    # Railway sẽ cung cấp biến PORT cho quá trình chạy
+    # Lệnh khởi chạy: Migrate database trước khi start server
     CMD npx prisma migrate deploy && node dist/main.js
