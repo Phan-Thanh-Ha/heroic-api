@@ -17,8 +17,8 @@
     RUN node scripts/merge-prisma-schema.js || echo "Merge skipped"
     
     # Cập nhật binaryTargets trong quá trình build để tương thích Linux Alpine
-    RUN npx prisma generate
-    
+    RUN npx prisma generate --no-engine
+        
     # Build dự án NestJS ra thư mục dist
     RUN yarn build
     
