@@ -1,11 +1,15 @@
-import { Module } from '@nestjs/common';
-import { LoginService } from './login.service';
-import { LoginController } from './login.controller';
+import { JwtModule } from '@jwt';
 import { LoggerModule } from '@logger';
+import { MailModule, MailService } from '@mail';
+import { Module } from '@nestjs/common';
+import { PrismaModule } from '@prisma';
+import { LoginController } from './login.controller';
+import { LoginRepository } from './login.repository';
+import { LoginService } from './login.service';
 
 @Module({
-  imports: [LoggerModule],
+  imports: [LoggerModule, PrismaModule, JwtModule, MailModule],
   controllers: [LoginController],
-  providers: [LoginService],
+  providers: [LoginService, LoginRepository],
 })
 export class LoginModule {}

@@ -41,7 +41,8 @@
 			"@locations": ["src/apis/customer/locations"],
 			"@prisma": ["src/prisma"],
 			"@utils": ["src/common/utils"],
-			"@interfaces": ["src/common/interfaces"]
+			"@interfaces": ["src/common/interfaces"],
+			"@mail": ["src/mail/index"],
 		}
 	},
 	"exclude": ["./node_modules/**"],

@@ -17,14 +17,14 @@ export const APP_ROUTES = {
         },
         ADMIN: {
             REGISTER: { path: 'admins/register', tag: 'Register_Admin' },
-            LOGIN: { path: 'admins/login', tag: 'Login_Admin' },
+            LOGIN: { path: 'admins/auth/', tag: 'Login_Admin' },
             EMPLOYEES: { path: 'admins/employees', tag: 'Employees_Admin' },
         },
     
     },
 
     CUSTOMER:{
-        LIST:{path: 'customer/customerlist', tag: 'Customer_List'}
+        LIST:{path: 'customers/list', tag: 'Customer_List'}
     },
 
     LOCATIONS: {

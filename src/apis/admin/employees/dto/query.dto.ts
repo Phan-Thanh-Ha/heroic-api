@@ -2,69 +2,34 @@ import { DefaultQueryDto } from '@common';
 import { IsBoolean, IsBooleanString, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class QueryUserDto extends DefaultQueryDto {
-	@IsOptional()
-	@IsString()
-	_id?: string | Object;
+	id?: string;
 
-	@IsOptional()
-	@IsString()
-	CCCDNumber?: string | Object;
+	CCCDNumber?: string;
 
-	@IsOptional()
-	@IsString()
-	customerCode?: string | Object;
 
-	@IsOptional()
-	@IsString()
-	fullName?: string | Object;
+	customerCode?: string;
 
-	@IsOptional()
-	@IsString()
-	phone?: string | Object;
 
-	@IsOptional()
-	@IsString()
-	email?: string | Object;
+	fullName?: string;
 
-	@IsOptional()
-	@IsString()
-	gender?: string | Object;
+	phone?: string;
 
-	@IsOptional()
-	@IsDateString()
-	birthday?: string | Object;
+	email?: string;
 
-	@IsOptional()
-	@IsString()
-	identityNumber?: string | Object;
+	gender?: string;
 
-	@IsOptional()
-	@IsString()
-	positionId?: string | Object;
+	birthday?: string;
 
-	@IsOptional()
-	@IsString()
-	departmentId?: string | Object;
+	identityNumber?: string;
 
-	// Base ------------------------
+	positionId?: string;
 
-	@IsOptional()
-	@IsBoolean()
-	isActive?: boolean | Object;
+	departmentId?: string;
 
-	@IsOptional()
-	@IsDateString()
-	createdAt?: Date | Object;
 
-	@IsOptional()
-	@IsDateString()
-	updatedAt?: Date | Object;
-
-	@IsOptional()
-	@IsNumber()
-	createdById?: number | Object;
-
-	@IsOptional()
-	@IsNumber()
-	updatedById?: number | Object;
+	isActive?: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
+	createdById?: number;
+	updatedById?: number;
 }
