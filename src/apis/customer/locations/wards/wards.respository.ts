@@ -21,4 +21,20 @@ export class WardsRepository {
             throw error;
         }
     }
+
+
+    async findWardsByWardId(wardId: number) {
+        try {
+            return await this.prisma.wards.findFirst({
+                where: { id: wardId },
+            
+                
+            }); 
+            
+        }
+        catch (error) {
+            this.logger.error(this.context, 'findWardsByDistrictCode', error);
+            throw error;
+        }
+    }
 }

@@ -26,9 +26,9 @@ export class CustomerController {
     return await this.customerService.getCustomerList();
   }
  
-  @ApiPatch(':id', {
-    summary: 'Cập nhật thông tin danh sách khách hàng'
-  })
+  // @ApiPatch(':id', {
+  //   summary: 'Cập nhật thông tin danh sách khách hàng'
+  // })
 
   // @ResponseMessage(customerSuccessTypes().UPDATE_CUSTOMER.message) // 4. Thêm message success
   // async update(

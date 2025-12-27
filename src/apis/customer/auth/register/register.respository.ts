@@ -4,6 +4,7 @@ import { PrismaService } from "@prisma";
 import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@utils";
 import bcrypt from "bcryptjs";
 import { CreateRegisterDto } from "./dto/create-register.dto";
+import { WardsService } from "../../locations/wards/wards.service";
 
 
 @Injectable()
@@ -12,6 +13,7 @@ export class RegisterRespository {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly loggerService: LoggerService,
+        private readonly wardsService: WardsService,
 	) { }
 
 	//#region Kiểm tra email đã tồn tại chưa
@@ -31,6 +33,7 @@ export class RegisterRespository {
         try {
             const dateOfBirthToSave = convertDdMmYyyyToUTCDate(createRegisterDto.birthday);
             const passwordHashed = await bcrypt.hash(createRegisterDto.password, 10);
+            const ward = await this.wardsService.findWardsByWardId(createRegisterDto.wardId);
             // Cần id trước rồi mới sinh được mã KHyyMMdd0001 (dựa trên id)
                 const customer = await this.prisma.$transaction(async (tx) => {
                 // 1. Insert trước để lấy id
@@ -52,6 +55,7 @@ export class RegisterRespository {
                     provinceId: createRegisterDto.provinceId,
                     districtId: createRegisterDto.districtId,
                     wardId: createRegisterDto.wardId,
+                    fullAddress: createRegisterDto.address + ' ' + ward?.path_with_type
                 };
 
                 // Endpoint này chỉ dành cho đăng ký Email, không có facebookId/googleId

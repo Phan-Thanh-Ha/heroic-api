@@ -34,5 +34,17 @@ export class WardsService {
       this.logger.error(this.context, 'findWardsByDistrictCode', error);
       throw error;
     }
-  }
+  };
+   
+
+   async findWardsByWardId (wardId : number){
+    try {
+      return await this.wardsRepository.findWardsByWardId(wardId);
+    } catch (error) {
+      this.logger.error(this.context, 'findWardsByWardId', error);
+      throw error;
+    }
+   }
+  
 }
+

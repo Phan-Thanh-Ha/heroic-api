@@ -5,8 +5,10 @@ import { RegisterController } from './register.controller';
 import { RegisterRespository } from './register.respository';
 import { RegisterService } from './register.service';
 
+import { WardsModule } from '@locations';
+
 @Module({
-  imports: [LoggerModule, PrismaModule],
+  imports: [LoggerModule, PrismaModule, WardsModule],
   controllers: [RegisterController],
   providers: [RegisterService, RegisterRespository],
 })
