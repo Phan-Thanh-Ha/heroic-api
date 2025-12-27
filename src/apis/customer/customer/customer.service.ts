@@ -13,9 +13,9 @@ export class CustomerService {
     return this.customerRepository.getCustomerList();
   }
  
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
-  }
+  // update(id: number, updateCustomerDto: UpdateCustomerDto) {
+  //   return `This action updates a #${id} customer`;
+  // }
     
 
   // findOne(id: number) {

@@ -10,7 +10,7 @@ export class CustomerRepository {
     // Lấy danh sách thành phố
     async getCustomerList() {
         try {
-            return await this.prisma.customer.findMany(
+             const takeCustomerList = await this.prisma.customer.findMany(
                 {
                     omit: {
                         password: true
@@ -29,6 +29,18 @@ export class CustomerRepository {
                     },
                 }
             );
+            const customerList = takeCustomerList.map( (item) => {
+                 return {...item,
+                    province: item.province?.name,
+                    district: item.district?.name,
+                    ward: item.ward?.name
+
+                 }
+                //  return {...takeCustomerList 
+                //     province : takeCustomerList[0].province?.name
+                //  }
+            } )
+            return customerList
         } catch (error) {
             this.logger.error(this.context, 'getCustomerList', error);
             throw error;

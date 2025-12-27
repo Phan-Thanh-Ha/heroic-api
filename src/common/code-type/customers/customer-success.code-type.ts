@@ -2,6 +2,7 @@ import { SuccessType } from "src/common/interfaces";
 
 interface CustomerSuccessTypes {
     GET_CUSTOMER_LIST: SuccessType;
+    UPDATE_CUSTOMER: SuccessType;
 }
 export const customerSuccessTypes = function (): CustomerSuccessTypes {
     return {
@@ -13,5 +14,14 @@ export const customerSuccessTypes = function (): CustomerSuccessTypes {
                 cn: '在所有省市取得成功。',
             },
         },
+
+        UPDATE_CUSTOMER: {
+            success_code: 'CUSTOMER_UPDATE_SUCCESS',
+            message: {
+                vi: 'Cập nhật thông tin khách hàng thành công',
+                en: 'Update customer successfully',
+                cn: '更新客户成功', // (Bạn có thể sửa lại tiếng Trung nếu cần)
+            }
+        }
     };
 }; 
