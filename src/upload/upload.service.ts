@@ -1,153 +1,65 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { UploadFolderType } from './dto/upload-image.dto';
 
 @Injectable()
 export class UploadService {
-	/**
-	 * Đường dẫn lưu trữ file upload
-	 * Ưu tiên: UPLOAD_PATH từ env → ./uploads (thư mục mặc định)
-	 */
-	private readonly uploadPath: string = (() => {
-		// Ưu tiên 1: UPLOAD_PATH từ environment variable
-		if (process.env.UPLOAD_PATH) {
-			return process.env.UPLOAD_PATH;
-		}
-		// Ưu tiên 2: ./uploads trong project (thư mục mặc định)
-		return path.join(process.cwd(), 'uploads');
-	})();
+    // Khởi tạo Supabase Client
+    private supabase = createClient(
+        process.env.SUPABASE_URL || '',
+        process.env.SUPABASE_ANON_KEY || '',
+    );
 
-	constructor() {
-		// Tự động tạo thư mục uploads và các thư mục con khi service khởi tạo
-		this.ensureUploadDirectoryExists();
-		// Tạo các thư mục con (avatar, banner, product) ngay từ đầu
-		this.initializeSubFolders();
-	}
+    async uploadImage(file: Express.Multer.File, folder: string = 'general') {
+        if (!file) {
+            throw new BadRequestException('Vui lòng chọn file ảnh');
+        }
 
-	/**
-	 * Khởi tạo các thư mục con (avatar, banner, product) ngay từ đầu
-	 */
-	private initializeSubFolders(): void {
-		Object.values(UploadFolderType).forEach((folder) => {
-			this.ensureFolderExists(folder);
-		});
-	}
-	
+        const isProduction = process.env.NODE_ENV === 'production';
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const filePath = `${folder}/${fileName}`; // Cấu trúc thư mục trong bucket hoặc local
 
-	/**
-	 * Đảm bảo thư mục uploads tồn tại, nếu chưa có thì tạo mới
-	 */
-	private ensureUploadDirectoryExists(): void {
-		if (!fs.existsSync(this.uploadPath)) {
-			try {
-				fs.mkdirSync(this.uploadPath, { recursive: true });
-				console.log(`✅ Created upload directory: ${this.uploadPath}`);
-			} catch (error) {
-				console.error(`❌ Failed to create upload directory: ${this.uploadPath}`, error);
-				throw new Error(`Cannot create upload directory: ${error.message}`);
-			}
-		}
-	}
+        if (!isProduction) {
+            // --- CHẾ ĐỘ PRODUCTION (SUPABASE) ---
+            const { data, error } = await this.supabase.storage
+                .from(process.env.SUPABASE_BUCKET_NAME || '')
+                .upload(filePath, file.buffer, {
+                    contentType: file.mimetype,
+                    upsert: true,
+                });
 
-	//#region Kiểm tra thư mục tồn tại
-	private ensureFolderExists(folder?: UploadFolderType) {
-		// Đảm bảo thư mục gốc tồn tại
-		this.ensureUploadDirectoryExists();
+            if (error) throw new Error(`Supabase Error: ${error.message}`);
 
-		// Nếu không có folder, trả về thư mục gốc
-		if (!folder) {
-			return this.uploadPath;
-		}
+            const { data: { publicUrl } } = this.supabase.storage
+                .from(process.env.SUPABASE_BUCKET_NAME || '')
+                .getPublicUrl(filePath);
 
-		// Tạo đường dẫn thư mục con
-		const folderPath = path.join(this.uploadPath, folder);
+            return { url: publicUrl, name: fileName, provider: 'supabase' };
+        } else {
+            // --- CHẾ ĐỘ DEVELOPMENT (LOCAL STORAGE) ---
+            const uploadDir = path.join(process.cwd(), 'uploads', folder);
+            
+            // Tạo thư mục nếu chưa có (ví dụ: uploads/employees)
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
 
-		// Tạo thư mục con nếu chưa tồn tại
-		if (!fs.existsSync(folderPath)) {
-			try {
-				fs.mkdirSync(folderPath, { recursive: true });
-				console.log(`Created folder: ${folderPath}`);
-			} catch (error) {
-				console.error(`Failed to create folder: ${folderPath}`, error);
-				throw new BadRequestException(`Cannot create folder: ${error.message}`);
-			}
-		}
+            const localFilePath = path.join(uploadDir, fileName);
+            fs.writeFileSync(localFilePath, file.buffer);
 
-		return folderPath;
-	}
+            // Trả về URL local (Lưu ý: Bạn cần config static trong main.ts)
+            const url = `http://localhost:${process.env.PORT || 3000}/uploads/${folder}/${fileName}`;
+            return { url: url, name: fileName, provider: 'local' };
+        }
+    }
 
-	//#endregion
+    async uploadMultipleImages(files: Express.Multer.File[], folder: string = 'general') {
+        if (!files || files.length === 0) {
+            throw new BadRequestException('Vui lòng chọn ít nhất một file');
+        }
 
-	//#region Upload image
-	async uploadImage(
-		file: Express.Multer.File,
-		folder?: UploadFolderType,
-	) {
-		if (!file) {
-			throw new BadRequestException('No file uploaded');
-		}
-
-		// Nhận biết file type có phải là ảnh không
-		const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-		if (!allowedMimeTypes.includes(file.mimetype)) {
-			throw new BadRequestException(
-				`Invalid file type. Allowed types: ${allowedMimeTypes.join(', ')}`,
-			);
-		}
-
-		// Validate file size (max 5MB)
-		const maxSize = 5 * 1024 * 1024; // 5MB
-		if (file.size > maxSize) {
-			throw new BadRequestException('File size exceeds 5MB limit');
-		}
-
-		// Đảm bảo thư mục (gốc hoặc con) tồn tại
-		const targetFolderPath = this.ensureFolderExists(folder);
-		const targetFolderName = folder || '';
-
-		// Tạo tên file unique
-		const fileExtension = path.extname(file.originalname);
-		const uniqueFilename = `${uuidv4()}${fileExtension}`;
-		const filePath = path.join(targetFolderPath, uniqueFilename);
-
-		// Lưu file
-		try {
-			fs.writeFileSync(filePath, file.buffer);
-		} catch (error) {
-			throw new BadRequestException(`Failed to save file: ${error.message}`);
-		}
-
-		// Trả về URL để client có thể truy cập
-		// Nếu có folder, URL sẽ bao gồm folder: /uploads/avatar/filename.jpg
-		const url = targetFolderName
-			? `/uploads/${targetFolderName}/${uniqueFilename}`
-			: `/uploads/${uniqueFilename}`;
-
-		return {
-			url,
-			filename: uniqueFilename,
-		};
-	}
-	//#endregion
-
-	//#region Upload multiple images
-	async uploadMultipleImages(
-		files: Express.Multer.File[],
-		folder?: UploadFolderType,
-	) {
-		if (!files || files.length === 0) {
-			throw new BadRequestException('No files uploaded');
-		}
-
-		const results = await Promise.all(files.map((file) => this.uploadImage(file, folder)));
-
-		return {
-			urls: results.map((r) => r.url),
-			filenames: results.map((r) => r.filename),
-		};
-	}
-	//#endregion
+        const uploadPromises = files.map(file => this.uploadImage(file, folder));
+        return Promise.all(uploadPromises);
+    }
 }
-
