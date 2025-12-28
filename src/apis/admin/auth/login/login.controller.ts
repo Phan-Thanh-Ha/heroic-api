@@ -4,7 +4,7 @@ import { Body, HttpCode, Post } from '@nestjs/common';
 import { ApiLogin } from 'src/apis/customer/auth/login/swagger/login.swagger';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
 import { AppController } from 'src/common/decorators/decorator';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './dto/employee-login.dto';
 import { LoginService } from './login.service';
 import { ApiLoginSwagger } from './swagger';
 import { LoginEntity } from './entities';

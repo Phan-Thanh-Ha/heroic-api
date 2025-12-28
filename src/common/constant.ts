@@ -1,6 +1,7 @@
 export const tokenLifeTime = {
 	// 1. Access Token: Ngắn, bảo mật cao
-    accessToken: '30d',                    // JWT Expire string
+    accessTokenCustomer: '30d',                    // JWT Expire string
+    accessTokenAdmin: '8h',                    // 8h
     refreshToken: '30d',                  // JWT Expire string
     redisAccessToken: 60 * 60,            // 1 giờ (giây) - khớp với JWT
     redisRefreshToken: 30 * 24 * 60 * 60, // 30 ngày (giây)

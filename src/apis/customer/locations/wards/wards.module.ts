@@ -9,5 +9,6 @@ import { WardsService } from './wards.service';
   imports: [LoggerModule, PrismaModule],
   controllers: [WardsController],
   providers: [WardsService, WardsRepository],
+  exports : [WardsService]
 })
 export class WardsModule {}

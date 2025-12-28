@@ -11,6 +11,7 @@ import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/e
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) { }
 
+  //#region Tạo nhân viên
   @ApiPost('create', {
     summary: 'Tạo nhân viên',
     swagger: ApiCreateEmployeeSwagger(),
@@ -21,7 +22,9 @@ export class EmployeesController {
   async createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
     return await this.employeesService.createEmployee(createEmployeeDto);
   }
+  //#endregion
 
+  //#region Lấy danh sách nhân viên
   @ApiGet('list', {
     summary: 'Lấy danh sách nhân viên',
     swagger: ApiGetListEmployeeSwagger(),
@@ -32,24 +35,7 @@ export class EmployeesController {
   async listEmployees(@Query() query: QueryUserDto) {
     return await this.employeesService.getListEmployees(query);
   }
+  //#endregion
 
-  // @Get()
-  // findAll() {
-  //   return this.employeesService.findAll();
-  // }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.employeesService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
-  //   return this.employeesService.update(+id, updateEmployeeDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.employeesService.remove(+id);
-  // }
 }

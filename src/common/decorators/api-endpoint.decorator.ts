@@ -51,7 +51,7 @@ function createApiDecorator(
 }
 
 // EXPORT CÁC HÀM DÙNG CHUNG (Tên Generic)
-export function ApiGet(path: string, options: ApiEndpointOptions) {
+export function ApiGet(path: string , options: ApiEndpointOptions) {
     return createApiDecorator(RequestMethod.GET, path, options);
 }
 

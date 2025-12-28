@@ -3,9 +3,9 @@ import { IsString, IsNotEmpty, IsBoolean, IsNumber, IsInt, IsDate } from "class-
 
 export class CreateEmployeeDto {
 
-    @IsString({ message: 'employeeCode phải là chuỗi' })
-    @IsNotEmpty({ message: 'employeeCode không được để trống' })
-    employeeCode!: string;
+    @IsString({ message: 'code phải là chuỗi' })
+    @IsNotEmpty({ message: 'code không được để trống' })
+    code!: string;
 
     @IsString({ message: 'fullName phải là chuỗi' })
     @IsNotEmpty({ message: 'fullName không được để trống' })

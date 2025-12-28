@@ -1,32 +1,53 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
-import { customerAuthErrorTypes, tokenLifeTime } from '@common';
+import { adminAuthErrorTypes, customerAuthErrorTypes, tokenLifeTime } from '@common';
 import { configuration } from '@config';
-import { JwtPayloadCustomer } from './jwt.interface';
+import { JwtPayloadAdmin, JwtPayloadCustomer } from './jwt.interface';
 
 @Injectable()
 export class JwtService extends NestJwtService {
-	signJwtCustomer(payload: JwtPayloadCustomer, isRefreshToken = false) {
-		const { accessToken, refreshToken } = tokenLifeTime;
-		const expiresIn = isRefreshToken ? refreshToken : accessToken;
+    
+    //#region Customer
+    signJwtCustomer(payload: JwtPayloadCustomer, isRefreshToken = false): string {
+        const { accessTokenCustomer, refreshToken } = tokenLifeTime;
+        const expiresIn = isRefreshToken ? refreshToken : accessTokenCustomer;
 
-		const token = this.sign<JwtPayloadCustomer>(payload, {
-			expiresIn: expiresIn as any,
-			secret: configuration().secretKey,
-		});
+        return this.sign(payload, {
+            expiresIn: expiresIn as any,
+            secret: configuration().secretKey,
+        });
+    }
 
-		return token;
-	}
+    async verifyJwtCustomer(token: string): Promise<JwtPayloadCustomer> {
+        try {
+            return await this.verifyAsync<JwtPayloadCustomer>(token, {
+                secret: configuration().secretKey,
+            });
+        } catch (error) {
+            throw new UnauthorizedException(customerAuthErrorTypes().AUTH_TOKEN_ERROR);
+        }
+    }
+    //#endregion
 
-	async verifyJwt(token: string) {
-		try {
-			const payload = await this.verify<JwtPayloadCustomer>(token, {
-				secret: configuration().secretKey,
-			});
+    //#region Admin
+    signJwtAdmin(payload: JwtPayloadAdmin, isRefreshToken = false): string {
+        const { accessTokenAdmin, refreshToken } = tokenLifeTime;
+        const expiresIn = isRefreshToken ? refreshToken : accessTokenAdmin;
 
-			return payload;
-		} catch (error) {
-			throw new UnauthorizedException(customerAuthErrorTypes().AUTH_TOKEN_ERROR);
-		}
-	}
+        return this.sign(payload, {
+            expiresIn: expiresIn as any,
+            secret: configuration().secretKey,
+        });
+    }
+
+    async verifyJwtAdmin(token: string): Promise<JwtPayloadAdmin> {
+        try {
+            return await this.verifyAsync<JwtPayloadAdmin>(token, {
+                secret: configuration().secretKey,
+            });
+        } catch (error) {
+            throw new UnauthorizedException(adminAuthErrorTypes().AUTH_TOKEN_ERROR);
+        }
+    }
+    //#endregion
 }

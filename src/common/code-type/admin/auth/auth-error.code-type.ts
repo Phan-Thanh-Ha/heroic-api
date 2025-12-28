@@ -10,8 +10,9 @@ interface AdminAuthErrorTypes {
 	USER_IS_BLOCKED: ErrorType;
 	AUTH_EMPLOYEE_CODE_EXISTS: ErrorType;
 	AUTH_EMPLOYEE_EMAIL_EXISTS: ErrorType;
-
+	AUTH_USERNAME_NOT_FOUND: ErrorType;
 	AUTH_GET_LIST_EMPLOYEES_FAILED: ErrorType;
+	AUTH_PASSWORD_INCORRECT: ErrorType;
 }
 
 export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
@@ -94,6 +95,22 @@ export const adminAuthErrorTypes = function (): AdminAuthErrorTypes {
 				vi: 'Lấy danh sách nhân viên thất bại',
 				en: 'Get list employees failed',
 				cn: '获取员工列表失败',
+			},
+		},
+		AUTH_USERNAME_NOT_FOUND: {
+			error_code: 'ADMIN_AUTH_USERNAME_NOT_FOUND',
+			message: {
+				vi: 'Username không tồn tại',
+				en: 'Username not found',
+				cn: '用户名不存在',
+			},
+		},
+		AUTH_PASSWORD_INCORRECT: {
+			error_code: 'ADMIN_AUTH_PASSWORD_INCORRECT',
+			message: {
+				vi: 'Mật khẩu không đúng',
+				en: 'Password is incorrect',
+				cn: '密码不正确',
 			},
 		},
 	};

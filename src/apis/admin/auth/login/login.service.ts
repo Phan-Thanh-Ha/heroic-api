@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@logger';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './dto/employee-login.dto';
 import { LoginRepository } from './login.repository';
 
 @Injectable()

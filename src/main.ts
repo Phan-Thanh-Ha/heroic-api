@@ -20,13 +20,16 @@ async function bootstrap() {
     fs.mkdirSync(uploadsPath, { recursive: true });
   }
 
+  // Cấu hình Upload Files Storage 
   app.useStaticAssets(uploadsPath, {
     prefix: '/uploads/',
   });
 
-  // --- 2. Cấu hình Cơ bản ---
+  //Cấu hình Global Prefix
   app.setGlobalPrefix('/v1');
+  // Cấu hình Cookie Parser
   app.use(cookieParser());
+  // Cấu hình CORS
   app.enableCors({ origin: '*', credentials: true });
 
   // --- 3. Swagger ---

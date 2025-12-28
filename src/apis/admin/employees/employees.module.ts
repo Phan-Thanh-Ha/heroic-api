@@ -9,5 +9,6 @@ import { EmployeesService } from './employees.service';
   imports: [LoggerModule, PrismaModule],
   controllers: [EmployeesController],
   providers: [EmployeesService, EmployeesRepository],
+  exports: [EmployeesRepository],
 })
 export class EmployeesModule {}

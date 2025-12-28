@@ -1,24 +1,63 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { LoginDto } from "./dto";
 import { PrismaService } from "@prisma";
 import { LoggerService } from "@logger";
+import { adminAuthErrorTypes } from "@common";
+import { comparePassword, hashPassword } from "@utils";
+import { EmployeesRepository } from "../../employees/employees.repository";
+import { JwtService } from "@jwt";
+import { setCookieRFToken } from "src/common/helpers/setCookieRFToken";
 
 @Injectable()
 export class LoginRepository {
     private context = LoginRepository.name;
-    constructor(private readonly prisma: PrismaService, private readonly loggerService: LoggerService) { }
+    constructor(
+        private readonly loggerService: LoggerService,
+        private readonly employeesRepository: EmployeesRepository,
+        private readonly jwtService: JwtService,
+    ) { }
 
+    //#region Đăng nhập
     async login(loginDto: LoginDto) {
         try {
-            const user = await this.prisma.employee.findUnique({
-                where: {
-                    code: loginDto.username,
-                },
-            });
-            return user;
+            const employee = await this.employeesRepository.getEmployeeByCodeAndPassword(loginDto.username, loginDto.password);
+            if (!employee) {
+                throw new BadRequestException(adminAuthErrorTypes().AUTH_LOGIN_FAILED);
+            }
+
+            // Tạo token
+            // const token = await this.jwtService.signJwtAdmin({
+            //     id: employee.id,
+            //     uuid: employee.uuid,
+            //     code: employee.code,
+            //     positionId: employee.positionId,
+            //     departmentId: employee.departmentId,
+            //     fullName: employee.fullName,
+            //     email: employee.email,
+            // });
+
+            // tạo refresh token
+            // const response = await this.jwtService.signJwtAdmin({
+            //     id: employee.id,
+            //     uuid: employee.uuid,
+            //     code: employee.code,
+            //     positionId: employee.positionId,
+            //     departmentId: employee.departmentId,
+            //     fullName: employee.fullName,
+            //     email: employee.email,
+            // });
+
+            // setCookieRFToken(response, refreshToken);
+
+            return {
+                items: employee,
+                // token,
+                // response,
+            };
         } catch (error) {
             this.loggerService.error(this.context, 'login', error);
-            throw error;
+            throw new BadRequestException(adminAuthErrorTypes().AUTH_LOGIN_FAILED);
         }
     }
+    //#endregion
 }

@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { adminAuthErrorTypes, DefaultQueryDto } from "@common"; // File chứa định nghĩa lỗi
 import { LoggerService } from "@logger";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
-import { CreateEmployeeDto } from "./dto/create-employee.dto";
-import { generateUUID, generateHashedDefaultPassword } from "@utils";
-import { adminAuthErrorTypes, DefaultQueryDto, paginationToQuery } from "@common"; // File chứa định nghĩa lỗi
+import { comparePassword, generateHashedDefaultPassword, generateUUID } from "@utils";
 import { Prisma } from "generated/prisma";
+import { CreateEmployeeDto } from "./dto/create-employee.dto";
 
 @Injectable()
 export class EmployeesRepository {
@@ -14,13 +14,33 @@ export class EmployeesRepository {
         private readonly prisma: PrismaService,
     ) { }
 
+    //#region Kiểm tra username đã tồn tại chưa
+    async getEmployeeByCodeAndPassword(code: string, password: string) {
+        const employee = await this.prisma.employee.findFirst({
+            where: { code: code },
+        });
+
+        if (!employee) {
+            return null;
+        }
+
+        const isMatch = await comparePassword(password, employee.password);
+        
+        if (!isMatch) {
+            return null;
+        }
+
+        const { password: _, ...result } = employee;
+        return result;
+    }
+    //#endregion
 
     //#region Tạo nhân viên
     async createEmployee(createEmployeeDto: CreateEmployeeDto) {
         const existingEmployee = await this.prisma.employee.findFirst({
             where: {
                 OR: [
-                    { code: createEmployeeDto.employeeCode },
+                    { code: createEmployeeDto.code },
                     { email: createEmployeeDto.email }
                 ]
             },
@@ -28,7 +48,7 @@ export class EmployeesRepository {
         });
 
         if (existingEmployee) {
-            if (existingEmployee.code === createEmployeeDto.employeeCode) {
+            if (existingEmployee.code === createEmployeeDto.code) {
                 throw new BadRequestException(adminAuthErrorTypes().AUTH_EMPLOYEE_CODE_EXISTS);
             }
             if (existingEmployee.email === createEmployeeDto.email) {
@@ -46,9 +66,9 @@ export class EmployeesRepository {
             identity_number: createEmployeeDto.identityNumber,
             uuid: generateUUID(),
             password: passwordHashed,
-            code: createEmployeeDto.employeeCode,
+            code: createEmployeeDto.code,
             dob: createEmployeeDto.birthday,
-
+            // Thêm data vào position và department
             position: {
                 connect: { id: createEmployeeDto.positionId }
             },
@@ -67,7 +87,7 @@ export class EmployeesRepository {
     async getListEmployees(query: DefaultQueryDto) {
         try {
             const { search } = query
-    
+
             // Điều kiện lọc
             const whereCondition: Prisma.EmployeeWhereInput = {
                 ...(search ? {
@@ -80,7 +100,7 @@ export class EmployeesRepository {
                     ],
                 } : {}),
             };
-    
+
             // Query lấy danh sách nhân viên
             const findManyQuery = this.prisma.employee.findMany({
                 where: whereCondition,
@@ -91,18 +111,18 @@ export class EmployeesRepository {
                 },
                 orderBy: { id: 'desc' },
             });
-    
+
             // Query đếm tổng số lượng nhân viên
             const countQuery = this.prisma.employee.count({
                 where: whereCondition,
             });
-    
+
             // Thực thi song song
             const [employeesList, totalCount] = await this.prisma.$transaction([
                 findManyQuery,
                 countQuery
             ]);
-    
+
             // Làm phẳng dữ liệu
             const employeesListWithNames = employeesList.map((emp) => {
                 const { department, position, ...rest } = emp;
@@ -114,13 +134,13 @@ export class EmployeesRepository {
                     positionName: position?.name || null,
                 };
             });
-            
+
             // Trả về kết quả
             return {
                 items: employeesListWithNames,
                 total: totalCount,
             };
-    
+
         } catch (error) {
             this.loggerService.error(this.context, error.message, error);
             throw new BadRequestException(adminAuthErrorTypes().AUTH_GET_LIST_EMPLOYEES_FAILED);

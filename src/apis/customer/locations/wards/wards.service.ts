@@ -1,6 +1,7 @@
 import { LoggerService } from '@logger';
 import { Injectable } from '@nestjs/common';
 import { WardsRepository } from './wards.respository';
+import { QueryWardsDto } from './dto/query.dto';
 
 @Injectable()
 export class WardsService {
@@ -25,14 +26,26 @@ export class WardsService {
   // remove(id: number) {
   //   return `This action removes a #${id} ward`;
   // }
-  async findWardsByDistrictCode(districtCode: string) {
+  async findWardsByDistrictCode(query: QueryWardsDto) {
     try {
       // Trả thẳng danh sách để interceptor bọc:
       // data: { result: [...], total: n }
-      return await this.wardsRepository.findWardsByDistrictCode(districtCode);
+      return await this.wardsRepository.findWardsByDistrictCode(query);
     } catch (error) {
       this.logger.error(this.context, 'findWardsByDistrictCode', error);
       throw error;
     }
-  }
+  };
+   
+
+   async findWardsByWardId (wardId : number){
+    try {
+      return await this.wardsRepository.findWardsByWardId(wardId);
+    } catch (error) {
+      this.logger.error(this.context, 'findWardsByWardId', error);
+      throw error;
+    }
+   }
+  
 }
+
