@@ -29,8 +29,22 @@ async function bootstrap() {
   app.setGlobalPrefix('/v1');
   // Cấu hình Cookie Parser
   app.use(cookieParser());
+  
   // Cấu hình CORS
-  app.enableCors({ origin: '*', credentials: true });
+  app.enableCors({ 
+    // Thay '*' bằng địa chỉ chính xác của Frontend bạn đang dùng để test
+    origin: ['http://localhost:5173', 'http://localhost:3000'], 
+    credentials: true, // Cho phép trình duyệt nhận và gửi Cookie
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'x-time-zone', 
+      'x-language', 
+      'namespace',
+      'X-Requested-With'
+    ],
+  });
 
   // --- 3. Swagger ---
   initSwagger(app);

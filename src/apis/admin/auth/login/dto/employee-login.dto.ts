@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
-export class LoginDto {
+export class EmployeeLoginDto {
     @IsString({ message: 'username phải là chuỗi' })
     @IsNotEmpty({ message: 'username không được để trống' })
     username!: string;

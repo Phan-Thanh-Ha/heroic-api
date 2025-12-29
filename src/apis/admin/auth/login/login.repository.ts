@@ -1,12 +1,11 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { LoginDto } from "./dto";
-import { PrismaService } from "@prisma";
-import { LoggerService } from "@logger";
 import { adminAuthErrorTypes } from "@common";
-import { comparePassword, hashPassword } from "@utils";
-import { EmployeesRepository } from "../../employees/employees.repository";
 import { JwtService } from "@jwt";
+import { LoggerService } from "@logger";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { setCookieRFToken } from "src/common/helpers/setCookieRFToken";
+import { EmployeesRepository } from "../../employees/employees.repository";
+import { EmployeeLoginDto } from "./dto/employee-login.dto";
+import { Response } from 'express';
 
 @Injectable()
 export class LoginRepository {
@@ -18,41 +17,40 @@ export class LoginRepository {
     ) { }
 
     //#region Đăng nhập
-    async login(loginDto: LoginDto) {
+    async login(employeeLoginDto: EmployeeLoginDto, res: Response) {
         try {
-            const employee = await this.employeesRepository.getEmployeeByCodeAndPassword(loginDto.username, loginDto.password);
+            const employee = await this.employeesRepository.getEmployeeByCodeAndPassword(employeeLoginDto.username, employeeLoginDto.password);
             if (!employee) {
                 throw new BadRequestException(adminAuthErrorTypes().AUTH_LOGIN_FAILED);
             }
 
             // Tạo token
-            // const token = await this.jwtService.signJwtAdmin({
-            //     id: employee.id,
-            //     uuid: employee.uuid,
-            //     code: employee.code,
-            //     positionId: employee.positionId,
-            //     departmentId: employee.departmentId,
-            //     fullName: employee.fullName,
-            //     email: employee.email,
-            // });
+            const accessToken = await this.jwtService.signJwtAdmin({
+                id: employee.id,
+                uuid: employee.uuid,
+                code: employee.code,
+                positionId: employee.positionId,
+                departmentId: employee.departmentId,
+                fullName: employee.fullName,
+                email: employee.email,
+            });
 
             // tạo refresh token
-            // const response = await this.jwtService.signJwtAdmin({
-            //     id: employee.id,
-            //     uuid: employee.uuid,
-            //     code: employee.code,
-            //     positionId: employee.positionId,
-            //     departmentId: employee.departmentId,
-            //     fullName: employee.fullName,
-            //     email: employee.email,
-            // });
+            const refreshToken = await this.jwtService.signJwtAdmin({
+                id: employee.id,
+                uuid: employee.uuid,
+                code: employee.code,
+                positionId: employee.positionId,
+                departmentId: employee.departmentId,
+                fullName: employee.fullName,
+                email: employee.email,
+            });
 
-            // setCookieRFToken(response, refreshToken);
+            setCookieRFToken(res, refreshToken);
 
             return {
                 items: employee,
-                // token,
-                // response,
+                accessToken: accessToken,
             };
         } catch (error) {
             this.loggerService.error(this.context, 'login', error);

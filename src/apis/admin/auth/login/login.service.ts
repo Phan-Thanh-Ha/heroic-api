@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@logger';
-import { LoginDto } from './dto/employee-login.dto';
+import { EmployeeLoginDto } from './dto/employee-login.dto';
 import { LoginRepository } from './login.repository';
+import { Response } from 'express';
 
 @Injectable()
 export class LoginService {
@@ -10,12 +11,13 @@ export class LoginService {
     private readonly loginRepository: LoginRepository,
     private readonly loggerService: LoggerService,
   ) {}
-  async login(loginDto: LoginDto) {
-    this.loggerService.log(this.context, 'login', loginDto);
+  async login(employeeLoginDto: EmployeeLoginDto, res: Response) {
+    this.loggerService.log(this.context, 'login', employeeLoginDto);
     try {
-      const user = await this.loginRepository.login(loginDto);
+      const employee = await this.loginRepository.login(employeeLoginDto,res);
       return {
-        message: 'Login successful',
+        items: employee.items,
+        accessToken: employee.accessToken,
       };
     } catch (error) {
       this.loggerService.error(this.context, 'login', error);

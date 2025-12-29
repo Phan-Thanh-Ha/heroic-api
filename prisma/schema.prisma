@@ -76,6 +76,28 @@ model Wards {
   @@map("wards")
 }
 
+model Category {
+    id          Int      @id @default(autoincrement()) // ID danh mục
+    uuid        String   @unique @map("uuid") @db.Char(36) // UUID danh mục
+
+    name        String   @map("name") @db.VarChar(255) // Tên danh mục
+    slug        String   @unique @map("slug") @db.VarChar(255) // Slug danh mục
+    image       String?  @map("image") @db.Text // Ảnh danh mục
+    description String?  @map("description") @db.Text // Mô tả danh mục
+
+    products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm
+
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
+
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    createdById Int?     @map("created_by_id") // ID người tạo danh mục
+
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+    updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
+
+    @@map("categories")
+}
+
 model Customer {
   id              Int       @id @default(autoincrement()) @map("id") // ID khách hàng
   uuid            String    @unique @map("uuid") @db.Char(36) // UUID khách hàng
@@ -225,4 +247,29 @@ model Position {
     employees       Employee[] @relation("PositionEmployees") 
 
     @@map("positions")
+}
+
+model Product {
+    id          Int      @id @default(autoincrement()) @map("id") // ID sản phẩm
+    uuid        String   @unique @map("uuid") @db.Char(36) // UUID sản phẩm
+    name        String   @map("name") @db.VarChar(255) // Tên sản phẩm
+    description String?  @map("description") @db.Text // Mô tả sản phẩm
+
+    image       String?  @map("image") @db.Text // Ảnh sản phẩm
+    slug        String   @unique @map("slug") @db.VarChar(255) // Slug sản phẩm
+    price       Float    @map("price") // Giá sản phẩm
+    discount    Float?   @map("discount") // Giảm giá sản phẩm
+    stock       Int      @map("stock") // Số lượng sản phẩm
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
+
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo sản phẩm
+    createdById Int?     @map("created_by_id") // ID người tạo sản phẩm
+    updatedById Int?     @map("updated_by_id") // ID người cập nhật sản phẩm
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật sản phẩm
+
+    categoryId Int      @map("category_id")
+    category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
+
+
+    @@map("products")
 }
