@@ -1,6 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { ADMIN_TAG_LIST, CUSTOMER_TAG_LIST } from "./common/apis-routes/api.routes"; // Import từ file routes đã tối ưu
+import { ADMIN_TAG_LIST, CUSTOMER_TAG_LIST } from "./common/apis-routes/api.routes";
 import { filterDocumentByTags } from "./common/swagger";
 import { configuration } from "./config";
 
@@ -28,22 +28,26 @@ const createSwaggerDocument = (
 
 export const initSwagger = (app: INestApplication) => {
     const config = configuration();
-    // const ngrokUrl = config.ngrokUrl;
 
-    // 1. CẤU HÌNH BUILDER (Đã thêm Global Parameters)
+    // 1. CẤU HÌNH BUILDER
     const documentBuilder = new DocumentBuilder()
         .setTitle('Heroic API')
         .setDescription('Heroic API Documentation')
         .setVersion('1.0.0')
-        .addBearerAuth({
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-        })
-        // --- THÊM MỚI: Header Language ---
+        // --- SỬA Ở ĐÂY: Dùng Bearer Auth thay cho ApiKey ---
+        .addApiKey(
+            { 
+                type: 'apiKey', 
+                name: 'authorization', // Tên header đúng như bạn dùng trong Postman
+                in: 'header',
+                description: 'Dán trực tiếp chuỗi JWT vào đây'
+            }, 
+            'access-token' 
+        )
+        // --- Giữ nguyên Global Parameters ---
         .addGlobalParameters({
             in: 'header',
-            required: false, // false để backend tự fallback về default nếu không gửi
+            required: false,
             name: 'x-language',
             schema: {
                 type: 'string',
@@ -52,7 +56,6 @@ export const initSwagger = (app: INestApplication) => {
                 description: 'Ngôn ngữ phản hồi (vi, en, cn)',
             },
         })
-        // --- THÊM MỚI: Header TimeZone ---
         .addGlobalParameters({
             in: 'header',
             required: false,
@@ -63,9 +66,8 @@ export const initSwagger = (app: INestApplication) => {
                 default: 'Asia/Ho_Chi_Minh',
                 description: 'Múi giờ của Client',
             },
-        })
+        });
     
-    // 2. Tạo Base Document (Chứa tất cả API + Header Config ở trên)
     const baseDocument = SwaggerModule.createDocument(
         app,
         documentBuilder.build(),
@@ -89,17 +91,16 @@ export const initSwagger = (app: INestApplication) => {
         },
     ];
 
-    // Tạo mảng để hứng các URL JSON cho thanh Select
     const explorerUrls: any[] = [];
 
     swaggerConfigs.forEach((config) => {
-        // Lọc document con từ baseDocument (Header x-language sẽ được kế thừa)
         const document = createSwaggerDocument(baseDocument, config);
         
-        // 1. Setup các trang con (để NestJS sinh ra file JSON ngầm)
         SwaggerModule.setup(config.path, app, document, {
             customSiteTitle: `${config.title} Documentation`,
             swaggerOptions: {
+                // Giúp lưu trạng thái login khi chuyển đổi giữa các docs
+                persistAuthorization: true, 
                 requestInterceptor: (req: any) => {
                     if (!req.headers) req.headers = {};
                     req.headers['ngrok-skip-browser-warning'] = 'true';
@@ -108,35 +109,34 @@ export const initSwagger = (app: INestApplication) => {
             },
         });
 
-        // 2. Thu thập đường dẫn JSON vào mảng explorer
         explorerUrls.push({
-            name: config.path, // Tên hiển thị trong Dropdown
+            name: config.path,
             url: `/${config.path}-json`,
         });
     });
 
     // --- TẠO TRANG TỔNG HỢP (HUB) ---
     SwaggerModule.setup('docs', app, baseDocument, {
-        explorer: true, // Bật thanh Select
+        explorer: true,
         customSiteTitle: 'Heroic API Hub',
         swaggerOptions: {
             urls: explorerUrls,
             'urls.primaryName': explorerUrls[0].name,
-            persistAuthorization: true,//
+            persistAuthorization: true,
             displayRequestDuration: true,
             filter: true,
-            docExpansion: 'list',// Bật thanh Select
+            docExpansion: 'list',
             theme: 'monokai',
-            tryItOutEnabled: true, // Bật try it out 
-            tagsSorter: 'alpha', // Sắp xếp tags theo alphabet
-            defaultModelsExpandDepth: -1,  // Ẩn bảng danh sách Schemas ở dưới cùng (cho gọn trang)
+            tryItOutEnabled: true,
+            tagsSorter: 'alpha',
+            defaultModelsExpandDepth: -1,
             deepLinking: true,
         },
         customCss: `
-        .swagger-ui .wrapper { max-width: 1460px; padding: 0 20px; }
-        .swagger-ui .topbar { background-color: #000; border-bottom: 3px solid #ed1c24; }
-        .swagger-ui .info .title { color: #ed1c24; font-family: 'Segoe UI', sans-serif; }
-        .opblock-summary-path { font-weight: bold !important; }
-    `
+            .swagger-ui .wrapper { max-width: 1460px; padding: 0 20px; }
+            .swagger-ui .topbar { background-color: #000; border-bottom: 3px solid #ed1c24; }
+            .swagger-ui .info .title { color: #ed1c24; font-family: 'Segoe UI', sans-serif; }
+            .opblock-summary-path { font-weight: bold !important; }
+        `
     });
 };

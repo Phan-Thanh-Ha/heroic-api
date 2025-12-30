@@ -38,7 +38,7 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: [
       'Content-Type', 
-      'Authorization', 
+      'authorization', 
       'x-time-zone', 
       'x-language', 
       'namespace',

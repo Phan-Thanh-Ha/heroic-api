@@ -14,13 +14,14 @@ export class CreateCategoryDto {
 
     @IsString()
     @IsNotEmpty()
-    image!: string;
+    banner!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    thumbnail!: string;
 
     @IsString()
     @IsNotEmpty()
     description!: string;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    isActive!: boolean;
 }

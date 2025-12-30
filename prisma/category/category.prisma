@@ -4,7 +4,8 @@ model Category {
 
     name        String   @map("name") @db.VarChar(255) // Tên danh mục
     slug        String   @unique @map("slug") @db.VarChar(255) // Slug danh mục
-    image       String?  @map("image") @db.Text // Ảnh danh mục
+    banner      String?  @map("banner") @db.Text // Ảnh banner danh mục
+    thumbnail   String?  @map("thumbnail") @db.Text // Ảnh thumbnail danh mục
     description String?  @map("description") @db.Text // Mô tả danh mục
 
     products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm

@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiConsumes, ApiBody, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiConsumes, ApiBody, ApiResponse, ApiQuery, ApiHeader } from '@nestjs/swagger';
 import { UploadFolderType } from '../dto/upload-image.dto';
 
 /**
@@ -34,6 +34,11 @@ export const ApiUploadMultipleImages = () => {
 					},
 				},
 			},
+		}),
+		ApiHeader({
+			name: 'token',
+			required: true,
+			schema: { type: 'string'},
 		}),
 		ApiResponse({
 			status: 201,

@@ -8,9 +8,10 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
  * Descriptions sẽ tự động cập nhật từ enum values
  */
 export enum UploadFolderType {
-	AVATAR = 'avatar',
-	BANNER = 'banner',
-	PRODUCT = 'product',
+    CATEGORY_BANNER = 'categories/banners',
+    CATEGORY_THUMBNAIL = 'categories/thumbnails',
+    PRODUCT = 'products',
+    AVATAR = 'avatars',
 }
 
 export enum TypeUpload {

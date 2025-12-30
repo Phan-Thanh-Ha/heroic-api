@@ -1,25 +1,34 @@
-import { BadRequestException, ClassSerializerInterceptor, Provider, ValidationError, ValidationPipe } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { AllExceptionsFilter, ResponseTransformInterceptor } from '@common';
-import { JwtAuthGuard } from '@guards';
+import { 
+    BadRequestException, 
+    ValidationError, 
+    ValidationPipe, 
+    Provider,
+    ClassSerializerInterceptor 
+} from '@nestjs/common';
+import { APP_PIPE, APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { AllExceptionsFilter } from '../common/filters/all-exceptions.filter'; 
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard'; 
+import { ResponseTransformInterceptor } from '@common';
 
-
+/**
+ * Hàm xử lý lỗi Validation (Lỗi khi Client gửi thiếu/sai trường dữ liệu)
+ * Chuyển đổi mảng lỗi phức tạp của NestJS thành Object đơn giản để Frontend dễ đọc
+ */
 const exceptionFactory = (errors: ValidationError[]) => {
-    // Khởi tạo object kết quả
     const result = {};
 
-    // Hàm đệ quy để duyệt tất cả các nhánh lỗi
+    // Hàm đệ quy để quét sâu vào các trường dữ liệu lồng nhau (Nested Objects)
     const mapErrors = (validationErrors: ValidationError[], target: any) => {
         for (const err of validationErrors) {
-            // Nếu không có constraints nhưng có children => Tiếp tục đào sâu
+            // Nếu field không có lỗi trực tiếp nhưng có lỗi ở các trường con (children)
             if (!err.constraints && err.children && err.children.length > 0) {
-                target[err.property] = {}; // Tạo object rỗng để chứa lỗi con
+                target[err.property] = {};
                 mapErrors(err.children, target[err.property]);
             } else {
-                // Nếu có lỗi ở cấp hiện tại
+                // Nếu có lỗi tại field hiện tại, lấy câu thông báo lỗi đầu tiên
                 target[err.property] = {
-                    errorCode: 'BAD_REQUEST',
-                    message: err.constraints ? Object.values(err.constraints)[0] : 'Invalid value',
+                    errorCode: 'VALIDATION_ERROR',
+                    message: err.constraints ? Object.values(err.constraints)[0] : 'Giá trị không hợp lệ',
                 };
             }
         }
@@ -27,38 +36,36 @@ const exceptionFactory = (errors: ValidationError[]) => {
 
     mapErrors(errors, result);
     
-    // Ném lỗi với object kết quả hoàn chỉnh
-    throw new BadRequestException(result);
+    // Ném lỗi BadRequest kèm theo danh sách errors chi tiết
+    throw new BadRequestException({ 
+        errors: result, 
+        message: 'Dữ liệu đầu vào không hợp lệ' 
+    });
 };
-// provider áp dụng cho toàn App (global)
+
 export const providerApp: Provider[] = [
-	// serialize data
-	{
-		provide: APP_INTERCEPTOR,
-		useClass: ClassSerializerInterceptor,
-	},
-	// trả về response chuẩn
-	{
+    // Interceptor: Giúp tự động ẩn các trường nhạy cảm (như password) khi trả về dữ liệu
+    {
 		provide: APP_INTERCEPTOR,
 		useClass: ResponseTransformInterceptor,
 	},
-	// kiểm tra dữ liệu input và trả về lỗi nếu không hợp lệ
-	{
-		provide: APP_PIPE,
-		useValue: new ValidationPipe({
-			exceptionFactory,
-		}),
-	},
-	// filter lỗi http exception
-	{
-		provide: APP_FILTER,
-		useClass: AllExceptionsFilter,
-	},
-	// guard jwt auth
-	{
-		provide: APP_GUARD,
-		useClass: JwtAuthGuard,
-	},
+    // Pipe: Kiểm tra tính hợp lệ của dữ liệu đầu vào dựa trên DTO
+    {
+        provide: APP_PIPE,
+        useValue: new ValidationPipe({
+            whitelist: true, // Loại bỏ các trường không được định nghĩa trong DTO
+            transform: true, // Tự động chuyển đổi kiểu dữ liệu (ví dụ string sang number)
+            exceptionFactory, // Sử dụng hàm định dạng lỗi tùy chỉnh ở trên
+        }),
+    },
+    // Filter: Bộ lọc bắt mọi loại lỗi (400, 401, 500...) để trả về format chuẩn
+    {
+        provide: APP_FILTER,
+        useClass: AllExceptionsFilter,
+    },
+    // Guard: Bảo vệ các route, chỉ cho phép người dùng có Token hợp lệ truy cập
+    {
+        provide: APP_GUARD,
+        useClass: JwtAuthGuard,
+    },
 ];
-
-

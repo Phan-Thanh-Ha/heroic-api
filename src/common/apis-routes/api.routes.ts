@@ -15,9 +15,7 @@ export const APP_ROUTES = {
             LOGIN: { path: 'admins/auth/', tag: 'Admin_Auth' },
         },
         EMPLOYEES: { path: 'admins/employees', tag: 'Admin_Employees' },
-        CATEGORY: {
-            CREATE: { path: 'admins/category', tag: 'Admin_Category' },
-        },
+        CATEGORY: {path: 'admin/category', tag: 'Admin_Category'},
         // Thêm Upload vào nhánh Admin
         UPLOAD: {
             IMAGE: { path: 'admins/upload/image', tag: 'Admin_Upload' },

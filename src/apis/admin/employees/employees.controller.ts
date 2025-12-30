@@ -33,7 +33,6 @@ export class EmployeesController {
     status: HTTP_STATUS_ENUM.OK,
   })
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ResponseMessage(adminEmployeeSuccessTypes().ADMIN_EMPLOYEE_GET_LIST_SUCCESS.message)
   async listEmployees(@Query() query: QueryUserDto) {
     return await this.employeesService.getListEmployees(query);

@@ -1,15 +1,15 @@
 import { ApiPost, APP_ROUTES, HTTP_STATUS_ENUM } from '@common';
-import { LoggerService } from '@logger';
+import { JwtAuthGuard } from '@guards';
 import {
-    BadRequestException,
     Controller,
     Query,
     UploadedFile,
     UploadedFiles,
-    UseInterceptors,
+    UseGuards,
+    UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UploadImageDto } from './dto/upload-image.dto';
 import { ApiUploadMultipleImages, ApiUploadSingleImage } from './swagger';
 import { UploadService } from './upload.service';
@@ -27,6 +27,8 @@ export class AdminUploadController {
         response: UploadImageDto,
         status: HTTP_STATUS_ENUM.CREATED,
     })
+    @UseGuards(JwtAuthGuard)
+    @ApiSecurity('access-token')
     async adminUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
         // Tự động gán typeUpload là admin và ưu tiên folder từ query gửi lên
         return this.uploadService.uploadImage(file, { 
@@ -65,6 +67,8 @@ export class CustomerUploadController {
         response: UploadImageDto,
         status: HTTP_STATUS_ENUM.CREATED,
     })
+    @UseGuards(JwtAuthGuard)
+    @ApiSecurity('access-token')
     async customerUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
         return this.uploadService.uploadImage(file, { 
             ...query, 

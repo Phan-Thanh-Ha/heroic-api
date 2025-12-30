@@ -16,10 +16,14 @@ export class UploadService {
         if (!file) {
             throw new BadRequestException('Vui lòng chọn file ảnh');
         }
-        const folder = `${uploadImageDto.typeUpload}/${uploadImageDto.folder}`;
         const isProduction = process.env.NODE_ENV === 'development';
+
+        // Trong service xử lý upload:
+        const type = uploadImageDto.typeUpload; // admins
+        const subPath = uploadImageDto.folder;  // categories/thumbnails
         const fileName = `${Date.now()}-${file.originalname}`;
-        const filePath = `${folder}/${fileName}`; // Cấu trúc thư mục trong bucket hoặc local
+
+        const filePath = `${type}/${subPath}/${fileName}`;
 
         if (isProduction) {
             // --- CHẾ ĐỘ PRODUCTION (SUPABASE) ---
@@ -39,8 +43,8 @@ export class UploadService {
             return { url: publicUrl, name: fileName, provider: 'supabase' };
         } else {
             // --- CHẾ ĐỘ DEVELOPMENT (LOCAL STORAGE) ---
-            const uploadDir = path.join(process.cwd(), 'uploads', folder);
-            
+            const uploadDir = path.join(process.cwd(), 'uploads', type || '');
+
             // Tạo thư mục nếu chưa có (ví dụ: uploads/employees)
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, { recursive: true });
@@ -50,7 +54,7 @@ export class UploadService {
             fs.writeFileSync(localFilePath, file.buffer);
 
             // Trả về URL local (Lưu ý: Bạn cần config static trong main.ts)
-            const url = `http://localhost:${process.env.PORT || 3000}/uploads/${folder}/${fileName}`;
+            const url = `http://localhost:${process.env.PORT || 3000}/uploads/${type}/${subPath}/${fileName}`;
             return { url: url, name: fileName, provider: 'local' };
         }
     }
