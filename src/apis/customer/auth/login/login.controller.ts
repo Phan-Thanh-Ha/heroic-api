@@ -12,7 +12,7 @@ import { ApiLoginWithFacebook } from './swagger/login-facebook.swagger';
 import { ApiLoginWithGoogle } from './swagger/login-google.swagger';
 import { ApiVerifyOtp } from './swagger/verify-otp.swagger';
 
-@AppController(APP_ROUTES.AUTH.CUSTOMER.LOGIN)
+@AppController(APP_ROUTES.CUSTOMER.AUTH.LOGIN)
 export class LoginController {
   private context = LoginController.name;
   constructor(

@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { UploadImageDto } from './dto';
 
 @Injectable()
 export class UploadService {
@@ -11,12 +12,12 @@ export class UploadService {
         process.env.SUPABASE_ANON_KEY || '',
     );
 
-    async uploadImage(file: Express.Multer.File, folder: string = 'general') {
+    async uploadImage(file: Express.Multer.File, uploadImageDto: UploadImageDto) {
         if (!file) {
             throw new BadRequestException('Vui lòng chọn file ảnh');
         }
-
-        const isProduction = process.env.NODE_ENV === 'production';
+        const folder = `${uploadImageDto.typeUpload}/${uploadImageDto.folder}`;
+        const isProduction = process.env.NODE_ENV === 'development';
         const fileName = `${Date.now()}-${file.originalname}`;
         const filePath = `${folder}/${fileName}`; // Cấu trúc thư mục trong bucket hoặc local
 
@@ -54,12 +55,12 @@ export class UploadService {
         }
     }
 
-    async uploadMultipleImages(files: Express.Multer.File[], folder: string = 'general') {
+    async uploadMultipleImages(files: Express.Multer.File[], uploadImageDto: UploadImageDto) {
         if (!files || files.length === 0) {
             throw new BadRequestException('Vui lòng chọn ít nhất một file');
         }
 
-        const uploadPromises = files.map(file => this.uploadImage(file, folder));
+        const uploadPromises = files.map(file => this.uploadImage(file, uploadImageDto));
         return Promise.all(uploadPromises);
     }
 }

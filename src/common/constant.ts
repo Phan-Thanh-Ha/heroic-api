@@ -14,7 +14,7 @@ export const MetadataKey = {
 
 export const StrategyKey = {
 	LOCAL: 'local',
-	JWT_CUSTOMER: 'jwt_customer',
+	JWT: 'jwt',
 };
 
 export const IS_PUBLIC_KEY = 'isPublic';

@@ -169,6 +169,7 @@ export class LoginRepository {
                     email: customerResponse.email,
                     facebookId: customerResponse.facebookId,
                     googleId: customerResponse.googleId,
+                    typeAccessToken: 'customer',
                 });
 
                 return {
@@ -204,6 +205,7 @@ export class LoginRepository {
                 email: newCustomer.email,
                 facebookId: newCustomer.facebookId,
                 googleId: newCustomer.googleId,
+                typeAccessToken: 'customer',
             });
 
             return {
@@ -342,6 +344,7 @@ export class LoginRepository {
                     email: customerResponse.email,
                     facebookId: customerResponse.facebookId,
                     googleId: customerResponse.googleId,
+                    typeAccessToken: 'customer',
                 });
 
                 return {
@@ -390,6 +393,7 @@ export class LoginRepository {
                         email: customerResponse.email,
                         facebookId: customerResponse.facebookId,
                         googleId: customerResponse.googleId,
+                        typeAccessToken: 'customer',
                     });
 
                     return {
@@ -426,6 +430,7 @@ export class LoginRepository {
                 email: newCustomer.email,
                 facebookId: newCustomer.facebookId,
                 googleId: newCustomer.googleId,
+                typeAccessToken: 'customer',
             });
 
             return {
@@ -506,6 +511,7 @@ export class LoginRepository {
                 email: customerResponse.email,
                 facebookId: customerResponse.facebookId,
                 googleId: customerResponse.googleId,
+                typeAccessToken: 'customer',
             });
 
             return {

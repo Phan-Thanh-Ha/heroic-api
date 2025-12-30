@@ -1,11 +1,8 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 
-import { ApiGet, ApiPatch, APP_ROUTES, AppController, ResponseMessage, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
-import { ApiTags } from '@nestjs/swagger';
-import { ApiCustomerGetList } from './swagger/get-customer-list.swagger';
+import { ApiGet, APP_ROUTES, AppController, ResponseMessage } from '@common';
 import { customerSuccessTypes } from 'src/common/code-type/customers/customer-success.code-type';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { ApiCustomerGetList } from './swagger/get-customer-list.swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.LIST)
 export class CustomerController {

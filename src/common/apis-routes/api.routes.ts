@@ -1,53 +1,62 @@
 // src/common/api.routes.ts
 
-// 1. Định nghĩa kiểu để gợi ý code (Intellisense)
 export type RouteConfig = {
     path: string;
     tag: string;
 };
 
-// 2. Khai báo Route + Tag chung 1 chỗ
 export const APP_ROUTES = {
-    AUTH: {
-        CUSTOMER: {
-            LOGIN: { path: 'customers/auth/login', tag: 'Login_Customer' },
-            LOGIN_GOOGLE: { path: 'customers/auth/login/google', tag: 'Auth_Customer' },
-            REGISTER: { path: 'customers/auth/register', tag: 'Auth_Customer' },
-            
+    // ------------------------------------------
+    // Cụm dành cho QUẢN TRỊ VIÊN
+    // ------------------------------------------
+    ADMIN: {
+        AUTH: {
+            REGISTER: { path: 'admins/register', tag: 'Admin_Auth' },
+            LOGIN: { path: 'admins/auth/', tag: 'Admin_Auth' },
         },
-        ADMIN: {
-            REGISTER: { path: 'admins/register', tag: 'Register_Admin' },
-            LOGIN: { path: 'admins/auth/', tag: 'Login_Admin' },
-            EMPLOYEES: { path: 'admins/employees', tag: 'Employees_Admin' },
+        EMPLOYEES: { path: 'admins/employees', tag: 'Admin_Employees' },
+        CATEGORY: {
+            CREATE: { path: 'admins/category', tag: 'Admin_Category' },
         },
-    
+        // Thêm Upload vào nhánh Admin
+        UPLOAD: {
+            IMAGE: { path: 'admins/upload/image', tag: 'Admin_Upload' },
+        },
     },
 
-    CUSTOMER:{
-        LIST:{path: 'customers/list', tag: 'Customer_List'}
-    },
-
-    LOCATIONS: {
-        PROVINCE: { path: 'customers/locations/province', tag: 'Locations' },
-        DISTRICTS: { path: 'customers/locations/districts', tag: 'Locations' },
-        WARDS: { path: 'customers/locations/wards', tag: 'Locations' },
-    },
-    UPLOAD: {
-        IMAGE: { path: 'customers/upload/image', tag: 'Upload' },
+    // ------------------------------------------
+    // Cụm dành cho KHÁCH HÀNG
+    // ------------------------------------------
+    CUSTOMER: {
+        AUTH: {
+            LOGIN: { path: 'customers/auth/login', tag: 'Customer_Auth' },
+            LOGIN_GOOGLE: { path: 'customers/auth/login/google', tag: 'Customer_Auth' },
+            REGISTER: { path: 'customers/auth/register', tag: 'Customer_Auth' },
+        },
+        LIST: { path: 'customers/list', tag: 'Customer_List' },
+        LOCATIONS: {
+            PROVINCE: { path: 'customers/locations/province', tag: 'Customer_Locations' },
+            DISTRICTS: { path: 'customers/locations/districts', tag: 'Customer_Locations' },
+            WARDS: { path: 'customers/locations/wards', tag: 'Customer_Locations' },
+        },
+        // Upload đã có sẵn ở nhánh Customer
+        UPLOAD: {
+            IMAGE: { path: 'customers/upload/image', tag: 'Customer_Upload' },
+        },
     },
 } as const;
 
-// 3. Hàm tiện ích để tự động lấy Tag 
+// 2. Hàm tiện ích (Giữ nguyên logic của bạn)
 function getUniqueTags(obj: any): string[] {
     const tags = new Set<string>();
     const traverse = (o: any) => {
         for (const key in o) {
-            const value = o[key];
-            // Nếu object có chứa 'tag' và 'path' -> Nó là RouteConfig -> Lấy tag
-            if (value && typeof value === 'object' && 'tag' in value) {
-                tags.add(value.tag);
-            } else if (typeof value === 'object') {
-                traverse(value); // Duyệt tiếp vào sâu hơn
+            if (o[key] && typeof o[key] === 'object') {
+                if ('tag' in o[key] && 'path' in o[key]) {
+                    tags.add(o[key].tag);
+                } else {
+                    traverse(o[key]);
+                }
             }
         }
     };
@@ -55,11 +64,9 @@ function getUniqueTags(obj: any): string[] {
     return Array.from(tags);
 }
 
-// 4. Xuất danh sách tag để dùng cho file main.ts
-export const ADMIN_TAG_LIST = getUniqueTags(APP_ROUTES.AUTH.ADMIN);
-export const CUSTOMER_TAG_LIST = [
-    ...getUniqueTags(APP_ROUTES.AUTH.CUSTOMER),
-    ...getUniqueTags(APP_ROUTES.LOCATIONS),
-    ...getUniqueTags(APP_ROUTES.UPLOAD),
-    ...getUniqueTags(APP_ROUTES.CUSTOMER),
-];
+// 3. Xuất danh sách tag
+// ADMIN_TAG_LIST bây giờ sẽ tự động bao gồm 'Admin_Upload'
+export const ADMIN_TAG_LIST = getUniqueTags(APP_ROUTES.ADMIN);
+
+// CUSTOMER_TAG_LIST sẽ bao gồm 'Customer_Upload'
+export const CUSTOMER_TAG_LIST = getUniqueTags(APP_ROUTES.CUSTOMER);

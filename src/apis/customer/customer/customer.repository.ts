@@ -10,7 +10,7 @@ export class CustomerRepository {
     // Lấy danh sách thành phố
     async getCustomerList() {
         try {
-             const takeCustomerList = await this.prisma.customer.findMany(
+            const takeCustomerList = await this.prisma.customer.findMany(
                 {
                     omit: {
                         password: true
@@ -46,4 +46,5 @@ export class CustomerRepository {
             throw error;
         }
     }
+
 }

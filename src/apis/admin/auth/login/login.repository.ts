@@ -33,6 +33,7 @@ export class LoginRepository {
                 departmentId: employee.departmentId,
                 fullName: employee.fullName,
                 email: employee.email,
+                typeAccessToken: 'admin',
             });
 
             // tạo refresh token
@@ -44,6 +45,7 @@ export class LoginRepository {
                 departmentId: employee.departmentId,
                 fullName: employee.fullName,
                 email: employee.email,
+                typeAccessToken: 'admin',
             });
 
             setCookieRFToken(res, refreshToken);

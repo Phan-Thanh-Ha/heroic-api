@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiConsumes, ApiBody, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { UploadFolderType } from '../dto/upload-image.dto';
+import { getUploadFolderDescription, TypeUpload, UploadFolderType } from '../dto/upload-image.dto';
 
 /**
  * Swagger decorator cho API upload single image
@@ -13,11 +13,18 @@ export const ApiUploadSingleImage = () => {
 		}),
 		ApiQuery({
 			name: 'folder',
+			required: true,
 			enum: UploadFolderType,
-			required: false,
-			description: 'Loại thư mục để lưu file (avatar, banner, product). Nếu không có, file sẽ lưu ở thư mục gốc',
+			description: getUploadFolderDescription(),
 			example: UploadFolderType.AVATAR,
 		}),
+		ApiQuery({
+			name: 'typeUpload',
+			enum: TypeUpload,
+			required: true,
+			description: 'Type upload (customers | admins)',
+			example: TypeUpload.Customer,
+		}),	
 		ApiConsumes('multipart/form-data'),
 		ApiBody({
 			schema: {

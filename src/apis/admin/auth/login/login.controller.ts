@@ -1,4 +1,5 @@
-import { adminAuthSuccessTypes, ApiPost, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
+import { Public } from './../../../../common/decorators/public.decoration';
+import { adminAuthSuccessTypes, HTTP_STATUS_ENUM, ResponseMessage, ApiPost } from '@common';
 import { LoggerService } from '@logger';
 import { Body, Res } from '@nestjs/common';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
@@ -10,7 +11,7 @@ import { ApiLoginSwagger } from './swagger';
 import {  Response } from 'express';
 
 
-@AppController(APP_ROUTES.AUTH.ADMIN.LOGIN)
+@AppController(APP_ROUTES.ADMIN.AUTH.LOGIN)
 export class LoginController {
   constructor(
     private readonly loggerService: LoggerService,
@@ -24,6 +25,7 @@ export class LoginController {
     response: LoginEntity,
     status: HTTP_STATUS_ENUM.OK,
   })
+  @Public()
   @ResponseMessage(adminAuthSuccessTypes().AUTH_LOGIN_SUCCESS.success_code)
   async login(
     @Body() employeeLoginDto: EmployeeLoginDto,

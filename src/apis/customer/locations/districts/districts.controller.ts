@@ -6,7 +6,7 @@ import { DistrictsService } from './districts.service';
 import { ApiDistrictsFindByParentCode } from './swagger';
 
 
-@AppController(APP_ROUTES.LOCATIONS.DISTRICTS)
+@AppController(APP_ROUTES.CUSTOMER.LOCATIONS.DISTRICTS)
 export class DistrictsController {
   constructor(private readonly districtsService: DistrictsService) {}
   @Get('/:provinceCode')

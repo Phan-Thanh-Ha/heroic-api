@@ -1,13 +1,14 @@
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { Body, Query } from '@nestjs/common';
+import { Body, Query, UseGuards } from '@nestjs/common';
+import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { QueryUserDto } from './dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
 import { ApiCreateEmployeeSwagger, ApiGetListEmployeeSwagger } from './swagger';
-import { QueryUserDto } from './dto';
-import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';
-
-@AppController(APP_ROUTES.AUTH.ADMIN.EMPLOYEES)
+@AppController(APP_ROUTES.ADMIN.EMPLOYEES)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) { }
 
@@ -31,6 +32,8 @@ export class EmployeesController {
     response: [Employee],
     status: HTTP_STATUS_ENUM.OK,
   })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ResponseMessage(adminEmployeeSuccessTypes().ADMIN_EMPLOYEE_GET_LIST_SUCCESS.message)
   async listEmployees(@Query() query: QueryUserDto) {
     return await this.employeesService.getListEmployees(query);

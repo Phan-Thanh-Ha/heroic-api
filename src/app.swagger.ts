@@ -35,7 +35,11 @@ export const initSwagger = (app: INestApplication) => {
         .setTitle('Heroic API')
         .setDescription('Heroic API Documentation')
         .setVersion('1.0.0')
-        .addBearerAuth()
+        .addBearerAuth({
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+        })
         // --- THÊM MỚI: Header Language ---
         .addGlobalParameters({
             in: 'header',
@@ -59,7 +63,7 @@ export const initSwagger = (app: INestApplication) => {
                 default: 'Asia/Ho_Chi_Minh',
                 description: 'Múi giờ của Client',
             },
-        });
+        })
     
     // 2. Tạo Base Document (Chứa tất cả API + Header Config ở trên)
     const baseDocument = SwaggerModule.createDocument(

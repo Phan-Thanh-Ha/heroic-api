@@ -4,7 +4,7 @@ import { RouteConfig } from '../apis-routes/api.routes';
 
 export function AppController(config: RouteConfig) {
     return applyDecorators(
-        Controller(config.path),
-        ApiTags(config.tag)
+        Controller(config.path || ''),
+        ApiTags(config.tag || '')
     );
 }

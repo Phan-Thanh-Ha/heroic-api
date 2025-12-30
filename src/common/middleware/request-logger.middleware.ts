@@ -25,24 +25,23 @@ export class RequestLoggerMiddleware implements NestMiddleware {
     // Header trong Node.js luôn tự động chuyển về chữ thường (lowercase)
     const lang = req.headers['x-language'] || 'vi'; // Mặc định là 'vi'
     const timeZone = req.headers['x-time-zone'] || 'Asia/Ho_Chi_Minh'; // Sửa: x-timezone -> x-time-zone
-
+    const accessToken = req.headers['authorization'];
+    
     // 2. GÁN VÀO REQUEST (Quan Trọng)
     // Bước này giúp Controller và Interceptor sau này có thể gọi req.timeZone
     req.lang = lang;
     req.timeZone = timeZone;
+    req.accessToken = accessToken;
 
     // 3. LOGGING
     const safeBody = maskSensitive(body);
     console.log('[REQ]', { 
       method,
       url: originalUrl,
-      // params: req.params, // Lưu ý: Middleware chạy TRƯỚC Router nên req.params lúc này thường là {} (rỗng)
-      query: query,
+      token: accessToken,
+      query: JSON.stringify(query),
       body: safeBody,
       ip: req.ip,
-      // userAgent: req.headers['user-agent'],
-      // referer: req.headers['referer'],
-      // host: req.headers['host'],
       timeZone: timeZone,
       language: lang 
     });

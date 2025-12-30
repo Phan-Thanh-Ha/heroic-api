@@ -6,6 +6,7 @@ export interface JwtPayloadCustomer {
 	email: string;
 	facebookId: string | null;
 	googleId: string | null;
+	typeAccessToken: 'customer';
 }
 //#endregion
 
@@ -18,5 +19,6 @@ export interface JwtPayloadAdmin {
 	departmentId: number;
 	fullName: string;
 	email: string;
+	typeAccessToken: 'admin';
 }
 //#endregion`

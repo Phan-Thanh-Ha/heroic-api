@@ -7,7 +7,7 @@ import { RegisterService } from './register.service';
 import { ApiRegister } from './swagger/register.swagger';
 import { RegisterEntity } from './entities/register.entity';
 
-@AppController(APP_ROUTES.AUTH.CUSTOMER.REGISTER)
+@AppController(APP_ROUTES.CUSTOMER.AUTH.REGISTER)
 export class RegisterController {
   constructor(
     private readonly registerService: RegisterService,

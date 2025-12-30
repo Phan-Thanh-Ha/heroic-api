@@ -7,7 +7,7 @@ import { ApiProvinceGetAll } from './swagger/get-all-province.swagger';
 import { ResponseMessage } from '@common';
 import { provinceSuccessTypes } from 'src/common/code-type/province/province-success.code-type';
 
-@AppController(APP_ROUTES.LOCATIONS.PROVINCE)
+@AppController(APP_ROUTES.CUSTOMER.LOCATIONS.PROVINCE)
 export class ProvinceController {
     constructor(private readonly provinceService: ProvinceService) {}
 

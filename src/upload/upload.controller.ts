@@ -1,74 +1,75 @@
-import { HTTP_STATUS_ENUM, ROUTER_ENUM, ROUTER_TAG_ENUM } from '@common';
+import { ApiPost, APP_ROUTES, HTTP_STATUS_ENUM } from '@common';
+import { LoggerService } from '@logger';
 import {
-	Controller,
-	Post,
-	UploadedFile,
-	UploadedFiles,
-	UseInterceptors,
-	HttpCode,
-	Query,
+    BadRequestException,
+    Controller,
+    Query,
+    UploadedFile,
+    UploadedFiles,
+    UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { UploadService } from './upload.service';
-import { LoggerService } from '@logger';
-import { ApiUploadSingleImage, ApiUploadMultipleImages } from './swagger';
 import { UploadImageDto } from './dto/upload-image.dto';
+import { ApiUploadMultipleImages, ApiUploadSingleImage } from './swagger';
+import { UploadService } from './upload.service';
 
-@Controller(ROUTER_ENUM.UPLOAD.IMAGE)
-@ApiTags(ROUTER_TAG_ENUM.UPLOAD.IMAGE)
-export class UploadController {
-	constructor(
-		private readonly uploadService: UploadService,
-		private readonly loggerService: LoggerService,
-	) {}
-	private context = UploadController.name;
+// --- ADMIN CONTROLLER ---
+@Controller('')
+@ApiTags(APP_ROUTES.ADMIN.UPLOAD.IMAGE.tag)
+export class AdminUploadController {
+    constructor(private readonly uploadService: UploadService) {}
 
-	// Upload một ảnh
-	@Post('single')
-	@HttpCode(HTTP_STATUS_ENUM.CREATED)
-	@UseInterceptors(FileInterceptor('file'))
-	@ApiUploadSingleImage()
-	async uploadSingleImage(
-		@UploadedFile() file: Express.Multer.File,
-		@Query() query: UploadImageDto,
-	) {
-		this.loggerService.log(this.context, 'uploadSingleImage', {
-			file: file?.originalname,
-			size: file?.size,
-			folder: query.folder,
-			
-		});
-		try {
-			const result = await this.uploadService.uploadImage(file, query.folder);
-			return result;
-		} catch (error) {
-			this.loggerService.error(this.context, 'uploadSingleImage', error);
-			throw error;
-		}
-	}
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiPost(APP_ROUTES.ADMIN.UPLOAD.IMAGE.path, {
+        summary: 'Admin upload một ảnh',
+        swagger: ApiUploadSingleImage(),
+        response: UploadImageDto,
+        status: HTTP_STATUS_ENUM.CREATED,
+    })
+    async adminUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
+        // Tự động gán typeUpload là admin và ưu tiên folder từ query gửi lên
+        return this.uploadService.uploadImage(file, { 
+            ...query, 
+            typeUpload: 'admin', 
+            folder: query.folder || 'general' 
+        });
+    }
 
-	// Upload nhiều ảnh cùng lúc
-	@Post('multiple')
-	@HttpCode(HTTP_STATUS_ENUM.CREATED)
-	@UseInterceptors(FilesInterceptor('files', 10)) // Max 10 files
-	@ApiUploadMultipleImages()
-	async uploadMultipleImages(
-		@UploadedFiles() files: Express.Multer.File[],
-		@Query() query: UploadImageDto,
-	) {
-		this.loggerService.log(this.context, 'uploadMultipleImages', {
-			count: files?.length,
-			folder: query.folder,
-		});
-
-		try {
-			const result = await this.uploadService.uploadMultipleImages(files, query.folder);
-			return result;
-		} catch (error) {
-			this.loggerService.error(this.context, 'uploadMultipleImages', error);
-			throw error;
-		}
-	}
+    @UseInterceptors(FilesInterceptor('files', 10))
+    @ApiPost('admins/upload/multiple', {
+        summary: 'Admin upload nhiều ảnh cùng lúc',
+        swagger: ApiUploadMultipleImages(),
+        response: UploadImageDto,
+        status: HTTP_STATUS_ENUM.CREATED,
+    })
+    async adminUploadMultipleImages(@UploadedFiles() files: Express.Multer.File[], @Query() query: UploadImageDto) {
+        return this.uploadService.uploadMultipleImages(files, { 
+            ...query, 
+            typeUpload: 'admin', 
+            folder: query.folder || 'general' 
+        });
+    }
 }
 
+// --- CUSTOMER CONTROLLER ---
+@Controller('')
+@ApiTags(APP_ROUTES.CUSTOMER.UPLOAD.IMAGE.tag)
+export class CustomerUploadController {
+    constructor(private readonly uploadService: UploadService) {}
+
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiPost(APP_ROUTES.CUSTOMER.UPLOAD.IMAGE.path, {
+        summary: 'Customer upload một ảnh',
+        swagger: ApiUploadSingleImage(),
+        response: UploadImageDto,
+        status: HTTP_STATUS_ENUM.CREATED,
+    })
+    async customerUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
+        return this.uploadService.uploadImage(file, { 
+            ...query, 
+            typeUpload: 'customer', 
+            folder: query.folder || 'general' 
+        });
+    }
+}

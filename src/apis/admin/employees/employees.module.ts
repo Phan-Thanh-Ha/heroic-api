@@ -6,7 +6,10 @@ import { EmployeesRepository } from './employees.repository';
 import { EmployeesService } from './employees.service';
 
 @Module({
-  imports: [LoggerModule, PrismaModule],
+  imports: [
+    LoggerModule, 
+    PrismaModule,
+  ],
   controllers: [EmployeesController],
   providers: [EmployeesService, EmployeesRepository],
   exports: [EmployeesRepository],

@@ -6,7 +6,7 @@ import { WardsService } from './wards.service';
 import { ApiWardsFindByWardId } from '../../customer/swagger/get-ward-by-wardid.swagger';
 import { QueryWardsDto } from './dto/query.dto';
 
-@AppController(APP_ROUTES.LOCATIONS.WARDS)
+@AppController(APP_ROUTES.CUSTOMER.LOCATIONS.WARDS)
 export class WardsController {
   constructor(private readonly wardsService: WardsService) {}
 

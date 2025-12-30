@@ -43,6 +43,7 @@
 			"@utils": ["src/common/utils"],
 			"@interfaces": ["src/common/interfaces"],
 			"@mail": ["src/mail/index"],
+			"@guards": ["src/guards"],
 		}
 	},
 	"exclude": ["./node_modules/**"],

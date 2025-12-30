@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ProvinceModule, DistrictsModule, WardsModule } from '@locations';
-import { ApiCustomerModule } from './customer';
-import { ApiAdminModule } from './admin';
 import { UploadModule } from '../upload';
+import { ApiAdminModule } from './admin';
+import { ApiCustomerModule } from './customer';
 
 @Module({
 	imports: [
