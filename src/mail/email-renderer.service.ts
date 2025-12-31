@@ -9,11 +9,11 @@ export class EmailRendererService {
   /**
    * Render OTP email template thành HTML
    */
-  async renderOtpEmail(otpCode: string, userName?: string): Promise<string> {
+  async renderOtpEmail(otp: string, userName?: string): Promise<string> {
     try {
       const html = await render(
         OtpEmail({
-          otpCode,
+          otp,
           userName,
         }),
       );
@@ -27,11 +27,11 @@ export class EmailRendererService {
   /**
    * Render OTP email template thành plain text
    */
-  async renderOtpEmailText(otpCode: string, userName?: string): Promise<string> {
+  async renderOtpEmailText(otp: string, userName?: string): Promise<string> {
     try {
       const text = await render(
         OtpEmail({
-          otpCode,
+          otp,
           userName,
         }),
         {

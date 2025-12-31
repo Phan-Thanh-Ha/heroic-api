@@ -32,11 +32,11 @@ export class MailService {
             const fromName = this.mailConfig.fromName;
 
             const html = await this.emailRenderer.renderOtpEmail(
-                sendMailOtpDto.otpCode,
+                sendMailOtpDto.otp,
                 userName,
             );
             const text = await this.emailRenderer.renderOtpEmailText(
-                sendMailOtpDto.otpCode,
+                sendMailOtpDto.otp,
                 userName,
             );
 

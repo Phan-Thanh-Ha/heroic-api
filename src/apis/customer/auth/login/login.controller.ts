@@ -1,4 +1,4 @@
-import { ApiPost, APP_ROUTES, AppController } from '@common';
+import { ApiPost, APP_ROUTES, AppController, Public } from '@common';
 import { LoggerService } from '@logger';
 import { Body, Req } from '@nestjs/common';
 import { Request } from 'express';
@@ -25,6 +25,7 @@ export class LoginController {
     summary: 'Đăng nhập bằng email',
     swagger: ApiLogin()
   })
+  @Public()
   async login(
     @Body() loginDto: LoginDto,
     @Req() req: Request & { timeZone?: string },
@@ -62,6 +63,7 @@ export class LoginController {
     summary: 'Xác thực OTP',
     swagger: ApiVerifyOtp()
   })
+  @Public()
   async verifyOtp(
     @Body() verifyOtpDto: VerifyOtpDto,
     @Req() req: Request & { timeZone?: string },

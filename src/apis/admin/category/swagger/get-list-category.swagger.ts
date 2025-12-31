@@ -7,11 +7,6 @@ export const ApiGetListCategorySwagger = () => {
         ApiOperation({
             summary: 'Lấy danh sách danh mục',
         }),
-        ApiHeader({
-            name: 'token',
-            required: true,
-            schema: { type: 'string'},
-        }),  
         ApiResponse({
             status: HTTP_STATUS_ENUM.OK,
             description: 'Danh sách danh mục',

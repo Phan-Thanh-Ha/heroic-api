@@ -1,8 +1,7 @@
+import { filterDocumentByTags } from './src/common/swagger/filter-document';
+import { ADMIN_TAG_LIST, CUSTOMER_TAG_LIST } from './src/common/apis-routes/api.routes';
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { ADMIN_TAG_LIST, CUSTOMER_TAG_LIST } from "./common/apis-routes/api.routes"; // Import từ file routes đã tối ưu
-import { filterDocumentByTags } from "./common/swagger";
-import { configuration } from "./config";
 
 interface SwaggerConfig {
     title: string;
@@ -27,8 +26,7 @@ const createSwaggerDocument = (
 };
 
 export const initSwagger = (app: INestApplication) => {
-    const config = configuration();
-    // const ngrokUrl = config.ngrokUrl;
+    // const ngrokUrl = process.env.NGROK_URL;
 
     // 1. CẤU HÌNH BUILDER (Đã thêm Global Parameters)
     const documentBuilder = new DocumentBuilder()
@@ -128,11 +126,5 @@ export const initSwagger = (app: INestApplication) => {
             defaultModelsExpandDepth: -1,  // Ẩn bảng danh sách Schemas ở dưới cùng (cho gọn trang)
             deepLinking: true,
         },
-        customCss: `
-        .swagger-ui .wrapper { max-width: 1460px; padding: 0 20px; }
-        .swagger-ui .topbar { background-color: #000; border-bottom: 3px solid #ed1c24; }
-        .swagger-ui .info .title { color: #ed1c24; font-family: 'Segoe UI', sans-serif; }
-        .opblock-summary-path { font-weight: bold !important; }
-    `
     });
 };

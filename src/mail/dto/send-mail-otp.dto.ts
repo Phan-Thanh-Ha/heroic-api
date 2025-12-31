@@ -7,5 +7,5 @@ export class SendMailOtpDto {
 
     @IsString()
     @IsNotEmpty()
-    otpCode!: string;
+    otp!: string;
 }

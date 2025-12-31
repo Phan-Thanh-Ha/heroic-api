@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
 
 // Mask nhanh các field nhạy cảm (password, token, secret)
 const maskSensitive = (value: any) => {
@@ -18,32 +18,37 @@ const maskSensitive = (value: any) => {
 
 @Injectable()
 export class RequestLoggerMiddleware implements NestMiddleware {
+  // 1. Dùng Logger của NestJS nhìn cho chuyên nghiệp và đồng bộ màu sắc
+  private readonly logger = new Logger('HTTP');
+
   use(req: any, _res: any, next: () => void) {
     const { method, originalUrl, query, body } = req;
 
-    // 1. LẤY GIÁ TRỊ TỪ HEADER (Sửa đúng tên khớp với Swagger)
-    // Header trong Node.js luôn tự động chuyển về chữ thường (lowercase)
-    const lang = req.headers['x-language'] || 'vi'; // Mặc định là 'vi'
-    const timeZone = req.headers['x-time-zone'] || 'Asia/Ho_Chi_Minh'; // Sửa: x-timezone -> x-time-zone
-    const accessToken = req.headers['token'];
+    // --- LẤY CÁC HEADER ---
+    const lang = req.headers['x-language'] || 'vi';
+    const timeZone = req.headers['x-time-zone'] || 'Asia/Ho_Chi_Minh';
     
-    // 2. GÁN VÀO REQUEST (Quan Trọng)
-    // Bước này giúp Controller và Interceptor sau này có thể gọi req.timeZone
+    // --- LOGIC LẤY TOKEN THÔNG MINH (HYBRID) ---
+    let token = req.headers['x-access-token']; 
+
+
+    // --- GÁN VÀO REQUEST ---
     req.lang = lang;
     req.timeZone = timeZone;
-    req.accessToken = accessToken;
+    req.accessToken = token; // Gán token tìm được vào
 
-    // 3. LOGGING
+    // --- LOGGING ---
     const safeBody = maskSensitive(body);
-    console.log('[REQ]', { 
-      method,
-      url: originalUrl,
-      token: accessToken,
-      query: JSON.stringify(query),
-      body: safeBody,
+    
+    // Dùng Logger.log thay vì console.log
+    this.logger.log(`[REQ] ${method} ${originalUrl}`, {
+      // accessToken: token ? `${token.substring(0, 10)}...` : 'null', // Chỉ log 1 phần token cho gọn
+      accessToken: token, // Hoặc log hết nếu bạn đang debug
       ip: req.ip,
-      timeZone: timeZone,
-      language: lang 
+      timeZone,
+      lang,
+      query,
+      body: safeBody,
     });
 
     next();

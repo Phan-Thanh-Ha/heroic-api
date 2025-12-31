@@ -14,15 +14,15 @@ import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 
 interface OtpEmailProps {
-    otpCode: string;
+    otp: string;
     userName?: string;
 }
 
-export const OtpEmail = ({ otpCode, userName = 'Bạn' }: OtpEmailProps) => {
+export const OtpEmail = ({ otp, userName = 'Bạn' }: OtpEmailProps) => {
     return (
         <Html>
             <Head />
-            <Preview>Mã xác thực OTP: {otpCode} - Heroic</Preview>
+            <Preview>Mã xác thực OTP: {otp} - Heroic</Preview>
             <Tailwind>
                 <Body className="bg-[#f4f7f9] py-12 px-4 font-sans">
                 <Container className="bg-white max-w-[520px] mx-auto rounded-2xl shadow-xl overflow-hidden border border-gray-100">
@@ -50,7 +50,7 @@ export const OtpEmail = ({ otpCode, userName = 'Bạn' }: OtpEmailProps) => {
                                 Mã OTP của bạn (6 chữ số)
                             </Text>
                             <Text className="text-indigo-600 font-mono text-5xl font-black tracking-[10px] m-0">
-                                {otpCode}
+                                {otp}
                             </Text>
                         </Section>
 
@@ -90,7 +90,7 @@ export const OtpEmail = ({ otpCode, userName = 'Bạn' }: OtpEmailProps) => {
 };
 
 OtpEmail.PreviewProps = {
-    otpCode: '482931',
+    otp: '482931',
     userName: 'Thành Luân Võ',
 } as OtpEmailProps;
 

@@ -36,13 +36,13 @@ export const initSwagger = (app: INestApplication) => {
         .setVersion('1.0.0')
         // --- SỬA Ở ĐÂY: Dùng Bearer Auth thay cho ApiKey ---
         .addApiKey(
-            { 
+            {
                 type: 'apiKey', 
-                name: 'authorization', // Tên header đúng như bạn dùng trong Postman
+                name: 'x-access-token', // Tên Header sẽ xuất hiện trong curl
                 in: 'header',
-                description: 'Dán trực tiếp chuỗi JWT vào đây'
-            }, 
-            'access-token' 
+                description: 'Nhập token vào đây (không cần chữ Bearer)',
+            },
+            'JWT', // 👈 Key định danh (Reference Key)
         )
         // --- Giữ nguyên Global Parameters ---
         .addGlobalParameters({
@@ -67,7 +67,7 @@ export const initSwagger = (app: INestApplication) => {
                 description: 'Múi giờ của Client',
             },
         });
-    
+
     const baseDocument = SwaggerModule.createDocument(
         app,
         documentBuilder.build(),
@@ -95,12 +95,12 @@ export const initSwagger = (app: INestApplication) => {
 
     swaggerConfigs.forEach((config) => {
         const document = createSwaggerDocument(baseDocument, config);
-        
+
         SwaggerModule.setup(config.path, app, document, {
             customSiteTitle: `${config.title} Documentation`,
             swaggerOptions: {
                 // Giúp lưu trạng thái login khi chuyển đổi giữa các docs
-                persistAuthorization: true, 
+                persistAuthorization: true,
                 requestInterceptor: (req: any) => {
                     if (!req.headers) req.headers = {};
                     req.headers['ngrok-skip-browser-warning'] = 'true';

@@ -44,6 +44,7 @@
 			"@interfaces": ["src/common/interfaces"],
 			"@mail": ["src/mail/index"],
 			"@guards": ["src/guards"],
+			"@apis-routes": ["src/common/apis-routes/api.routes"], 
 		}
 	},
 	"exclude": ["./node_modules/**"],

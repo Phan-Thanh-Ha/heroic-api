@@ -7,10 +7,5 @@ export const ApiCustomerGetList = () => {
         ApiOperation({
             summary: 'Lấy danh sách khách hàng ',
         }),
-        ApiHeader({
-            name: 'token',
-            required: true,
-            schema: { type: 'string'},
-        }),  
     )
 }; 

@@ -277,7 +277,7 @@ export class LoginRepository {
                     try {
                         await this.mailService.sendMailOTP({
                             email: customerResponse.email,
-                            otpCode,
+                            otp: otpCode.toString(),
                         });
                     } catch (error) {
                         this.loggerService.error(this.context, 'Failed to send OTP email', error);
@@ -453,14 +453,14 @@ export class LoginRepository {
     async verifyOtp(verifyOtpDto: VerifyOtpDto) {
         try {
             // Trim OTP để loại bỏ khoảng trắng thừa
-            const trimmedOtpCode = verifyOtpDto.otpCode?.trim() || verifyOtpDto.otpCode;
+            const trimmedOtp = verifyOtpDto.otp?.trim() || verifyOtpDto.otp;
 
             // Query trực tiếp trong database với điều kiện email và otpCode
             // Database sẽ tự động so sánh otpCode, không cần so sánh trong code
             const existingCustomer = await this.prisma.customer.findFirst({
                 where: {
                     email: verifyOtpDto.email,
-                    otpCode: trimmedOtpCode, // Query với điều kiện otpCode chính xác
+                    otpCode: trimmedOtp, // Query với điều kiện otpCode chính xác
                 },
             });
 

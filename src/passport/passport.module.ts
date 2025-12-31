@@ -8,7 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
     imports: [
         NestPassportModule.register({ defaultStrategy: 'jwt' }),
     ],
-    // Chứa các Strategy (vì chúng là Injectable)
+    // Chứa các Strategy
     providers: [
         JwtStrategy, 
     ],
