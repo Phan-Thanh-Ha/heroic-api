@@ -8,6 +8,7 @@ import { JwtModule } from '@jwt';
 import { MailModule } from '../../../../mail/mail.module';
 import { EmailModule } from 'src/apis/otp/email/email.module';
 import { DiscordModule } from 'src/apis/otp/discord/discord.module';
+import { TelegramModule } from 'src/apis/otp/telegram/telegram.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DiscordModule } from 'src/apis/otp/discord/discord.module';
     MailModule, 
     EmailModule,
     DiscordModule,
+    TelegramModule,
   ],
   controllers: [LoginController],
   providers: [LoginService, LoginRepository],

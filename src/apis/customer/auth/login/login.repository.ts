@@ -11,7 +11,7 @@ import { LoginDto } from "./dto/login.dto";
 import { EmailService } from "src/apis/otp/email/email.service";
 import { DiscordService } from "src/apis/otp/discord/discord.service";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
-// import { MailService } from "../../../../mail/mail.service";
+import { TelegramService } from "src/apis/otp/telegram/telegram.service";
 
 @Injectable()
 export class LoginRepository {
@@ -22,6 +22,7 @@ export class LoginRepository {
         private readonly jwtService: JwtService,
         private readonly emailService: EmailService,
         private readonly discordService: DiscordService,
+        private readonly telegramService: TelegramService,
     ) { }
 
     //#region Kiểm tra email đã tồn tại chưa
@@ -93,8 +94,13 @@ export class LoginRepository {
                 // Lưu ý: Tên hàm bên DiscordService nên khớp với hàm bạn đã viết (sendOTP)
             }
             else if (method === 'telegram') {
-                // TODO: Implement telegram otp
-            }
+                if (!user?.telegramId) {
+                    throw new Error('Tài khoản này chưa liên kết với Telegram!');
+                }
+
+                console.log('user.telegramId', user.telegramId);
+                await this.telegramService.sendTelegramOTP(user.telegramId, otpCode);
+                }
         } catch (error) {
             this.loggerService.error(this.context, 'sendOtp', error);
             throw error;
@@ -483,7 +489,6 @@ export class LoginRepository {
 
     //#region Xác thực OTP
     async verifyOtp(verifyOtpDto: VerifyOtpDto) {
-        console.log("🚀 🇵 🇭: ~ login.repository.ts:486 ~ verifyOtpDto:", verifyOtpDto)
         try {
             // Trim OTP để loại bỏ khoảng trắng thừa
             const trimmedOtp = verifyOtpDto.otp?.trim() || verifyOtpDto.otp;

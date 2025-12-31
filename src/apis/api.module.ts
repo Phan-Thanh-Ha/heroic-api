@@ -4,6 +4,7 @@ import { ApiAdminModule } from './admin';
 import { ApiCustomerModule } from './customer';
 import { EmailModule } from './otp/email/email.module';
 import { DiscordModule } from './otp/discord/discord.module';
+import { TelegramModule } from './otp/telegram/telegram.module';
 
 @Module({
 	imports: [
@@ -11,7 +12,8 @@ import { DiscordModule } from './otp/discord/discord.module';
 		ApiAdminModule,
 		UploadModule,
 		EmailModule,
-		DiscordModule, // Upload module dùng chung cho cả customer và admin
+		DiscordModule,
+		TelegramModule, // Upload module dùng chung cho cả customer và admin
 	],
 })
 

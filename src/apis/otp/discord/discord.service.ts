@@ -71,6 +71,7 @@ export class DiscordService implements OnModuleInit {
         });
     }
 
+    //#region hàm đăng ký lệnh /link
     private async registerCommands(token: string, clientId: string, guildId: string) {
         const commands = [
             new SlashCommandBuilder()
@@ -78,8 +79,8 @@ export class DiscordService implements OnModuleInit {
                 .setDescription('Liên kết email website với Discord để nhận mã OTP')
                 .addStringOption(opt => 
                     opt.setName('email')
-                       .setDescription('Email bạn sử dụng để đăng nhập website')
-                       .setRequired(true)
+                    .setDescription('Email bạn sử dụng để đăng nhập website')
+                    .setRequired(true)
                 )
         ].map(c => c.toJSON());
 
@@ -91,6 +92,7 @@ export class DiscordService implements OnModuleInit {
             this.logger.error('Lỗi nạp lệnh', e);
         }
     }
+    //#endregion
 
     /**
      * Hàm gửi OTP qua tin nhắn riêng (Direct Message)
