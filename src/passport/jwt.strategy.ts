@@ -13,10 +13,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     ) {
         super({
             jwtFromRequest: (req) => {
-                // 1. Thử lấy từ Header chuẩn (accessToken: Bearer ...)
+                // lấy token từ header
                 let token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
-                // 3. Nếu vẫn không có, thử lấy từ header accessToken nhưng không có Bearer
+                //Nếu vẫn không có, lấy từ header accessToken nhưng không có Bearer
                 if (!token && req.accessToken) {
                     token = req.accessToken.replace('Bearer ', '').trim();
                 }

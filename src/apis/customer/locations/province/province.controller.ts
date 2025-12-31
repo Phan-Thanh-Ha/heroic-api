@@ -4,8 +4,9 @@ import { ApiGet } from 'src/common/decorators/api-endpoint.decorator';
 import { AppController } from 'src/common/decorators/decorator';
 import { ProvinceService } from './province.service';
 import { ApiProvinceGetAll } from './swagger/get-all-province.swagger';
-import { ResponseMessage } from '@common';
+import { Public, ResponseMessage } from '@common';
 import { provinceSuccessTypes } from 'src/common/code-type/province/province-success.code-type';
+import { ApiSecurity } from '@nestjs/swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.LOCATIONS.PROVINCE)
 export class ProvinceController {
@@ -15,6 +16,8 @@ export class ProvinceController {
         summary: 'Lấy tất cả tỉnh thành',
         swagger: ApiProvinceGetAll()    
     })
+    @ApiSecurity('JWT')
+    @Public()
     @ResponseMessage(provinceSuccessTypes().GET_ALL_PROVINCE.message)
     async getAllProvince() {
         return await this.provinceService.getAllProvince();

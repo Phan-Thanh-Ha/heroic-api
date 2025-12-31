@@ -1,6 +1,7 @@
 import { LoggerService } from '@logger';
 import { Injectable } from '@nestjs/common';
 import { DistrictsRepository } from './districts.respository';
+import { QueryDistrictsDto } from './dto/query.dto';
 
 @Injectable()
 export class DistrictsService {
@@ -10,9 +11,9 @@ export class DistrictsService {
     private readonly logger: LoggerService,
   ) {}
 
-  async findDistrictsByProvinceCode(provinceCode: string) {
+  async findDistrictsByProvinceCode(query: QueryDistrictsDto) {
     try {
-      return await this.districtsRepository.findDistrictsByProvinceCode(provinceCode);
+      return await this.districtsRepository.findDistrictsByProvinceCode(query);
     } catch (error) {
       this.logger.error(this.context, 'findDistrictsByProvinceCode', error);
       throw error;

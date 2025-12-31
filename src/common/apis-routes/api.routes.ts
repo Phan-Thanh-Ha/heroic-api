@@ -6,6 +6,7 @@ export type RouteConfig = {
 };
 
 export const APP_ROUTES = {
+
     // ------------------------------------------
     // Cụm dành cho QUẢN TRỊ VIÊN
     // ------------------------------------------
@@ -16,9 +17,11 @@ export const APP_ROUTES = {
         },
         EMPLOYEES: { path: 'admins/employees', tag: 'Admin_Employees' },
         CATEGORY: {path: 'admin/category', tag: 'Admin_Category'},
-        // Thêm Upload vào nhánh Admin
         UPLOAD: {
             IMAGE: { path: 'admins/upload/image', tag: 'Admin_Upload' },
+        },
+        EMAIL: {
+            SEND_OTP: { path: 'customers/email/send-otp', tag: 'Customer_Email' },
         },
     },
 
@@ -37,9 +40,11 @@ export const APP_ROUTES = {
             DISTRICTS: { path: 'customers/locations/districts', tag: 'Customer_Locations' },
             WARDS: { path: 'customers/locations/wards', tag: 'Customer_Locations' },
         },
-        // Upload đã có sẵn ở nhánh Customer
         UPLOAD: {
             IMAGE: { path: 'customers/upload/image', tag: 'Customer_Upload' },
+        },
+        EMAIL: {
+            SEND_OTP: { path: 'customers/email/send-otp', tag: 'Customer_Email' },
         },
     },
 } as const;

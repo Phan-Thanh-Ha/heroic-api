@@ -4,8 +4,8 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '@logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { formatDateToYMD, toUnixByTimeZone } from '@utils';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Injectable()
 export class LoginService {
@@ -16,7 +16,7 @@ export class LoginService {
   ) { }
 
   //#region Đăng nhập bằng email
-  async login(loginDto: LoginDto, timeZone?: string) {
+  async loginWithEmail(loginDto: LoginDto, timeZone?: string) {
     try {
       this.loggerService.debug(this.context, 'login', loginDto);
       const result = await this.loginRepository.loginWithEmail(loginDto);

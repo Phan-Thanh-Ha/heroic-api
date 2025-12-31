@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { LoggerService } from "@logger";
 import { PrismaService } from "@prisma";
+import { QueryDistrictsDto } from "./dto/query.dto";
 
 @Injectable()
 export class DistrictsRepository {
@@ -10,28 +11,18 @@ export class DistrictsRepository {
         private readonly logger: LoggerService,
     ) {}
     
-    async findDistrictsByProvinceCode(provinceCode: string) {
+    async findDistrictsByProvinceCode(query: QueryDistrictsDto) {
         try {
-            this.logger.log(this.context, 'findDistrictsByProvinceCode', provinceCode);
-            return await this.prisma.districts.findMany({
+            this.logger.log(this.context, 'findDistrictsByProvinceCode', query);
+            const districts = await this.prisma.districts.findMany({
                 where: {
-                    province_code: provinceCode,
-                },
-                select: {
-                    id: true,
-                    code: true,
-                    name: true,
-                    slug: true,
-                    type: true,
-                    name_with_type: true,
-                    path: true,
-                    path_with_type: true,
-                    province_code: true,
-                },
-                orderBy: {
-                    name: 'asc',
+                    province_code: query.provinceCode,
                 },
             });
+            return ({
+                    items: districts,
+                    total: districts.length,
+                })
         } catch (error) {
             this.logger.error(this.context, 'findDistrictsByProvinceCode', error);
             throw error;

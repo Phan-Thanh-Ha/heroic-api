@@ -8,8 +8,10 @@ import bcrypt from "bcryptjs";
 import { LoginFacebookDto } from "./dto/login-facebook.dto";
 import { LoginGoogleDto } from "./dto/login-google.dto";
 import { LoginDto } from "./dto/login.dto";
+import { EmailService } from "src/apis/otp/email/email.service";
+import { DiscordService } from "src/apis/otp/discord/discord.service";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
-import { MailService } from "../../../../mail/mail.service";
+// import { MailService } from "../../../../mail/mail.service";
 
 @Injectable()
 export class LoginRepository {
@@ -18,7 +20,8 @@ export class LoginRepository {
         private readonly prisma: PrismaService,
         private readonly loggerService: LoggerService,
         private readonly jwtService: JwtService,
-        private readonly mailService: MailService,
+        private readonly emailService: EmailService,
+        private readonly discordService: DiscordService,
     ) { }
 
     //#region Kiểm tra email đã tồn tại chưa
@@ -61,6 +64,39 @@ export class LoginRepository {
         }
         catch (error) {
             this.loggerService.error(this.context, 'checkFacebookIdExists', error);
+            throw error;
+        }
+    }
+    //#endregion
+
+    //#region method gửi otp
+    private async sendOtp(method: 'email' | 'discord' | 'telegram', otpCode: string, email: string) {
+        try {
+            // 1. Tìm user trong database để lấy discordId
+            const user = await this.checkEmailExists(email);
+            console.log("🚀 🇵 🇭: ~ login.repository.ts:76 ~ user:", user)
+            
+            if (method === 'email') {
+                await this.emailService.sendMailOTP({
+                    email: email,
+                    otp: otpCode,
+                });
+            } 
+            else if (method === 'discord') {
+                // Kiểm tra xem user đã thực hiện bước /link chưa
+                if (!user?.discordId) {
+                    throw new Error('Tài khoản này chưa liên kết với Discord!');
+                }
+
+                console.log('user.discordId', user.discordId);
+                await this.discordService.sendDiscordOTP(user.discordId, otpCode);
+                // Lưu ý: Tên hàm bên DiscordService nên khớp với hàm bạn đã viết (sendOTP)
+            }
+            else if (method === 'telegram') {
+                // TODO: Implement telegram otp
+            }
+        } catch (error) {
+            this.loggerService.error(this.context, 'sendOtp', error);
             throw error;
         }
     }
@@ -271,19 +307,15 @@ export class LoginRepository {
                     where: { id: customerResponse.id },
                     data: { otpCode },
                 });
-
-                // Gửi email OTP sau khi lưu OTP thành công
-                if (customerResponse.email) {
-                    try {
-                        await this.mailService.sendMailOTP({
-                            email: customerResponse.email,
-                            otp: otpCode.toString(),
-                        });
-                    } catch (error) {
-                        this.loggerService.error(this.context, 'Failed to send OTP email', error);
-                        // Không throw error để không làm gián đoạn login flow
-                    }
-                }
+                await this.sendOtp(loginDto.otpMethod as 'email' | 'discord' | 'telegram', otpCode, loginDto.email);
+                return {
+                    message: customerAuthSuccessTypes().AUTH_LOGIN_SUCCESS.message,
+                    info: {
+                        ...customerResponse,
+                        customerCode: trimmedCustomerCode,
+                    },
+                    otpCode, // Chỉ trả về OTP để user verify
+                };
             } catch (error) {
                 this.loggerService.error(this.context, 'Failed to save OTP to database', error);
                 // Nếu lỗi do cột otp_code chưa tồn tại, vẫn tiếp tục nhưng log warning
@@ -451,6 +483,7 @@ export class LoginRepository {
 
     //#region Xác thực OTP
     async verifyOtp(verifyOtpDto: VerifyOtpDto) {
+        console.log("🚀 🇵 🇭: ~ login.repository.ts:486 ~ verifyOtpDto:", verifyOtpDto)
         try {
             // Trim OTP để loại bỏ khoảng trắng thừa
             const trimmedOtp = verifyOtpDto.otp?.trim() || verifyOtpDto.otp;

@@ -6,7 +6,7 @@ import { QueryWardsDto } from './dto/query.dto';
 @Injectable()
 export class WardsService {
   private context = WardsService.name;
-  constructor(private readonly wardsRepository: WardsRepository, private readonly logger: LoggerService) {}
+  constructor(private readonly wardsRepository: WardsRepository, private readonly logger: LoggerService) { }
   // create(createWardDto: CreateWardDto) {
   //   return 'This action adds a new ward';
   // }
@@ -28,24 +28,26 @@ export class WardsService {
   // }
   async findWardsByDistrictCode(query: QueryWardsDto) {
     try {
-      // Trả thẳng danh sách để interceptor bọc:
-      // data: { result: [...], total: n }
-      return await this.wardsRepository.findWardsByDistrictCode(query);
+      const wards = await this.wardsRepository.findWardsByDistrictCode(query);
+      return ({
+          items: wards,
+          total: wards.length,
+        })
     } catch (error) {
       this.logger.error(this.context, 'findWardsByDistrictCode', error);
       throw error;
     }
   };
-   
 
-   async findWardsByWardId (wardId : number){
+
+  async findWardsByWardId(wardId: number) {
     try {
       return await this.wardsRepository.findWardsByWardId(wardId);
     } catch (error) {
       this.logger.error(this.context, 'findWardsByWardId', error);
       throw error;
     }
-   }
-  
+  }
+
 }
 

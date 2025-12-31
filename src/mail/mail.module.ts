@@ -5,7 +5,6 @@ import { LoggerModule } from '@logger';
 import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 import { EmailRendererService } from './email-renderer.service';
-import { MailRepository } from './mail.repository';
 
 @Module({
     imports: [
@@ -15,7 +14,6 @@ import { MailRepository } from './mail.repository';
     controllers: [MailController],
     providers: [
         MailService, 
-        MailRepository, 
         EmailRendererService
     ],
     exports: [MailService],

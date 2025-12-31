@@ -47,7 +47,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
       ip: req.ip,
       timeZone,
       lang,
-      query,
+      query: maskSensitive(query),
       body: safeBody,
     });
 

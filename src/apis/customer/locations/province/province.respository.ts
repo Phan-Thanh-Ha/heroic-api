@@ -10,24 +10,11 @@ export class ProvinceRepository {
     // Lấy danh sách thành phố
     async getAllProvince() {
         try {
-            return await this.prisma.provinces.findMany({
-                select: {
-                    id: true,
-                    code: true,
-                    name: true,
-                    slug: true,
-                    type: true,
-                    name_with_type: true,
-                    sort_order: true,
-                    lat: true,
-                    long: true,
-                    image: true,
-                },
-                orderBy: [
-                    { sort_order: 'asc' },
-                    { name: 'asc' },
-                ],
-            });
+            const provinces = await this.prisma.provinces.findMany();
+            return ({
+                    items: provinces,
+                    total: provinces.length,
+                })
         } catch (error) {
             this.logger.error(this.context, 'getAllProvince', error);
             throw error;
