@@ -1,11 +1,8 @@
 import { ApiSecurity } from '@nestjs/swagger';
-import { UseGuards } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-
 import { ApiGet, APP_ROUTES, AppController, ResponseMessage } from '@common';
 import { customerSuccessTypes } from 'src/common/code-type/customers/customer-success.code-type';
 import { ApiCustomerGetList } from './swagger/get-customer-list.swagger';
-import { JwtAuthGuard } from '@guards';
 
 @AppController(APP_ROUTES.CUSTOMER.LIST)
 export class CustomerController {

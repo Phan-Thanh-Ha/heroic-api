@@ -1,4 +1,3 @@
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
 import { Body, Query, UseGuards } from '@nestjs/common';
 import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';

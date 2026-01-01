@@ -76,6 +76,34 @@ model Wards {
   @@map("wards")
 }
 
+model Brand {
+    id        Int      @id @default(autoincrement()) @map("id")
+    uuid      String   @unique @map("uuid") @db.Char(36)
+
+    name      String   @map("name") @db.VarChar(100)
+    slug      String   @unique @map("slug") @db.VarChar(100)
+    image     String?  @map("image") @db.Text
+    description String?  @map("description") @db.Text
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
+    
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    createdById Int?     @map("created_by_id") // ID người tạo danh mục
+
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+    updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
+
+    featured    FeaturedBrand? // Quan hệ 1-1 với bảng FeaturedBrand
+
+    @@index([id])
+    @@index([uuid])
+    @@index([name])
+    @@index([slug])
+    @@index([isActive])
+    @@index([createdById])
+    @@index([updatedById])
+    @@map("brands")
+}
+
 model Category {
     id          Int      @id @default(autoincrement()) // ID danh mục
     uuid        String   @unique @map("uuid") @db.Char(36) // UUID danh mục
@@ -89,6 +117,7 @@ model Category {
     products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
+    isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của danh mục
 
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
     createdById Int?     @map("created_by_id") // ID người tạo danh mục
@@ -96,7 +125,7 @@ model Category {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    @@map("categories")
+    @@map("category")
 }
 
 model Customer {
@@ -195,6 +224,25 @@ model Employee {
     @@index([fullName])
     @@index([positionId])
     @@map("employees")
+}
+
+model FeaturedBrand {
+    id           Int     @id @default(autoincrement()) @map("id")
+    uuid         String  @unique @map("uuid") @db.Char(36)
+    // Nối với bảng Brand
+    brandId      Int     @unique @map("brand_id")
+    brand        Brand   @relation(fields: [brandId], references: [id])
+
+    // Các trường điều khiển hiển thị
+    isActive     Boolean @default(true) @map("is_active") // Bật/Tắt hiển thị
+    displayOrder Int     @default(0) @map("display_order") // Thứ tự (0, 1, 2...) để xếp logo
+
+
+    @@index([brandId])
+    @@index([isActive])
+    @@index([displayOrder])
+
+    @@map("featured_brands")
 }
 
 model LoginDetails {

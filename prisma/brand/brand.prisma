@@ -1,0 +1,27 @@
+model Brand {
+    id        Int      @id @default(autoincrement()) @map("id")
+    uuid      String   @unique @map("uuid") @db.Char(36)
+
+    name      String   @map("name") @db.VarChar(100)
+    slug      String   @unique @map("slug") @db.VarChar(100)
+    image     String?  @map("image") @db.Text
+    description String?  @map("description") @db.Text
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
+    
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    createdById Int?     @map("created_by_id") // ID người tạo danh mục
+
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+    updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
+
+    featured    FeaturedBrand? // Quan hệ 1-1 với bảng FeaturedBrand
+
+    @@index([id])
+    @@index([uuid])
+    @@index([name])
+    @@index([slug])
+    @@index([isActive])
+    @@index([createdById])
+    @@index([updatedById])
+    @@map("brands")
+}

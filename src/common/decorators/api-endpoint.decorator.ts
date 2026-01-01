@@ -1,5 +1,5 @@
 // src/common/decorators/api-endpoint.decorator.ts
-import { applyDecorators, Delete, Get, HttpCode, Post, Put, RequestMethod, UseInterceptors } from '@nestjs/common';
+import { applyDecorators, Delete, Get, HttpCode, Patch, Post, Put, RequestMethod, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoggingInterceptor } from '../interceptors/logging.interceptor';
 
@@ -27,8 +27,8 @@ function createApiDecorator(
         method === RequestMethod.POST ? Post(path) :
             method === RequestMethod.GET ? Get(path) :
                 method === RequestMethod.PUT ? Put(path) :
-                    method === RequestMethod.DELETE ? Delete(path) : Get(path),
-
+                    method === RequestMethod.PATCH ? Patch(path) :
+                        method === RequestMethod.DELETE ? Delete(path) : Get(path),
         // 2. HTTP Code & Swagger cơ bản
         HttpCode(status),
         ApiOperation({ summary: options.summary, description: options.description }),
@@ -60,7 +60,7 @@ export function ApiPost(path: string, options: ApiEndpointOptions) {
 }
 
 export function ApiPatch(path: string, options: ApiEndpointOptions) {
-    return createApiDecorator(RequestMethod.POST, path, options);
+    return createApiDecorator(RequestMethod.PATCH, path, options);
 }
 
 export function ApiPut(path: string, options: ApiEndpointOptions) {

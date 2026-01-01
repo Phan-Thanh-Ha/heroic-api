@@ -11,6 +11,7 @@ model Category {
     products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
+    isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của danh mục
 
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
     createdById Int?     @map("created_by_id") // ID người tạo danh mục
@@ -18,5 +19,5 @@ model Category {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    @@map("categories")
+    @@map("category")
 }

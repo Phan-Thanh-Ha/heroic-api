@@ -1,0 +1,18 @@
+model FeaturedBrand {
+    id           Int     @id @default(autoincrement()) @map("id")
+    uuid         String  @unique @map("uuid") @db.Char(36)
+    // Nối với bảng Brand
+    brandId      Int     @unique @map("brand_id")
+    brand        Brand   @relation(fields: [brandId], references: [id])
+
+    // Các trường điều khiển hiển thị
+    isActive     Boolean @default(true) @map("is_active") // Bật/Tắt hiển thị
+    displayOrder Int     @default(0) @map("display_order") // Thứ tự (0, 1, 2...) để xếp logo
+
+
+    @@index([brandId])
+    @@index([isActive])
+    @@index([displayOrder])
+
+    @@map("featured_brands")
+}

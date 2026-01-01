@@ -1,5 +1,4 @@
 import { ApiPost, APP_ROUTES, HTTP_STATUS_ENUM } from '@common';
-import { JwtAuthGuard } from '@guards';
 import {
     Controller,
     Query,
@@ -27,8 +26,7 @@ export class AdminUploadController {
         response: UploadImageDto,
         status: HTTP_STATUS_ENUM.CREATED,
     })
-    @UseGuards(JwtAuthGuard)
-    @ApiSecurity('access-token')
+    @ApiSecurity('JWT')
     async adminUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
         // Tự động gán typeUpload là admin và ưu tiên folder từ query gửi lên
         return this.uploadService.uploadImage(file, { 
@@ -67,8 +65,7 @@ export class CustomerUploadController {
         response: UploadImageDto,
         status: HTTP_STATUS_ENUM.CREATED,
     })
-    @UseGuards(JwtAuthGuard)
-    @ApiSecurity('access-token')
+    @ApiSecurity('JWT')
     async customerUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
         return this.uploadService.uploadImage(file, { 
             ...query, 

@@ -1,19 +1,25 @@
-import { ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { Body, Req, UseGuards } from '@nestjs/common';
+import { ApiDelete, ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
+import { JwtPayloadAdmin } from '@jwt';
+import { LoggerService } from '@logger';
+import { Body, Param, Query, Req } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
 import { Request } from 'express';
 import { categorySuccessTypes } from 'src/common/code-type/category/category-success.code-type';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { QueryUserDto } from '../employees/dto/query.dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
-import { JwtPayloadAdmin } from '@jwt';
-import { ApiGetListCategorySwagger } from './swagger';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-import { QueryUserDto } from '../employees/dto/query.dto';
-import { Query } from '@nestjs/common';
+import { ApiGetListCategorySwagger } from './swagger';
+import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
+import { ApiToggleCategorySwagger } from './swagger/toggle-category.swagger';
+import { ApiUpdateCategorySwagger } from './swagger/update-category.swagger';
 @AppController(APP_ROUTES.ADMIN.CATEGORY)
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService, 
+    private readonly logger: LoggerService
+  ) { }
 
   //#region Tạo danh mục mới
   @ApiPost('create', {
@@ -23,14 +29,13 @@ export class CategoryController {
     status: HTTP_STATUS_ENUM.CREATED
   })
   @ResponseMessage(categorySuccessTypes().CATEGORY_CREATE_SUCCESS.message)
-  @UseGuards(JwtAuthGuard)
+  @ApiSecurity('JWT')
   async createCategory(
-    @Req() req: Request, 
+    @Req() req: Request,
     @Body() createCategoryDto: CreateCategoryDto
   ) {
     // req.user chứa thông tin đã giải mã từ token (id, email, role...)
-    const userInfo = req.user as JwtPayloadAdmin; 
-    
+    const userInfo = req.user as JwtPayloadAdmin;
     // Truyền user hoặc user.id vào service để lưu người tạo
     return await this.categoryService.createCategory(createCategoryDto, userInfo);
   }
@@ -43,10 +48,64 @@ export class CategoryController {
     response: [Category],
     status: HTTP_STATUS_ENUM.OK,
   })
-  //#endregion
-  @UseGuards(JwtAuthGuard)
+  @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_GET_LIST_SUCCESS.message)
   async getListCategory(@Query() query: QueryUserDto) {
     return await this.categoryService.getListCategory(query);
   }
+  //#endregion
+
+  //#region Cập nhật danh mục
+  
+  @ApiPatch('update/:id', {
+    summary: 'Cập nhật danh mục',
+    swagger: ApiUpdateCategorySwagger(),
+    response: Category,
+    status: HTTP_STATUS_ENUM.OK,
+  })
+  @ApiSecurity('JWT')
+  @ResponseMessage(categorySuccessTypes().CATEGORY_UPDATE_SUCCESS.message)
+  async updateCategory(
+    @Req() req: Request, 
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
+    const userInfo = req.user as JwtPayloadAdmin;
+    return await this.categoryService.updateCategory(updateCategoryDto, userInfo);
+  }
+  //#endregion
+
+  //#region Xóa danh mục
+  @ApiDelete('delete/:uuid', {
+    summary: 'Xóa danh mục',
+    response: Category,
+    status: HTTP_STATUS_ENUM.OK,
+  })
+  @ApiSecurity('JWT')
+  @ResponseMessage(categorySuccessTypes().CATEGORY_DELETE_SUCCESS.message)
+  async deleteCategory(
+    @GetUser() user: JwtPayloadAdmin,
+    @Param('uuid') uuid: string
+  ) {
+    this.logger.log(CategoryController.name, 'deleteCategory', uuid);
+    return await this.categoryService.deleteCategory(uuid, user);
+  }
+  //#endregion
+
+  //#region mở đóng danh mục
+  @ApiPatch('toggle/:uuid', {
+    summary: 'Mở đóng danh mục',
+    swagger: ApiToggleCategorySwagger(),
+    response: Category,
+    status: HTTP_STATUS_ENUM.OK,
+  })
+  @ApiSecurity('JWT')
+  @ResponseMessage(categorySuccessTypes().CATEGORY_TOGGLE_SUCCESS.message)
+  async toggleCategory(
+    @GetUser() user: JwtPayloadAdmin, 
+    @Param('uuid') uuid: string,
+  ) {
+    this.logger.debug(CategoryController.name, 'toggleCategory', uuid);
+    return await this.categoryService.toggleActiveCategory(uuid, user);
+  }
+  //#endregion
 }
