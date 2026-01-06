@@ -317,7 +317,10 @@ model Product {
     quantity    Int      @map("quantity") // Số lượng sản phẩm còn lại
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
+    isOutOfStock Boolean   @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
+    isFlashSale Boolean   @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
 
+    
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo sản phẩm
     createdById Int?     @map("created_by_id") // ID người tạo sản phẩm
     updatedById Int?     @map("updated_by_id") // ID người cập nhật sản phẩm
