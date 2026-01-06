@@ -300,6 +300,34 @@ model Position {
     @@map("positions")
 }
 
+model ProductDetail {
+    id           Int      @id @default(autoincrement()) @map("id")
+    productId    Int      @map("product_id")
+    product      Product  @relation(fields: [productId], references: [id])
+
+    sku          String   @unique @map("sku") @db.VarChar(255) // Mã định danh riêng (Code cũ)
+    flavor       String?  @map("flavor") @db.VarChar(255)      // Chocolate, Vanilla...
+    size         String?  @map("size") @db.VarChar(255)        // 5lbs, 2lbs...
+
+    importPrice  Float    @map("import_price") // Giá nhập
+    retailPrice  Float    @map("retail_price") // Giá bán lẻ
+    discount     Float?   @default(0) @map("discount") // Giảm giá bán (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
+
+
+    quantity     Int      @map("quantity") // Số lượng sản phẩm còn lại
+    isOutOfStock Boolean  @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
+    @@map("product_detail")
+}
+
+model ProductImage {
+    id          Int      @id @default(autoincrement()) @map("id") // ID ảnh sản phẩm
+    productId   Int      @map("product_id") // ID sản phẩm
+    product     Product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng products
+    image       String   @map("image") @db.Text // Ảnh sản phẩm
+
+    @@map("product_images")
+}
+
 model Product {
     id          Int      @id @default(autoincrement()) @map("id") // ID sản phẩm
     uuid        String   @unique @map("uuid") @db.Char(36) // UUID sản phẩm
@@ -314,10 +342,8 @@ model Product {
     retailPrice  Float    @map("retail_price") // Giá bán lẻ
     discount     Float?   @default(0) @map("discount") // Giảm giá bán (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
 
-    quantity    Int      @map("quantity") // Số lượng sản phẩm còn lại
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
-    isOutOfStock Boolean   @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
     isFlashSale Boolean   @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
 
     
@@ -329,6 +355,17 @@ model Product {
     categoryId Int      @map("category_id")
     category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
 
+    /**
+     * Quan hệ 1-N với bảng ProductDetail
+     * Một sản phẩm có nhiều chi tiết sản phẩm
+     */
+    productDetails ProductDetail[]
+
+    /**
+     * Quan hệ 1-N với bảng ProductImage
+     * Một sản phẩm có nhiều ảnh sản phẩm
+     */
+    productImages ProductImage[]
 
     @@map("products")
 }

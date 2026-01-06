@@ -12,10 +12,8 @@ model Product {
     retailPrice  Float    @map("retail_price") // Giá bán lẻ
     discount     Float?   @default(0) @map("discount") // Giảm giá bán (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
 
-    quantity    Int      @map("quantity") // Số lượng sản phẩm còn lại
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
-    isOutOfStock Boolean   @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
     isFlashSale Boolean   @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
 
     
@@ -27,6 +25,17 @@ model Product {
     categoryId Int      @map("category_id")
     category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
 
+    /**
+     * Quan hệ 1-N với bảng ProductDetail
+     * Một sản phẩm có nhiều chi tiết sản phẩm
+     */
+    productDetails ProductDetail[]
+
+    /**
+     * Quan hệ 1-N với bảng ProductImage
+     * Một sản phẩm có nhiều ảnh sản phẩm
+     */
+    productImages ProductImage[]
 
     @@map("products")
 }

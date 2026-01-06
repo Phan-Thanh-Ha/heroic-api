@@ -1,0 +1,8 @@
+model ProductImage {
+    id          Int      @id @default(autoincrement()) @map("id") // ID ảnh sản phẩm
+    productId   Int      @map("product_id") // ID sản phẩm
+    product     Product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng products
+    image       String   @map("image") @db.Text // Ảnh sản phẩm
+
+    @@map("product_images")
+}

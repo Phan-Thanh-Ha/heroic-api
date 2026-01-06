@@ -33,7 +33,6 @@ export class ProductRepository {
                     slug: createProductDto.slug,
                     importPrice: createProductDto.importPrice,
                     retailPrice: createProductDto.retailPrice,
-                    quantity: createProductDto.quantity,
                     categoryId: createProductDto.categoryId,
                     isActive: true,
                     createdById: user.id,
