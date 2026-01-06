@@ -5,6 +5,7 @@ import { ProductRepository } from './product.repository';
 import { QueryProductDto } from './dto';
 import { productErrorTypes } from '@common';
 import { LoggerService } from '@logger';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -14,10 +15,13 @@ export class ProductService {
     private readonly loggerService: LoggerService
   ) {}
 
+  //#region Create Product
   async createProduct(createProductDto: CreateProductDto, user: JwtPayloadAdmin) {
     return await this.productRepository.createProduct(createProductDto, user);
   }
+  //#endregion
 
+  //#region Get List Product
   async getListProduct(query: QueryProductDto) {
     try {
       const products = await this.productRepository.getListProduct(query);
@@ -27,4 +31,11 @@ export class ProductService {
       throw new BadRequestException(productErrorTypes().PRODUCT_GET_LIST_FAILED.message);
     }
   }
+  //#endregion
+
+  //#region Update Product
+  async updateProduct(productId: number, updateProductDto: UpdateProductDto, user: JwtPayloadAdmin) {
+    return await this.productRepository.updateProduct(productId, updateProductDto, user);
+  }
+  //#endregion
 }

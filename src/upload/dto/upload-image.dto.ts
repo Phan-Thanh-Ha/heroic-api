@@ -10,7 +10,8 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 export enum UploadFolderType {
     CATEGORY_BANNER = 'categories/banners',
     CATEGORY_THUMBNAIL = 'categories/thumbnails',
-    PRODUCT = 'products',
+    PRODUCT_IMAGE = 'products/images',
+	PRODUCT_DETAIL = 'products/details',
     AVATAR = 'avatars',
 }
 

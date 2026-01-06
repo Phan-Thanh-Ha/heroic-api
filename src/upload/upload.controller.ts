@@ -19,6 +19,13 @@ import { UploadService } from './upload.service';
 export class AdminUploadController {
     constructor(private readonly uploadService: UploadService) {}
 
+    /**
+     * Admin upload một ảnh
+     * @param file ảnh
+     * @param query query
+     * @returns ảnh
+     */
+    //#region Admin upload một ảnh
     @UseInterceptors(FileInterceptor('file'))
     @ApiPost(APP_ROUTES.ADMIN.UPLOAD.IMAGE.path, {
         summary: 'Admin upload một ảnh',
@@ -33,11 +40,21 @@ export class AdminUploadController {
             folder: query.folder || 'general' 
         });
     }
+    //#endregion
 
+    /**
+     * Admin upload nhiều ảnh cùng lúc
+     * @param files ảnh
+     * @param query query
+     * @returns ảnh
+     */
+    //#region Admin upload nhiều ảnh cùng lúc
     @UseInterceptors(FilesInterceptor('files', 10))
     @ApiPost('admins/upload/multiple', {
         summary: 'Admin upload nhiều ảnh cùng lúc',
+        swagger: ApiUploadMultipleImages(),
     })
+    @ApiSecurity('JWT')
     async adminUploadMultipleImages(@UploadedFiles() files: Express.Multer.File[], @Query() query: UploadImageDto) {
         return this.uploadService.uploadMultipleImages(files, { 
             ...query, 
@@ -45,6 +62,7 @@ export class AdminUploadController {
             folder: query.folder || 'general' 
         });
     }
+    //#endregion
 }
 
 // --- CUSTOMER CONTROLLER ---

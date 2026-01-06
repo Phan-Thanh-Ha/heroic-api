@@ -32,7 +32,7 @@ async function bootstrap() {
   
   // Cấu hình CORS
   app.enableCors({ 
-    origin: ['http://localhost:5173', 'http://localhost:3000'], 
+    origin: '*', 
     credentials: true, // Cho phép trình duyệt nhận và gửi Cookie
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: '*', // Cho phép tất cả header

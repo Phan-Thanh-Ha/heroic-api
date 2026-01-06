@@ -1,39 +1,39 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProductDto {
-    @IsString( { message: 'code phải là chuỗi' })
-    @IsNotEmpty( { message: 'code không được để trống' })
+    @IsString({ message: 'code phải là chuỗi' })
+    @IsNotEmpty({ message: 'code không được để trống' })
     code!: string;
 
-    @IsString( { message: 'name phải là chuỗi' })
-    @IsNotEmpty( { message: 'name không được để trống' })
+    @IsString({ message: 'name phải là chuỗi' })
+    @IsNotEmpty({ message: 'name không được để trống' })
     name!: string;
     
-    @IsNotEmpty( { message: 'description không được để trống' })
+    @IsNotEmpty({ message: 'description không được để trống' })
     description!: string;
 
-    @IsString( { message: 'image phải là chuỗi' })
-    @IsNotEmpty( { message: 'image không được để trống' })
-    image!: string;
+    @IsArray({ message: 'images phải là một mảng' })
+    @IsString({ each: true, message: 'Mỗi ảnh trong danh sách phải là chuỗi URL' })
+    @IsNotEmpty({ message: 'images không được để trống' })
+    images!: string[]; 
 
     @IsNumber()
     @IsNotEmpty()
-    importPrice!: number; // Giá nhập
+    importPrice!: number;
 
     @IsNumber()
     @IsNotEmpty()
-    retailPrice!: number; // Giá bán lẻ
+    retailPrice!: number;
 
     @IsNumber()
     @IsNotEmpty()
-    quantity!: number; // Số lượng
+    quantity!: number;
 
     @IsNumber()
     @IsNotEmpty()
-    categoryId!: number; // ID danh mục
+    categoryId!: number;
 
-    @IsString( { message: 'slug phải là chuỗi' })
-    @IsNotEmpty( { message: 'slug không được để trống' })
+    @IsString({ message: 'slug phải là chuỗi' })
+    @IsNotEmpty({ message: 'slug không được để trống' })
     slug!: string;
-
 }

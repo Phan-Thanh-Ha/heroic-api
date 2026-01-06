@@ -1,22 +1,29 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiConsumes, ApiBody, ApiResponse, ApiQuery, ApiHeader } from '@nestjs/swagger';
-import { UploadFolderType } from '../dto/upload-image.dto';
+import { getUploadFolderDescription, TypeUpload, UploadFolderType } from '../dto/upload-image.dto';
 
 /**
  * Swagger decorator cho API upload multiple images
  */
 export const ApiUploadMultipleImages = () => {
 	return applyDecorators(
-		ApiOperation({ 
+		ApiOperation({
 			summary: 'Upload multiple images',
 			description: 'Upload nhiều ảnh cùng lúc (tối đa 10 files). Field name trong form-data PHẢI là "files" (không phải "file" hay tên khác).',
 		}),
 		ApiQuery({
 			name: 'folder',
+			required: true,
 			enum: UploadFolderType,
-			required: false,
-			description: 'Loại thư mục để lưu file (avatar, banner, product). Nếu không có, file sẽ lưu ở thư mục gốc',
-			example: UploadFolderType.PRODUCT,
+			description: getUploadFolderDescription(),
+			example: UploadFolderType.PRODUCT_IMAGE,
+		}),
+		ApiQuery({
+			name: 'typeUpload',
+			enum: TypeUpload,
+			required: true,
+			description: 'Type upload (customers | admins)',
+			example: TypeUpload.Admin,
 		}),
 		ApiConsumes('multipart/form-data'),
 		ApiBody({
@@ -34,11 +41,6 @@ export const ApiUploadMultipleImages = () => {
 					},
 				},
 			},
-		}),
-		ApiHeader({
-			name: 'token',
-			required: true,
-			schema: { type: 'string'},
 		}),
 		ApiResponse({
 			status: 201,
