@@ -25,8 +25,8 @@ export class CategoryController {
   @ApiPost('create', {
     summary: 'Tạo danh mục mới',
     swagger: ApiCreateCategorySwagger(),
-    response: CreateCategoryDto,
-    status: HTTP_STATUS_ENUM.CREATED
+    response: Category,
+    status: HTTP_STATUS_ENUM.CREATED,
   })
   @ResponseMessage(categorySuccessTypes().CATEGORY_CREATE_SUCCESS.message)
   @ApiSecurity('JWT')
@@ -45,8 +45,6 @@ export class CategoryController {
   @ApiGet('', {
     summary: 'Lấy danh sách danh mục',
     swagger: ApiGetListCategorySwagger(),
-    response: [Category],
-    status: HTTP_STATUS_ENUM.OK,
   })
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_GET_LIST_SUCCESS.message)
@@ -60,8 +58,6 @@ export class CategoryController {
   @ApiPatch('update/:id', {
     summary: 'Cập nhật danh mục',
     swagger: ApiUpdateCategorySwagger(),
-    response: Category,
-    status: HTTP_STATUS_ENUM.OK,
   })
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_UPDATE_SUCCESS.message)
@@ -77,8 +73,6 @@ export class CategoryController {
   //#region Xóa danh mục
   @ApiDelete('delete/:uuid', {
     summary: 'Xóa danh mục',
-    response: Category,
-    status: HTTP_STATUS_ENUM.OK,
   })
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_DELETE_SUCCESS.message)
@@ -95,8 +89,6 @@ export class CategoryController {
   @ApiPatch('toggle/:uuid', {
     summary: 'Mở đóng danh mục',
     swagger: ApiToggleCategorySwagger(),
-    response: Category,
-    status: HTTP_STATUS_ENUM.OK,
   })
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_TOGGLE_SUCCESS.message)

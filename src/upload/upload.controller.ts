@@ -23,8 +23,6 @@ export class AdminUploadController {
     @ApiPost(APP_ROUTES.ADMIN.UPLOAD.IMAGE.path, {
         summary: 'Admin upload một ảnh',
         swagger: ApiUploadSingleImage(),
-        response: UploadImageDto,
-        status: HTTP_STATUS_ENUM.CREATED,
     })
     @ApiSecurity('JWT')
     async adminUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {
@@ -39,9 +37,6 @@ export class AdminUploadController {
     @UseInterceptors(FilesInterceptor('files', 10))
     @ApiPost('admins/upload/multiple', {
         summary: 'Admin upload nhiều ảnh cùng lúc',
-        swagger: ApiUploadMultipleImages(),
-        response: UploadImageDto,
-        status: HTTP_STATUS_ENUM.CREATED,
     })
     async adminUploadMultipleImages(@UploadedFiles() files: Express.Multer.File[], @Query() query: UploadImageDto) {
         return this.uploadService.uploadMultipleImages(files, { 
@@ -61,9 +56,6 @@ export class CustomerUploadController {
     @UseInterceptors(FileInterceptor('file'))
     @ApiPost(APP_ROUTES.CUSTOMER.UPLOAD.IMAGE.path, {
         summary: 'Customer upload một ảnh',
-        swagger: ApiUploadSingleImage(),
-        response: UploadImageDto,
-        status: HTTP_STATUS_ENUM.CREATED,
     })
     @ApiSecurity('JWT')
     async customerUploadSingleImage(@UploadedFile() file: Express.Multer.File, @Query() query: UploadImageDto) {

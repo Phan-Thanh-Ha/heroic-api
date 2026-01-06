@@ -15,8 +15,6 @@ export class EmployeesController {
   @ApiPost('create', {
     summary: 'Tạo nhân viên',
     swagger: ApiCreateEmployeeSwagger(),
-    response: Employee,
-    status: HTTP_STATUS_ENUM.CREATED
   })
   @ResponseMessage(adminAuthSuccessTypes().AUTH_CREATE_EMPLOYEE_SUCCESS.message)
   async createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
@@ -28,10 +26,7 @@ export class EmployeesController {
   @ApiGet('list', {
     summary: 'Lấy danh sách nhân viên',
     swagger: ApiGetListEmployeeSwagger(),
-    response: [Employee],
-    status: HTTP_STATUS_ENUM.OK,
   })
-  @UseGuards(JwtAuthGuard)
   @ResponseMessage(adminEmployeeSuccessTypes().ADMIN_EMPLOYEE_GET_LIST_SUCCESS.message)
   async listEmployees(@Query() query: QueryUserDto) {
     return await this.employeesService.getListEmployees(query);

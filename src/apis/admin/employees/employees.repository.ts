@@ -16,22 +16,31 @@ export class EmployeesRepository {
 
     //#region Kiểm tra username đã tồn tại chưa
     async getEmployeeByCodeAndPassword(code: string, password: string) {
-        const employee = await this.prisma.employee.findFirst({
-            where: { code: code },
-        });
+        try {
+            console.log("🚀 🇵 🇭: ~ employees.repository.ts:19 ~ code:", code, password)
+            const employee = await this.prisma.employee.findFirst({
+                where: { code: code },
+            });
+            console.log("🚀 🇵 🇭: ~ employees.repository.ts:22 ~ employee:", employee)
 
-        if (!employee) {
-            return null;
+            if (!employee) {
+                return null;
+            }
+
+            const isMatch = await comparePassword(password, employee.password);
+
+            if (!isMatch) {
+                return null;
+            }
+
+            const { password: _, ...result } = employee;
+            return result;
+        } catch (error) {
+            this.loggerService.error(this.context, error.message, error);
+            throw new BadRequestException(adminAuthErrorTypes().AUTH_LOGIN_FAILED);
+
         }
 
-        const isMatch = await comparePassword(password, employee.password);
-        
-        if (!isMatch) {
-            return null;
-        }
-
-        const { password: _, ...result } = employee;
-        return result;
     }
     //#endregion
 

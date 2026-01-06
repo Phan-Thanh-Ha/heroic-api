@@ -18,7 +18,6 @@ export class RegisterController {
   @ApiPost('email', {
     summary: 'Đăng ký tài khoản khách hàng',
     swagger: ApiRegister(),
-    response: RegisterEntity
   })
   @ApiSecurity('JWT') // Để có thể swagger gọi được api này
   @Public() // Để có thể gọi được api này không cần token

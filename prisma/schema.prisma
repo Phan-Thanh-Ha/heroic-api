@@ -303,20 +303,25 @@ model Position {
 model Product {
     id          Int      @id @default(autoincrement()) @map("id") // ID sản phẩm
     uuid        String   @unique @map("uuid") @db.Char(36) // UUID sản phẩm
+    code        String   @unique @map("code") @db.VarChar(255) // Mã sản phẩm
     name        String   @map("name") @db.VarChar(255) // Tên sản phẩm
     description String?  @map("description") @db.Text // Mô tả sản phẩm
 
     image       String?  @map("image") @db.Text // Ảnh sản phẩm
     slug        String   @unique @map("slug") @db.VarChar(255) // Slug sản phẩm
-    price       Float    @map("price") // Giá sản phẩm
-    discount    Float?   @map("discount") // Giảm giá sản phẩm
-    stock       Int      @map("stock") // Số lượng sản phẩm
+
+    importPrice  Float    @map("import_price") // Giá nhập
+    retailPrice  Float    @map("retail_price") // Giá bán lẻ
+    discount     Float?   @default(0) @map("discount") // Giảm giá bán (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
+
+    quantity    Int      @map("quantity") // Số lượng sản phẩm còn lại
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
+    isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
 
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo sản phẩm
     createdById Int?     @map("created_by_id") // ID người tạo sản phẩm
     updatedById Int?     @map("updated_by_id") // ID người cập nhật sản phẩm
-    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6) // Ngày cập nhật sản phẩm
+    updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
 
     categoryId Int      @map("category_id")
     category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories

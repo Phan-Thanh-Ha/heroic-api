@@ -1,4 +1,5 @@
-import { IsNumberString, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class DefaultQueryDto {
 	@IsOptional()
@@ -6,12 +7,14 @@ export class DefaultQueryDto {
 	q?: string;
 
 	@IsOptional()
-	@IsNumberString()
-	limit?: string;
+	@IsString()
+	@Transform(() => '10') // Default limit is 10
+	limit?: number;
 
 	@IsOptional()
-	@IsNumberString()
-	page?: string;
+	@IsString() // Default page is 1
+	@Transform(() => '1') // Default page is 1
+	page?: number;
 
 	@IsOptional()
 	@IsString()

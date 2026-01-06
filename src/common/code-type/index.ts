@@ -10,3 +10,6 @@ export * from './admin/auth/auth-success.code-type';
 export * from './districts/districts-success.code-type';
 export * from './province/province-success.code-type';
 export * from './ward/ward-success.code-type';
+
+// Product
+export * from './product/product-error.code-type';

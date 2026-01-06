@@ -23,6 +23,8 @@ export const APP_ROUTES = {
         EMAIL: {
             SEND_OTP: { path: 'customers/email/send-otp', tag: 'Customer_Email' },
         },
+        PRODUCT: { path: 'admins/product', tag: 'Admin_Product' },
+
     },
 
     // ------------------------------------------
@@ -46,6 +48,7 @@ export const APP_ROUTES = {
         EMAIL: {
             SEND_OTP: { path: 'customers/email/send-otp', tag: 'Customer_Email' },
         },
+        CATEGORY: { path: 'customers/category', tag: 'Customer_Category' },
     },
 } as const;
 
