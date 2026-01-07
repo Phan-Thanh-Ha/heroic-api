@@ -1,10 +1,10 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model districts {
@@ -92,7 +92,8 @@ model brand {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    featured    featured_brand? // Quan hệ 1-1 với bảng FeaturedBrand 
+    featured    featured_brand? // Quan hệ 1-1 với bảng featured_brand 
+    products    product[] // Quan hệ 1-N với bảng products
 
     @@index([id])
     @@index([uuid])
@@ -286,6 +287,14 @@ model login {
     @@map("login")
 }
 
+model origin {
+    id        Int      @id @default(autoincrement()) @map("id")
+    name      String   @map("name") @db.VarChar(100)
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của địa điểm
+    products    product[] // Quan hệ 1-N với bảng products
+    @@map("origin")
+}
+
 model position {
     id              Int      @id @default(autoincrement()) @map("id") // ID chức vụ
     uuid            String   @unique @map("uuid") @db.Char(36) // UUID chức vụ
@@ -315,6 +324,9 @@ model product_detail {
 
 
     quantity     Int      @map("quantity") // Số lượng sản phẩm còn lại
+    
+    isActive     Boolean  @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
+    isFlashSale Boolean  @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
     isOutOfStock Boolean  @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
     @@map("product_detail")
 }
@@ -338,14 +350,14 @@ model product {
     image       String?  @map("image") @db.Text // Ảnh sản phẩm
     slug        String   @unique @map("slug") @db.VarChar(255) // Slug sản phẩm
 
-    importPrice  Float    @map("import_price") // Giá nhập
-    retailPrice  Float    @map("retail_price") // Giá bán lẻ
-    discount     Float?   @default(0) @map("discount") // Giảm giá bán (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
+    brandId Int      @map("brand_id")
+    brand   brand @relation(fields: [brandId], references: [id]) // Quan hệ N-1 với bảng brands
+
+    originId      Int              @map("origin_id")
+    origin        origin?          @relation(fields: [originId], references: [id]) // Quan hệ N-1 với bảng origin
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
-    isFlashSale Boolean   @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
-
     
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo sản phẩm
     createdById Int?     @map("created_by_id") // ID người tạo sản phẩm
@@ -357,6 +369,8 @@ model product {
 
     productDetails product_detail[] // Quan hệ 1-N với bảng product_detail một sản phẩm có nhiều chi tiết sản phẩm
     productImages product_image[] // Quan hệ 1-N với bảng product_image một sản phẩm có nhiều ảnh sản phẩm
+
+
 
     @@map("product")
 }

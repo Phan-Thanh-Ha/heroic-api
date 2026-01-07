@@ -14,7 +14,8 @@ model brand {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    featured    featured_brand? // Quan hệ 1-1 với bảng FeaturedBrand 
+    featured    featured_brand? // Quan hệ 1-1 với bảng featured_brand 
+    products    product[] // Quan hệ 1-N với bảng products
 
     @@index([id])
     @@index([uuid])

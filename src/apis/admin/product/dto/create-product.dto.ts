@@ -1,39 +1,83 @@
-import { IsArray, IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type } from 'class-transformer';
+import {
+    IsArray,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+    ValidateNested
+} from 'class-validator';
 
-export class CreateProductDto {
-    @IsString({ message: 'code phải là chuỗi' })
-    @IsNotEmpty({ message: 'code không được để trống' })
-    code!: string;
+class ProductDetailDto {
+    @IsString()
+    @IsNotEmpty()
+    sku!: string;
 
-    @IsString({ message: 'name phải là chuỗi' })
-    @IsNotEmpty({ message: 'name không được để trống' })
-    name!: string;
-    
-    @IsNotEmpty({ message: 'description không được để trống' })
-    description!: string;
+    @IsString()
+    @IsNotEmpty()
+    flavor!: string;
 
-    @IsArray({ message: 'images phải là một mảng' })
-    @IsString({ each: true, message: 'Mỗi ảnh trong danh sách phải là chuỗi URL' })
-    @IsNotEmpty({ message: 'images không được để trống' })
-    images!: string[]; 
+    @IsString()
+    @IsNotEmpty()
+    size!: string;
 
     @IsNumber()
-    @IsNotEmpty()
     importPrice!: number;
 
     @IsNumber()
-    @IsNotEmpty()
     retailPrice!: number;
 
     @IsNumber()
+    discount!: number;
+
+    @IsNumber()
+    stock!: number;
+}
+
+// Class validate cho từng hình ảnh
+class ProductImageDto {
+    @IsString()
     @IsNotEmpty()
-    quantity!: number;
+    image!: string;
+}
+
+export class CreateProductDto {
+    @IsString()
+    @IsNotEmpty()
+    name!: string;
+
+    @IsString()
+    @IsNotEmpty()
+    productCode!: string; // Thay 'code' bằng 'productCode' theo JSON của bạn
+
+    @IsString()
+    @IsNotEmpty()
+    slug!: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    brandId!: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    originId!: number;
 
     @IsNumber()
     @IsNotEmpty()
     categoryId!: number;
 
-    @IsString({ message: 'slug phải là chuỗi' })
-    @IsNotEmpty({ message: 'slug không được để trống' })
-    slug!: string;
+    @IsString()
+    @IsNotEmpty()
+    description!: string;
+
+    // Validate mảng ProductDetails
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ProductDetailDto)
+    productDetails!: ProductDetailDto[];
+
+    // Validate mảng ProductImages
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ProductImageDto)
+    productImages!: ProductImageDto[];
 }

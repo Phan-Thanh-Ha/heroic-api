@@ -1,0 +1,7 @@
+model origin {
+    id        Int      @id @default(autoincrement()) @map("id")
+    name      String   @map("name") @db.VarChar(100)
+    isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của địa điểm
+    products    product[] // Quan hệ 1-N với bảng products
+    @@map("origin")
+}

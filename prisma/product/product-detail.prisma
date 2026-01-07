@@ -13,6 +13,9 @@ model product_detail {
 
 
     quantity     Int      @map("quantity") // Số lượng sản phẩm còn lại
+    
+    isActive     Boolean  @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
+    isFlashSale Boolean  @default(false) @map("is_flash_sale") // Trạng thái flash sale của sản phẩm
     isOutOfStock Boolean  @default(false) @map("is_out_of_stock") // Trạng thái hết hàng của sản phẩm
     @@map("product_detail")
 }

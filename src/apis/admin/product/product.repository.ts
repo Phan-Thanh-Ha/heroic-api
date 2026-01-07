@@ -15,46 +15,58 @@ export class ProductRepository {
         private readonly loggerService: LoggerService
     ) { }
 
-    /**
-     * Tạo sản phẩm kèm danh sách ảnh
-     */
+    
     async createProduct(createProductDto: CreateProductDto, user: JwtPayloadAdmin) {
         try {
-            const product = await this.prisma.product.create({
+            return await this.prisma.product.create({
                 data: {
                     uuid: generateUUID(),
-                    code: createProductDto.code,
+                    code: createProductDto.productCode,
                     name: createProductDto.name,
                     description: createProductDto.description,
                     slug: createProductDto.slug,
-                    importPrice: createProductDto.importPrice,
-                    retailPrice: createProductDto.retailPrice,
+                    brandId: createProductDto.brandId,
+                    
+                    originId: createProductDto.originId, 
                     categoryId: createProductDto.categoryId,
                     isActive: true,
                     createdById: user.id,
-                    // Lưu ảnh đầu tiên làm ảnh đại diện chính
-                    image: createProductDto.images?.[0] || null,
+                    // Lấy ảnh đầu tiên trong danh sách làm ảnh chính của sản phẩm
+                    image: createProductDto.productImages?.[0]?.image || null,
 
-                    // Tạo các bản ghi trong bảng ProductImage
+                    // Lưu danh sách hình ảnh chi tiết
                     productImages: {
-                        create: createProductDto.images?.map((img) => ({
-                            image: img,
+                        create: createProductDto.productImages?.map((img) => ({
+                            image: img.image,
+                        })) || [],
+                    },
+
+                    // Lưu danh sách biến thể (vị, size, giá)
+                    productDetails: {
+                        create: createProductDto.productDetails?.map((detail) => ({
+                            sku: detail.sku,
+                            flavor: detail.flavor,
+                            size: detail.size,
+                            importPrice: detail.importPrice,
+                            retailPrice: detail.retailPrice,
+                            discount: detail.discount,
+                            quantity: detail.stock, // FIX: Map 'stock' từ DTO sang 'quantity' của Prisma
                         })) || [],
                     },
                 },
                 include: {
                     productImages: true,
+                    productDetails: true,
                 }
             });
-            return product;
-        } catch (error) {
+        } catch (error: any) {
             this.loggerService.error(ProductRepository.name, error.message, error.stack);
             throw new BadRequestException(productErrorTypes().PRODUCT_CREATE_FAILED.message.vi);
         }
     }
 
     /**
-     * Cập nhật sản phẩm và đồng bộ lại danh sách ảnh
+     * Cập nhật sản phẩm: Đồng bộ lại toàn bộ Detail và Image bằng cách Xóa cũ - Tạo mới
      */
     async updateProduct(productId: number, updateProductDto: UpdateProductDto, user: JwtPayloadAdmin) {
         try {
@@ -62,94 +74,106 @@ export class ProductRepository {
                 where: { id: productId },
                 data: {
                     name: updateProductDto.name,
+                    code: updateProductDto.productCode,
                     description: updateProductDto.description,
                     slug: updateProductDto.slug,
-                    importPrice: updateProductDto.importPrice,
-                    retailPrice: updateProductDto.retailPrice,
+                    brandId: updateProductDto.brandId,
+                    // FIX: Sử dụng originId để khớp với Prisma Schema
+                    originId: updateProductDto.originId, 
                     categoryId: updateProductDto.categoryId,
                     updatedById: user.id,
                     updatedAt: new Date(),
-                    // Cập nhật ảnh đại diện mới
-                    image: updateProductDto.images?.[0],
+                    
+                    // Cập nhật lại ảnh đại diện chính
+                    image: updateProductDto.productImages?.[0]?.image,
 
-                    // Cập nhật chi tiết sản phẩm
-                    productDetails: {
-                        updateMany: {
-                            where: { productId: productId },
-                            data: {
-                                sku: updateProductDto.code,
-                                importPrice: updateProductDto.importPrice,
-                                retailPrice: updateProductDto.retailPrice,
-                                quantity: updateProductDto.quantity,
-                            },
-                        },
+                    // Đồng bộ Hình ảnh: Xóa toàn bộ ảnh cũ và thêm loạt ảnh mới
+                    productImages: {
+                        deleteMany: {},
+                        create: updateProductDto.productImages?.map((img) => ({
+                            image: img.image,
+                        })) || [],
                     },
 
-                    productImages: {
-                        // Xóa toàn bộ ảnh cũ của sản phẩm này
-                        deleteMany: {}, 
-                        // Chèn lại danh sách ảnh mới từ DTO
-                        updateMany: updateProductDto.images?.map((img) => ({
-                            where: { productId: productId },
-                            data: { image: img },
-                        })),
+                    // Đồng bộ Biến thể: Xóa toàn bộ biến thể cũ và tạo mới theo DTO
+                    productDetails: {
+                        deleteMany: {},
+                        create: updateProductDto.productDetails?.map((detail) => ({
+                            sku: detail.sku,
+                            flavor: detail.flavor,
+                            size: detail.size,
+                            importPrice: detail.importPrice,
+                            retailPrice: detail.retailPrice,
+                            discount: detail.discount,
+                            quantity: detail.stock, // FIX: 'stock' -> 'quantity'
+                        })) || [],
                     },
                 },
                 include: {
                     productImages: true,
+                    productDetails: true,
                 }
             });
-        } catch (error) {
+        } catch (error: any) {
             this.loggerService.error(ProductRepository.name, error.message, error.stack);
             throw new BadRequestException(productErrorTypes().PRODUCT_UPDATE_FAILED.message.vi);
         }
     }
 
     /**
-     * Lấy danh sách sản phẩm có phân trang
+     * Lấy danh sách sản phẩm: Tính toán giá thấp nhất và tổng tồn kho
      */
     async getListProduct(query: QueryProductDto) {
         const { limit = 10, page = 1 } = query;
         try {
-            // Lấy tổng số lượng để làm phân trang
-            const total = await this.prisma.product.count({
-                where: { isDeleted: false }
+            const total = await this.prisma.product.count({ 
+                where: { isDeleted: false } 
             });
 
             const products = await this.prisma.product.findMany({
-                where: {
-                    isDeleted: false,
-                },
-                orderBy: {
-                    id: 'desc',
-                },
+                where: { isDeleted: false },
+                orderBy: { id: 'desc' },
                 include: {
-                    category: {
-                        select: {
-                            name: true,
-                        },
+                    category: { select: { name: true } },
+                    productImages: true,
+                    productDetails: {
+                        // FIX: Select trường 'quantity' thay vì 'stock'
+                        select: { retailPrice: true, discount: true, quantity: true }
                     },
-                    productImages: true, // Lấy kèm danh sách ảnh
                 },
                 skip: (Number(page) - 1) * Number(limit),
                 take: Number(limit),
             });
 
-            const productsWithCategory = products.map((product) => {
-                const { category, ...rest } = product;
+            // Format dữ liệu trả về cho giao diện Admin
+            const formattedProducts = products.map((product: any) => {
+                const { category, productDetails, ...rest } = product;
+                
+                // Logic lấy giá bán thấp nhất của sản phẩm
+                const minPrice = productDetails && productDetails.length > 0 
+                    ? Math.min(...productDetails.map((d: any) => d.retailPrice)) 
+                    : 0;
+
+                // Logic tính tổng lượng hàng trong kho của tất cả biến thể
+                const totalStock = productDetails 
+                    ? productDetails.reduce((sum: number, d: any) => sum + d.quantity, 0) 
+                    : 0;
+
                 return {
                     ...rest,
                     categoryName: category?.name || null,
+                    minPrice: minPrice,
+                    totalStock: totalStock,
                 };
             });
 
             return {
-                items: productsWithCategory,
+                items: formattedProducts,
                 total: total,
                 currentPage: Number(page),
                 totalPages: Math.ceil(total / Number(limit))
             };
-        } catch (error) {
+        } catch (error: any) {
             this.loggerService.error(ProductRepository.name, error.message, error.stack);
             throw new BadRequestException(productErrorTypes().PRODUCT_GET_LIST_FAILED.message.vi);
         }

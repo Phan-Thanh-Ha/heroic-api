@@ -8,13 +8,9 @@ export class CategoryRepository {
     constructor(private readonly prisma: PrismaService, private readonly logger: LoggerService) {
     }
 
-    /**
-     * Lấy danh sách danh mục
-     * @returns Danh sách danh mục và số lượng sản phẩm của danh mục đó
-     */
+    // Lấy danh sách danh mục và 5 item product của danh mục đó
     async getCategoryList() {
         try {
-            // Lấy danh sách danh mục và 5 item product của danh mục đó
             const categoryList = await this.prisma.category.findMany({
                 where: {
                     isActive: true,

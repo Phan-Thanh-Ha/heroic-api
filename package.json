@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-"scripts": {
+  "scripts": {
     "build": "node scripts/merge-prisma-schema.js && prisma generate && nest build",
     "postinstall": "prisma generate",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -45,6 +45,7 @@
     "@prisma/adapter-mariadb": "^7.1.0",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@prisma/config": "^7.2.0",
     "@react-email/components": "^1.0.3",
     "@react-email/render": "^2.0.1",
     "@supabase/supabase-js": "^2.89.0",
