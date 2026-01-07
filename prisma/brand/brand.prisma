@@ -1,4 +1,4 @@
-model Brand {
+model brand {
     id        Int      @id @default(autoincrement()) @map("id")
     uuid      String   @unique @map("uuid") @db.Char(36)
 
@@ -14,7 +14,7 @@ model Brand {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    featured    FeaturedBrand? // Quan hệ 1-1 với bảng FeaturedBrand
+    featured    featured_brand? // Quan hệ 1-1 với bảng FeaturedBrand 
 
     @@index([id])
     @@index([uuid])
@@ -23,5 +23,5 @@ model Brand {
     @@index([isActive])
     @@index([createdById])
     @@index([updatedById])
-    @@map("brands")
+    @@map("brand")
 }

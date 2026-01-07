@@ -1,6 +1,6 @@
-model Category {
-    id          Int      @id @default(autoincrement()) // ID danh mục
-    uuid        String   @unique @map("uuid") @db.Char(36) // UUID danh mục
+model category {
+    id          Int      @id @default(autoincrement()) @map("id") // ID danh mục
+    uuid   String        @unique @map("uuid") @db.Char(36) // UUID danh mục
 
     name        String   @map("name") @db.VarChar(255) // Tên danh mục
     slug        String   @unique @map("slug") @db.VarChar(255) // Slug danh mục
@@ -8,7 +8,7 @@ model Category {
     thumbnail   String?  @map("thumbnail") @db.Text // Ảnh thumbnail danh mục
     description String?  @map("description") @db.Text // Mô tả danh mục
 
-    products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm
+    products product[]    // Quan hệ 1-N với bảng product một danh mục có nhiều sản phẩm
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của danh mục

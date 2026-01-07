@@ -1,4 +1,4 @@
-model Wards {
+model wards {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(5)
   name           String   @db.VarChar(100)
@@ -9,8 +9,8 @@ model Wards {
   path_with_type String?
   district_code  String   @db.Char(3)
 
-  district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
-  customers Customer[] // Quan hệ 1-N với bảng customers
+  district districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với districts sẽ có nhiều wards
+  customers customer[] // Quan hệ 1-N với bảng customers sẽ có nhiều wards
   
   @@index([code])
   @@index([name])

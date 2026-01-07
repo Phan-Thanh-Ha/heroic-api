@@ -1,4 +1,4 @@
-model Customer {
+model customer {
   id              Int       @id @default(autoincrement()) @map("id") // ID khách hàng
   uuid            String    @unique @map("uuid") @db.Char(36) // UUID khách hàng
   customerCode    String    @map("customer_code") @db.Char(50) // Mã khách hàng
@@ -26,9 +26,9 @@ model Customer {
   discordId       String?   @map("discord_id") @db.Char(255) // Discord ID khách hàng
   telegramId      String?   @map("telegram_id") @db.Char(255) // Telegram ID khách hàng
 
-  province Provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
-  district Districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
-  ward     Wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
+  province provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với province sẽ có nhiều khách hàng
+  district districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với districts sẽ có nhiều khách hàng
+  ward     wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với wards sẽ có nhiều khách hàng
 
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo khách hàng
 
@@ -38,5 +38,5 @@ model Customer {
   @@index([provinceId])
   @@index([districtId])
   @@index([wardId])
-  @@map("customers")
+  @@map("customer")
 }

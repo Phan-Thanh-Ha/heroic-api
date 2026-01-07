@@ -1,7 +1,7 @@
-model ProductDetail {
+model product_detail {
     id           Int      @id @default(autoincrement()) @map("id")
     productId    Int      @map("product_id")
-    product      Product  @relation(fields: [productId], references: [id])
+    product      product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng product
 
     sku          String   @unique @map("sku") @db.VarChar(255) // Mã định danh riêng (Code cũ)
     flavor       String?  @map("flavor") @db.VarChar(255)      // Chocolate, Vanilla...

@@ -1,9 +1,9 @@
-model FeaturedBrand {
+model featured_brand {
     id           Int     @id @default(autoincrement()) @map("id")
     uuid         String  @unique @map("uuid") @db.Char(36)
     // Nối với bảng Brand
     brandId      Int     @unique @map("brand_id")
-    brand        Brand   @relation(fields: [brandId], references: [id])
+    brand        brand   @relation(fields: [brandId], references: [id])
 
     // Các trường điều khiển hiển thị
     isActive     Boolean @default(true) @map("is_active") // Bật/Tắt hiển thị
@@ -14,5 +14,5 @@ model FeaturedBrand {
     @@index([isActive])
     @@index([displayOrder])
 
-    @@map("featured_brands")
+    @@map("featured_brand")
 }

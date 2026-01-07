@@ -1,7 +1,7 @@
-model LoginDetails {
+model login_details {
     id        Int      @id @default(autoincrement())
     loginId   Int      @map("login_id")
-    login     Login    @relation(fields: [loginId], references: [id]) // Quan hệ N-1 với Login
+    login     login    @relation(fields: [loginId], references: [id]) // Quan hệ N-1 với Login sẽ có nhiều bản ghi login details
     ipAddress String   @map("ip_address") @db.VarChar(255) // IP đăng nhập
     device    String   @map("device") @db.VarChar(255) // Thiết bị đăng nhập
     browser   String   @map("browser") @db.VarChar(255) // Trình duyệt đăng nhập

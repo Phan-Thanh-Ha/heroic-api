@@ -1,4 +1,4 @@
-model Employee {
+model employee {
     id          Int       @id @default(autoincrement()) @map("id") // ID nhân viên
     uuid        String    @unique @map("uuid") @db.Char(36) // UUID nhân viên
     code        String    @unique @map("code") // Mã nhân viên
@@ -12,11 +12,11 @@ model Employee {
 
     // Quan hệ với Position 1-nhân viên thuộc về 1 chức vụ
     positionId Int      @map("position_id")
-    position   Position @relation("PositionEmployees", fields: [positionId], references: [id])
+    position   position @relation("PositionEmployees", fields: [positionId], references: [id])
 
     // quan hệ với Department 1-nhân viên thuộc về 1 phòng ban
     departmentId Int        @map("department_id")
-    department   Department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
+    department   department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
 
     //CCCD
     identity_number    String? @map("identity_number") @db.VarChar(20) // Số CCCD nhân viên
@@ -32,11 +32,11 @@ model Employee {
 
     // Quan hệ với Login
     loginId Int?     @map("login_id")
-    login   Login?   
+    login   login?   
 
     @@index([id])
     @@index([code])
     @@index([fullName])
     @@index([positionId])
-    @@map("employees")
+    @@map("employee")
 }

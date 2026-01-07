@@ -1,13 +1,13 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"] 
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model Districts {
+model districts {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(3)
   name           String   @db.VarChar(100)
@@ -18,15 +18,15 @@ model Districts {
   path_with_type String?
   province_code  String   @db.Char(2)
 
-  province Provinces @relation(fields: [province_code], references: [code]) // Quan hệ N-1 với Provinces
-  wards    Wards[] // Quan hệ 1-N với bảng wards
-  customers Customer[] // Quan hệ 1-N với bảng customers
+  province provinces @relation(fields: [province_code], references: [code]) // Quan hệ N-1 với provinces sẽ có nhiều districts
+  wards    wards[] // Quan hệ 1-N với bảng wards sẽ có nhiều districts
+  customers customer[] // Quan hệ 1-N với bảng customers sẽ có nhiều districts
 
   @@index([province_code])
   @@map("districts")
 }
 
-model Provinces {
+model provinces {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(2)
   name           String   @db.VarChar(100)
@@ -39,8 +39,8 @@ model Provinces {
   image          String?  @db.Text
 
 
-  districts Districts[] // Quan hệ 1-N với bảng districts
-  customers Customer[] // Quan hệ 1-N với bảng customers
+  districts districts[] // Quan hệ 1-N với bảng districts sẽ có nhiều provinces
+  customers customer[] // Quan hệ 1-N với bảng customers sẽ có nhiều provinces
 
   @@index([code])
   @@index([name])
@@ -51,7 +51,7 @@ model Provinces {
   @@map("provinces")
 }
 
-model Wards {
+model wards {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(5)
   name           String   @db.VarChar(100)
@@ -62,8 +62,8 @@ model Wards {
   path_with_type String?
   district_code  String   @db.Char(3)
 
-  district Districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với Districts
-  customers Customer[] // Quan hệ 1-N với bảng customers
+  district districts @relation(fields: [district_code], references: [code]) // Quan hệ N-1 với districts sẽ có nhiều wards
+  customers customer[] // Quan hệ 1-N với bảng customers sẽ có nhiều wards
   
   @@index([code])
   @@index([name])
@@ -76,7 +76,7 @@ model Wards {
   @@map("wards")
 }
 
-model Brand {
+model brand {
     id        Int      @id @default(autoincrement()) @map("id")
     uuid      String   @unique @map("uuid") @db.Char(36)
 
@@ -92,7 +92,7 @@ model Brand {
     updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
     updatedById Int?     @map("updated_by_id") // ID người cập nhật danh mục
 
-    featured    FeaturedBrand? // Quan hệ 1-1 với bảng FeaturedBrand
+    featured    featured_brand? // Quan hệ 1-1 với bảng FeaturedBrand 
 
     @@index([id])
     @@index([uuid])
@@ -101,12 +101,12 @@ model Brand {
     @@index([isActive])
     @@index([createdById])
     @@index([updatedById])
-    @@map("brands")
+    @@map("brand")
 }
 
-model Category {
-    id          Int      @id @default(autoincrement()) // ID danh mục
-    uuid        String   @unique @map("uuid") @db.Char(36) // UUID danh mục
+model category {
+    id          Int      @id @default(autoincrement()) @map("id") // ID danh mục
+    uuid   String        @unique @map("uuid") @db.Char(36) // UUID danh mục
 
     name        String   @map("name") @db.VarChar(255) // Tên danh mục
     slug        String   @unique @map("slug") @db.VarChar(255) // Slug danh mục
@@ -114,7 +114,7 @@ model Category {
     thumbnail   String?  @map("thumbnail") @db.Text // Ảnh thumbnail danh mục
     description String?  @map("description") @db.Text // Mô tả danh mục
 
-    products Product[]    // Quan hệ 1-N với bảng products một danh mục có nhiều sản phẩm
+    products product[]    // Quan hệ 1-N với bảng product một danh mục có nhiều sản phẩm
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của danh mục
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của danh mục
@@ -128,7 +128,7 @@ model Category {
     @@map("category")
 }
 
-model Customer {
+model customer {
   id              Int       @id @default(autoincrement()) @map("id") // ID khách hàng
   uuid            String    @unique @map("uuid") @db.Char(36) // UUID khách hàng
   customerCode    String    @map("customer_code") @db.Char(50) // Mã khách hàng
@@ -156,9 +156,9 @@ model Customer {
   discordId       String?   @map("discord_id") @db.Char(255) // Discord ID khách hàng
   telegramId      String?   @map("telegram_id") @db.Char(255) // Telegram ID khách hàng
 
-  province Provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với Provinces
-  district Districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với Districts
-  ward     Wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với Wards
+  province provinces? @relation(fields: [provinceId], references: [id]) // Quan hệ N-1 với province sẽ có nhiều khách hàng
+  district districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với districts sẽ có nhiều khách hàng
+  ward     wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với wards sẽ có nhiều khách hàng
 
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo khách hàng
 
@@ -168,22 +168,22 @@ model Customer {
   @@index([provinceId])
   @@index([districtId])
   @@index([wardId])
-  @@map("customers")
+  @@map("customer")
 }
 
-model Department {
+model department {
     id              Int      @id @default(autoincrement()) @map("id") // ID phòng ban
     uuid            String   @unique @map("uuid") @db.Char(36) // UUID phòng ban
     code            String   @unique @map("code") // Ví dụ: "SALES", "WAREHOUSE", "ACCOUNTING"
     name            String   @map("name") // Ví dụ: "Phòng Kinh Doanh", "Phòng Kho"
 
 
-    employees Employee[] @relation("DepartmentEmployees") // Quan hệ với bảng Employee nhiều-nhiều 1 phòng ban có nhiều nhân viên
+    employees employee[] @relation("DepartmentEmployees") // Quan hệ với bảng employee nhiều-nhiều 1 phòng ban có nhiều nhân viên
     
-    @@map("departments")
+    @@map("department")
 }
 
-model Employee {
+model employee {
     id          Int       @id @default(autoincrement()) @map("id") // ID nhân viên
     uuid        String    @unique @map("uuid") @db.Char(36) // UUID nhân viên
     code        String    @unique @map("code") // Mã nhân viên
@@ -197,11 +197,11 @@ model Employee {
 
     // Quan hệ với Position 1-nhân viên thuộc về 1 chức vụ
     positionId Int      @map("position_id")
-    position   Position @relation("PositionEmployees", fields: [positionId], references: [id])
+    position   position @relation("PositionEmployees", fields: [positionId], references: [id])
 
     // quan hệ với Department 1-nhân viên thuộc về 1 phòng ban
     departmentId Int        @map("department_id")
-    department   Department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
+    department   department @relation("DepartmentEmployees", fields: [departmentId], references: [id])
 
     //CCCD
     identity_number    String? @map("identity_number") @db.VarChar(20) // Số CCCD nhân viên
@@ -217,21 +217,21 @@ model Employee {
 
     // Quan hệ với Login
     loginId Int?     @map("login_id")
-    login   Login?   
+    login   login?   
 
     @@index([id])
     @@index([code])
     @@index([fullName])
     @@index([positionId])
-    @@map("employees")
+    @@map("employee")
 }
 
-model FeaturedBrand {
+model featured_brand {
     id           Int     @id @default(autoincrement()) @map("id")
     uuid         String  @unique @map("uuid") @db.Char(36)
     // Nối với bảng Brand
     brandId      Int     @unique @map("brand_id")
-    brand        Brand   @relation(fields: [brandId], references: [id])
+    brand        brand   @relation(fields: [brandId], references: [id])
 
     // Các trường điều khiển hiển thị
     isActive     Boolean @default(true) @map("is_active") // Bật/Tắt hiển thị
@@ -242,13 +242,13 @@ model FeaturedBrand {
     @@index([isActive])
     @@index([displayOrder])
 
-    @@map("featured_brands")
+    @@map("featured_brand")
 }
 
-model LoginDetails {
+model login_details {
     id        Int      @id @default(autoincrement())
     loginId   Int      @map("login_id")
-    login     Login    @relation(fields: [loginId], references: [id]) // Quan hệ N-1 với Login
+    login     login    @relation(fields: [loginId], references: [id]) // Quan hệ N-1 với Login sẽ có nhiều bản ghi login details
     ipAddress String   @map("ip_address") @db.VarChar(255) // IP đăng nhập
     device    String   @map("device") @db.VarChar(255) // Thiết bị đăng nhập
     browser   String   @map("browser") @db.VarChar(255) // Trình duyệt đăng nhập
@@ -267,26 +267,26 @@ model LoginDetails {
     @@map("login_details")
 }
 
-model Login {
+model login {
     id         Int      @id @default(autoincrement()) @map("id")
     uuid       String   @unique @map("uuid")
 
     employeeId Int      @unique @map("employee_id")
-    employee   Employee @relation(fields: [employeeId], references: [id]) // Quan hệ 1-1 với Employee
+    employee   employee @relation(fields: [employeeId], references: [id]) // Quan hệ 1-1 với employee sẽ có nhiều bản ghi login
 
     employeeCode String   @map("employee_code") // Mã nhân viên
     createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
     // Quan hệ: Một user có thể có nhiều bản ghi login details
-    loginDetails LoginDetails[]  // Quan hệ 1-N với LoginDetails
+    loginDetails login_details[]  // Quan hệ 1-N với login_details sẽ có nhiều bản ghi login details
 
     @@index([uuid])
     @@index([employeeCode])
     @@index([createdAt])
-    @@map("logins")
+    @@map("login")
 }
 
-model Position {
+model position {
     id              Int      @id @default(autoincrement()) @map("id") // ID chức vụ
     uuid            String   @unique @map("uuid") @db.Char(36) // UUID chức vụ
     code            String   @unique @map("code") // Ví dụ: "SUPER_ADMIN", "ADMIN", "STAFF"
@@ -295,15 +295,15 @@ model Position {
     level           Int      @default(1) @map("level") // Số càng cao quyền càng lớn
 
     // Quan hệ 1-N: Một chức vụ có nhiều nhân viên
-    employees       Employee[] @relation("PositionEmployees") 
+    employees       employee[] @relation("PositionEmployees") 
 
-    @@map("positions")
+    @@map("position")
 }
 
-model ProductDetail {
+model product_detail {
     id           Int      @id @default(autoincrement()) @map("id")
     productId    Int      @map("product_id")
-    product      Product  @relation(fields: [productId], references: [id])
+    product      product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng product
 
     sku          String   @unique @map("sku") @db.VarChar(255) // Mã định danh riêng (Code cũ)
     flavor       String?  @map("flavor") @db.VarChar(255)      // Chocolate, Vanilla...
@@ -319,16 +319,16 @@ model ProductDetail {
     @@map("product_detail")
 }
 
-model ProductImage {
+model product_image {
     id          Int      @id @default(autoincrement()) @map("id") // ID ảnh sản phẩm
     productId   Int      @map("product_id") // ID sản phẩm
-    product     Product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng products
+    product     product  @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng products
     image       String   @map("image") @db.Text // Ảnh sản phẩm
 
-    @@map("product_images")
+    @@map("product_image")
 }
 
-model Product {
+model product {
     id          Int      @id @default(autoincrement()) @map("id") // ID sản phẩm
     uuid        String   @unique @map("uuid") @db.Char(36) // UUID sản phẩm
     code        String   @unique @map("code") @db.VarChar(255) // Mã sản phẩm
@@ -353,19 +353,10 @@ model Product {
     updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
 
     categoryId Int      @map("category_id")
-    category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
+    category   category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
 
-    /**
-     * Quan hệ 1-N với bảng ProductDetail
-     * Một sản phẩm có nhiều chi tiết sản phẩm
-     */
-    productDetails ProductDetail[]
+    productDetails product_detail[] // Quan hệ 1-N với bảng product_detail một sản phẩm có nhiều chi tiết sản phẩm
+    productImages product_image[] // Quan hệ 1-N với bảng product_image một sản phẩm có nhiều ảnh sản phẩm
 
-    /**
-     * Quan hệ 1-N với bảng ProductImage
-     * Một sản phẩm có nhiều ảnh sản phẩm
-     */
-    productImages ProductImage[]
-
-    @@map("products")
+    @@map("product")
 }

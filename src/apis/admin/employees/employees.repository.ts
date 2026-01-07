@@ -3,7 +3,7 @@ import { LoggerService } from "@logger";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import { comparePassword, generateHashedDefaultPassword, generateUUID } from "@utils";
-import { Prisma } from "generated/prisma";
+import { Prisma } from "@prisma/client";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 
 @Injectable()
@@ -98,7 +98,7 @@ export class EmployeesRepository {
             const { search } = query
 
             // Điều kiện lọc
-            const whereCondition: Prisma.EmployeeWhereInput = {
+            const whereCondition: Prisma.employeeWhereInput = {
                 ...(search ? {
                     OR: [
                         { fullName: { contains: search, mode: 'insensitive' } },
@@ -133,8 +133,8 @@ export class EmployeesRepository {
             ]);
 
             // Làm phẳng dữ liệu
-            const employeesListWithNames = employeesList.map((emp) => {
-                const { department, position, ...rest } = emp;
+            const employeesListWithNames = employeesList.map((employee) => {
+                const { department, position, ...rest } = employee;
                 return {
                     ...rest,
                     departmentId: department?.id || null,

@@ -1,4 +1,4 @@
-model Product {
+model product {
     id          Int      @id @default(autoincrement()) @map("id") // ID sản phẩm
     uuid        String   @unique @map("uuid") @db.Char(36) // UUID sản phẩm
     code        String   @unique @map("code") @db.VarChar(255) // Mã sản phẩm
@@ -23,19 +23,10 @@ model Product {
     updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
 
     categoryId Int      @map("category_id")
-    category   Category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
+    category   category @relation(fields: [categoryId], references: [id]) // Quan hệ N-1 với bảng categories
 
-    /**
-     * Quan hệ 1-N với bảng ProductDetail
-     * Một sản phẩm có nhiều chi tiết sản phẩm
-     */
-    productDetails ProductDetail[]
+    productDetails product_detail[] // Quan hệ 1-N với bảng product_detail một sản phẩm có nhiều chi tiết sản phẩm
+    productImages product_image[] // Quan hệ 1-N với bảng product_image một sản phẩm có nhiều ảnh sản phẩm
 
-    /**
-     * Quan hệ 1-N với bảng ProductImage
-     * Một sản phẩm có nhiều ảnh sản phẩm
-     */
-    productImages ProductImage[]
-
-    @@map("products")
+    @@map("product")
 }

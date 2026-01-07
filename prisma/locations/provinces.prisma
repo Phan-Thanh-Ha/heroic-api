@@ -1,4 +1,4 @@
-model Provinces {
+model provinces {
   id             Int      @id @default(autoincrement())
   code           String   @unique @db.Char(2)
   name           String   @db.VarChar(100)
@@ -11,8 +11,8 @@ model Provinces {
   image          String?  @db.Text
 
 
-  districts Districts[] // Quan hệ 1-N với bảng districts
-  customers Customer[] // Quan hệ 1-N với bảng customers
+  districts districts[] // Quan hệ 1-N với bảng districts sẽ có nhiều provinces
+  customers customer[] // Quan hệ 1-N với bảng customers sẽ có nhiều provinces
 
   @@index([code])
   @@index([name])
