@@ -8,10 +8,11 @@ import { MailModule } from './mail/mail.module';
 import { PassportModule } from './passport/passport.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProvidersModule, providerApp } from './providers';
+import { ProductModule } from './apis/customer/product/product.module';
 
 @Module({
 	imports: [
-		AppConfigModule, 
+		AppConfigModule,
 		PrismaModule,
 		ApiAdminModule,
 		ApiCustomerModule,
@@ -19,6 +20,7 @@ import { ProvidersModule, providerApp } from './providers';
 		MailModule,
 		LoggerModule,
 		PassportModule,
+		ProductModule,
 	],
 	providers: [
 		...providerApp,

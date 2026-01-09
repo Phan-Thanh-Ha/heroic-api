@@ -2,10 +2,9 @@ import { ErrorType } from "../../interfaces";
 
 interface ProductErrorTypes {
     PRODUCT_CREATE_FAILED: ErrorType;
-
     PRODUCT_GET_LIST_FAILED: ErrorType;
-
     PRODUCT_UPDATE_FAILED: ErrorType;
+    PRODUCT_GET_BY_SLUG_FAILED: ErrorType;
 }
 
 
@@ -33,6 +32,14 @@ export const productErrorTypes = (): ProductErrorTypes => {
                 vi: 'Cập nhật sản phẩm thất bại',
                 en: 'Update product failed',
                 cn: '更新产品失败',
+            },
+        },
+        PRODUCT_GET_BY_SLUG_FAILED: {
+            error_code: 'PRODUCT_GET_BY_SLUG_FAILED',
+            message: {
+                vi: 'Lấy sản phẩm theo slug thất bại',
+                en: 'Get product by slug failed',
+                cn: '获取产品按slug失败',
             },
         },
     };

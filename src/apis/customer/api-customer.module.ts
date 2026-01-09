@@ -5,6 +5,7 @@ import { RegisterModule } from './auth/register/register.module';
 import { UploadModule } from '../../upload/upload.module';
 import { CustomerModule } from './customer/customer.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
 	imports: [
@@ -16,6 +17,7 @@ import { CategoryModule } from './category/category.module';
 		UploadModule,
 		CustomerModule,
 		CategoryModule,
+		ProductModule,
 	],
 })
 export class ApiCustomerModule {}

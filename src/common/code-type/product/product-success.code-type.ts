@@ -3,6 +3,7 @@ import { SuccessType } from "@interfaces";
 interface ProductSuccessCode {
     PRODUCT_CREATE_SUCCESS: SuccessType;
     PRODUCT_GET_LIST_SUCCESS: SuccessType;
+    PRODUCT_GET_BY_SLUG_SUCCESS: SuccessType;
 }
 
 export const productSuccessCode = (): ProductSuccessCode => {
@@ -21,6 +22,14 @@ export const productSuccessCode = (): ProductSuccessCode => {
                 vi: 'Lấy danh sách sản phẩm thành công',
                 en: 'Get list product successfully',
                 cn: '获取产品列表成功',
+            },
+        },
+        PRODUCT_GET_BY_SLUG_SUCCESS: {
+            success_code: 'PRODUCT_GET_BY_SLUG_SUCCESS',
+            message: {
+                vi: 'Lấy sản phẩm theo slug thành công',
+                en: 'Get product by slug successfully',
+                cn: '获取产品按slug成功',
             },
         },
     };

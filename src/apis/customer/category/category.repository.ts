@@ -5,8 +5,9 @@ import { LoggerService } from "@logger";
 @Injectable()
 export class CategoryRepository {
     private context = CategoryRepository.name;
-    constructor(private readonly prisma: PrismaService, private readonly logger: LoggerService) {}
+    constructor(private readonly prisma: PrismaService, private readonly logger: LoggerService) { }
 
+    // Lấy danh sách danh mục kèm sản phẩm mẫu
     async getCategoryList() {
         try {
             const categoryList = await this.prisma.category.findMany({
@@ -27,14 +28,14 @@ export class CategoryRepository {
                         include: {
                             // Lấy ảnh để làm thumbnail
                             productImages: {
-                                take: 1, 
+                                take: 1,
                                 select: { image: true }
                             },
                             // Lấy giá để tính Min Price
                             productDetails: {
-                                select: { 
+                                select: {
                                     retailPrice: true,
-                                    discount: true 
+                                    discount: true
                                 }
                             }
                         }

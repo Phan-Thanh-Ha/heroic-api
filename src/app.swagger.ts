@@ -37,7 +37,7 @@ export const initSwagger = (app: INestApplication) => {
         // --- SỬA Ở ĐÂY: Dùng Bearer Auth thay cho ApiKey ---
         .addApiKey(
             {
-                type: 'apiKey', 
+                type: 'apiKey',
                 name: 'x-access-token', // Tên Header sẽ xuất hiện trong curl
                 in: 'header',
                 description: 'Nhập token vào đây (không cần chữ Bearer)',
@@ -132,11 +132,5 @@ export const initSwagger = (app: INestApplication) => {
             defaultModelsExpandDepth: -1,
             deepLinking: true,
         },
-        customCss: `
-            .swagger-ui .wrapper { max-width: 1460px; padding: 0 20px; }
-            .swagger-ui .topbar { background-color: #000; border-bottom: 3px solid #ed1c24; }
-            .swagger-ui .info .title { color: #ed1c24; font-family: 'Segoe UI', sans-serif; }
-            .opblock-summary-path { font-weight: bold !important; }
-        `
     });
 };
