@@ -1,19 +1,19 @@
+import { productErrorTypes } from '@common';
 import { JwtPayloadAdmin } from '@jwt';
+import { LoggerService } from '@logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { ProductRepository } from './product.repository';
-import { QueryProductDto } from './dto';
-import { productErrorTypes } from '@common';
-import { LoggerService } from '@logger';
+import { QueryProductDto } from './dto/query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductRepository } from './product.repository';
 
 @Injectable()
 export class ProductService {
-  
+
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly loggerService: LoggerService
-  ) {}
+  ) { }
 
   //#region Create Product
   async createProduct(createProductDto: CreateProductDto, user: JwtPayloadAdmin) {

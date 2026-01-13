@@ -1,4 +1,4 @@
-import { SuccessType } from "@interfaces";
+import { SuccessType } from '@common';
 
 interface ProductSuccessCode {
     PRODUCT_CREATE_SUCCESS: SuccessType;

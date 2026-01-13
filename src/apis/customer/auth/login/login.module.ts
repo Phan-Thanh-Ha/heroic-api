@@ -9,19 +9,21 @@ import { MailModule } from '../../../../mail/mail.module';
 import { EmailModule } from 'src/apis/otp/email/email.module';
 import { DiscordModule } from 'src/apis/otp/discord/discord.module';
 import { TelegramModule } from 'src/apis/otp/telegram/telegram.module';
+import { NotificationsModule } from '@socket';
 
 @Module({
   imports: [
-    LoggerModule, 
-    PrismaModule, 
-    JwtModule, 
-    MailModule, 
+    LoggerModule,
+    PrismaModule,
+    JwtModule,
+    MailModule,
     EmailModule,
     DiscordModule,
     TelegramModule,
+    NotificationsModule, // Import để có thể inject NotificationsGateway
   ],
   controllers: [LoginController],
   providers: [LoginService, LoginRepository],
   exports: [LoginService],
 })
-export class LoginModule {}
+export class LoginModule { }

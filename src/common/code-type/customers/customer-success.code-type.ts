@@ -1,4 +1,4 @@
-import { SuccessType } from "src/common/interfaces";
+import { SuccessType } from '@common';
 
 interface CustomerSuccessTypes {
     GET_CUSTOMER_LIST: SuccessType;
@@ -24,4 +24,4 @@ export const customerSuccessTypes = function (): CustomerSuccessTypes {
             }
         }
     };
-}; 
+};

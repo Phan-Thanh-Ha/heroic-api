@@ -2,24 +2,24 @@ import { ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STA
 import { JwtPayloadAdmin } from '@jwt';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { productSuccessCode } from 'src/common/code-type/product/product-success.code-type';
-import { QueryProductDto } from './dto';
+import { productSuccessCode } from '@common';
+import { QueryProductDto } from './dto/query.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
-import { ApiGetListProductSwagger } from './swagger';
+import { ApiGetListProductSwagger } from './swagger/get-list-product.swagger';
 import { ApiCreateProductSwagger } from './swagger/create-product.swagger';
 import { ApiUpdateProductSwagger } from './swagger/update-product.repository';
 @AppController(APP_ROUTES.ADMIN.PRODUCT)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-  
+
   /**
    * Tạo sản phẩm
    * @param createProductDto - Thông tin sản phẩm
    * @param user - Thông tin người dùng
-   * @returns 
+   * @returns
    */
   @ApiPost('create', {
     summary: 'Tạo sản phẩm',

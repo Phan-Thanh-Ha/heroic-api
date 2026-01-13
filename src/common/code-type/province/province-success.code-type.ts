@@ -1,4 +1,4 @@
-import { SuccessType } from "src/common/interfaces";
+import { SuccessType } from '@common';
 
 interface ProvinceSuccessTypes {
 	GET_ALL_PROVINCE: SuccessType;

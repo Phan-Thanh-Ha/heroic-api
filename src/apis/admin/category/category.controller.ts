@@ -4,20 +4,20 @@ import { LoggerService } from '@logger';
 import { Body, Param, Query, Req } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { Request } from 'express';
-import { categorySuccessTypes } from 'src/common/code-type/category/category-success.code-type';
 import { QueryUserDto } from '../employees/dto/query.dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
-import { ApiGetListCategorySwagger } from './swagger';
+import { ApiGetListCategorySwagger } from './swagger/get-list-category.swagger';
 import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
 import { ApiToggleCategorySwagger } from './swagger/toggle-category.swagger';
 import { ApiUpdateCategorySwagger } from './swagger/update-category.swagger';
+import { categorySuccessTypes } from '@common';
 @AppController(APP_ROUTES.ADMIN.CATEGORY)
 export class CategoryController {
   constructor(
-    private readonly categoryService: CategoryService, 
+    private readonly categoryService: CategoryService,
     private readonly logger: LoggerService
   ) { }
 
@@ -54,7 +54,7 @@ export class CategoryController {
   //#endregion
 
   //#region Cập nhật danh mục
-  
+
   @ApiPatch('update/:id', {
     summary: 'Cập nhật danh mục',
     swagger: ApiUpdateCategorySwagger(),
@@ -62,7 +62,7 @@ export class CategoryController {
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_UPDATE_SUCCESS.message)
   async updateCategory(
-    @Req() req: Request, 
+    @Req() req: Request,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     const userInfo = req.user as JwtPayloadAdmin;

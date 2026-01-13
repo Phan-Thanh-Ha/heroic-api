@@ -9,11 +9,14 @@ import { PassportModule } from './passport/passport.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProvidersModule, providerApp } from './providers';
 import { ProductModule } from './apis/customer/product/product.module';
+import { SocketModule } from './socket/socket.module';
+import { JwtModule } from '@jwt';
 
 @Module({
 	imports: [
 		AppConfigModule,
 		PrismaModule,
+		JwtModule,
 		ApiAdminModule,
 		ApiCustomerModule,
 		ProvidersModule,
@@ -21,6 +24,7 @@ import { ProductModule } from './apis/customer/product/product.module';
 		LoggerModule,
 		PassportModule,
 		ProductModule,
+		SocketModule,
 	],
 	providers: [
 		...providerApp,

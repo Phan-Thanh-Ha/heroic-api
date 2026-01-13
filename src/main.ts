@@ -29,7 +29,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/v1');
   // Cấu hình Cookie Parser
   app.use(cookieParser());
-  
+
   // Cấu hình CORS
   app.enableCors({ 
     origin: '*', 
@@ -42,10 +42,10 @@ async function bootstrap() {
   initSwagger(app);
 
   // --- 4. Cấu hình Global Filters & Pipes (QUAN TRỌNG) ---
-  
+
   // Lấy HttpAdapterHost từ ứng dụng
   const httpAdapterHost = app.get(HttpAdapterHost);
-  
+
   // Khởi tạo Filter (chỉ truyền httpAdapterHost, logger tự lo bên trong Filter)
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 

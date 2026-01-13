@@ -18,5 +18,6 @@ export const StrategyKey = {
 };
 
 export const IS_PUBLIC_KEY = 'isPublic';
+export const IS_PUBLIC_SOCKET_KEY = 'isPublicSocket';
 export const ROLES_KEY = 'roles';
 export const PERMISSIONS_KEY = 'permissions';
