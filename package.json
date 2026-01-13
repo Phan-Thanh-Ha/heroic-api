@@ -8,7 +8,7 @@
   "scripts": {
     "build": "node scripts/merge-prisma-schema.js && prisma generate && nest build",
     "start": "node dist/src/main",
-    "start:prod": "cross-env NODE_ENV=production node dist/src/main",
+    "start:prod": "cross-env NODE_ENV=production node dist/main",
     "postinstall": "prisma generate",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "debug": "cross-env NODE_ENV=development node --inspect=0.0.0.0:9229 node_modules/.bin/nest start --watch",
