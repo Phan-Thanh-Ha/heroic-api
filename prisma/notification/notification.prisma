@@ -1,0 +1,31 @@
+model notification {
+    id          Int       @id @default(autoincrement()) @map("id")
+    uuid        String    @unique @map("uuid") @db.Char(36)
+    title       String    @map("title") @db.VarChar(255)
+    message     String    @map("message") @db.Text
+    type        String    @default("info") @map("type") @db.VarChar(50) // info, success, warning, error, system
+    isRead      Boolean   @default(false) @map("is_read")
+    readAt      DateTime? @map("read_at") @db.Timestamptz(6)
+    
+    // Quan hệ với employee (admin) - người nhận notification
+    userId      Int?      @map("user_id") // ID của employee (admin) nhận notification
+    user        employee? @relation("UserNotifications", fields: [userId], references: [id])
+    
+    // Quan hệ với employee - người tạo notification
+    createdById Int?      @map("created_by_id")
+    createdBy   employee? @relation("CreatedNotifications", fields: [createdById], references: [id])
+    
+    // Metadata cho notification (có thể link đến customer, order, etc.)
+    customerId  Int?      @map("customer_id") // ID customer liên quan (nếu có)
+    customerCode String? @map("customer_code") @db.VarChar(50) // Mã customer liên quan
+    
+    createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+    updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz(6)
+    
+    @@index([userId])
+    @@index([isRead])
+    @@index([createdAt])
+    @@index([type])
+    @@index([customerId])
+    @@map("notification")
+}

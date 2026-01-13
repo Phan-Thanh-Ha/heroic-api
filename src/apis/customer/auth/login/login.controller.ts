@@ -1,15 +1,15 @@
 import { ApiPost, APP_ROUTES, AppController, Public } from '@common';
 import { LoggerService } from '@logger';
-import { Body, Query, Req } from '@nestjs/common';
+import { Body, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
 import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoginDto } from './dto/login.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { LoginService } from './login.service';
-import { ApiLogin } from './swagger';
 import { ApiLoginWithFacebook } from './swagger/login-facebook.swagger';
 import { ApiLoginWithGoogle } from './swagger/login-google.swagger';
-import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ApiLogin } from './swagger/login.swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.AUTH.LOGIN)
 export class LoginController {
@@ -25,7 +25,7 @@ export class LoginController {
     swagger: ApiLogin()
   })
   @Public()
-  async loginWithEmail( 
+  async loginWithEmail(
     @Body() loginDto: LoginDto,
     @Req() req: Request & { timeZone?: string },
   ) {
@@ -68,7 +68,7 @@ export class LoginController {
   ) {
     this.loggerService.debug(this.context, 'verifyOtp', verifyOtpDto);
     try {
-      return await this.loginService.verifyOtp( verifyOtpDto, req.timeZone);
+      return await this.loginService.verifyOtp(verifyOtpDto, req.timeZone);
     } catch (error) {
       this.loggerService.error(this.context, 'verifyOtp', error);
       throw error;

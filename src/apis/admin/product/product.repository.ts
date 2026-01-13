@@ -2,10 +2,9 @@ import { PrismaService } from "@prisma";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { JwtPayloadAdmin } from "@jwt";
-import { generateUUID } from "@utils";
-import { productErrorTypes } from "@common";
+import { productErrorTypes,generateUUID } from "@common";
 import { LoggerService } from "@logger";
-import { QueryProductDto } from "./dto";
+import { QueryProductDto } from "./dto/query.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Injectable()
@@ -15,7 +14,6 @@ export class ProductRepository {
         private readonly loggerService: LoggerService
     ) { }
 
-    
     async createProduct(createProductDto: CreateProductDto, user: JwtPayloadAdmin) {
         try {
             return await this.prisma.product.create({
@@ -26,8 +24,8 @@ export class ProductRepository {
                     description: createProductDto.description,
                     slug: createProductDto.slug,
                     brandId: createProductDto.brandId,
-                    
-                    originId: createProductDto.originId, 
+
+                    originId: createProductDto.originId,
                     categoryId: createProductDto.categoryId,
                     isActive: true,
                     createdById: user.id,
@@ -79,11 +77,11 @@ export class ProductRepository {
                     slug: updateProductDto.slug,
                     brandId: updateProductDto.brandId,
                     // FIX: Sử dụng originId để khớp với Prisma Schema
-                    originId: updateProductDto.originId, 
+                    originId: updateProductDto.originId,
                     categoryId: updateProductDto.categoryId,
                     updatedById: user.id,
                     updatedAt: new Date(),
-                    
+
                     // Cập nhật lại ảnh đại diện chính
                     image: updateProductDto.productImages?.[0]?.image,
 
@@ -126,8 +124,8 @@ export class ProductRepository {
     async getListProduct(query: QueryProductDto) {
         const { limit = 10, page = 1 } = query;
         try {
-            const total = await this.prisma.product.count({ 
-                where: { isDeleted: false } 
+            const total = await this.prisma.product.count({
+                where: { isDeleted: false }
             });
 
             const products = await this.prisma.product.findMany({
@@ -148,15 +146,15 @@ export class ProductRepository {
             // Format dữ liệu trả về cho giao diện Admin
             const formattedProducts = products.map((product: any) => {
                 const { category, productDetails, ...rest } = product;
-                
+
                 // Logic lấy giá bán thấp nhất của sản phẩm
-                const minPrice = productDetails && productDetails.length > 0 
-                    ? Math.min(...productDetails.map((d: any) => d.retailPrice)) 
+                const minPrice = productDetails && productDetails.length > 0
+                    ? Math.min(...productDetails.map((d: any) => d.retailPrice))
                     : 0;
 
                 // Logic tính tổng lượng hàng trong kho của tất cả biến thể
-                const totalStock = productDetails 
-                    ? productDetails.reduce((sum: number, d: any) => sum + d.quantity, 0) 
+                const totalStock = productDetails
+                    ? productDetails.reduce((sum: number, d: any) => sum + d.quantity, 0)
                     : 0;
 
                 return {

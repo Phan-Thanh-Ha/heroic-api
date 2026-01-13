@@ -6,16 +6,16 @@ tunnels:
   heroic-api:
     # Nếu có static domain (ngrok paid plan), uncomment dòng dưới:
     # domain: your-domain.ngrok-free.app
-    
+
     # Hoặc dùng subdomain (nếu có)
     # subdomain: heroic-api
-    
+
     # Port của local server
     addr: 3102
-    
+
     # Protocol
     proto: http
-    
+
     # Các options khác (tùy chọn)
     # schemes: [https]  # Chỉ dùng HTTPS
     # inspect: false  # Tắt web inspector (ngrok v3)

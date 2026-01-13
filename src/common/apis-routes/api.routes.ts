@@ -24,6 +24,9 @@ export const APP_ROUTES = {
             SEND_OTP: { path: 'customers/email/send-otp', tag: 'Customer_Email' },
         },
         PRODUCT: { path: 'admins/product', tag: 'Admin_Product' },
+        SOCKET: {
+            NOTIFICATIONS: { path: 'socket/admin/notifications', tag: 'Admin_Socket' },
+        },
 
     },
 

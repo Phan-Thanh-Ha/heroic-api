@@ -1,9 +1,8 @@
-import { customerAuthErrorTypes, customerAuthSuccessTypes } from "@common";
+import { customerAuthErrorTypes, customerAuthSuccessTypes, generateCustomerCode, generateUUID, generateOTP } from "@common";
 import { JwtService } from "@jwt";
 import { LoggerService } from "@logger";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@prisma";
-import { generateCustomerCode, generateUUID, generateOTP } from "@utils";
 import bcrypt from "bcryptjs";
 import { LoginFacebookDto } from "./dto/login-facebook.dto";
 import { LoginGoogleDto } from "./dto/login-google.dto";
@@ -75,14 +74,12 @@ export class LoginRepository {
         try {
             // 1. Tìm user trong database để lấy discordId
             const user = await this.checkEmailExists(email);
-            console.log("🚀 🇵 🇭: ~ login.repository.ts:76 ~ user:", user)
-            
             if (method === 'email') {
                 await this.emailService.sendMailOTP({
                     email: email,
                     otp: otpCode,
                 });
-            } 
+            }
             else if (method === 'discord') {
                 // Kiểm tra xem user đã thực hiện bước /link chưa
                 if (!user?.discordId) {
@@ -420,7 +417,6 @@ export class LoginRepository {
                     });
 
                     const { password, ...customerResponse } = updatedCustomer;
-                    
                     // Trim customerCode để loại bỏ khoảng trắng thừa từ Char(50)
                     const trimmedCustomerCode = customerResponse.customerCode?.trim() || customerResponse.customerCode;
 
@@ -448,7 +444,7 @@ export class LoginRepository {
 
             // 3. Không tìm thấy email / facebookId → tạo khách hàng mới rồi đăng nhập luôn
             const newCustomer = await this.createCustomerWithFacebook(loginFacebookDto);
-            
+
             // Trim customerCode để loại bỏ khoảng trắng thừa từ Char(50)
             const trimmedCustomerCode = newCustomer.customerCode?.trim() || newCustomer.customerCode;
 

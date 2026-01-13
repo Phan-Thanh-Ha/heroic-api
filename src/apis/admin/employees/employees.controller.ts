@@ -1,12 +1,11 @@
-import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { Body, Query, UseGuards } from '@nestjs/common';
+import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, ResponseMessage } from '@common';
+import { Body, Query } from '@nestjs/common';
 import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { QueryUserDto } from './dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeesService } from './employees.service';
-import { Employee } from './entities/employee.entity';
-import { ApiCreateEmployeeSwagger, ApiGetListEmployeeSwagger } from './swagger';
+import { ApiCreateEmployeeSwagger } from './swagger/create-employee.swagger';
+import { ApiGetListEmployeeSwagger } from './swagger/get-list-employee.swagger';
 @AppController(APP_ROUTES.ADMIN.EMPLOYEES)
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) { }

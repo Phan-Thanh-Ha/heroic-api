@@ -1,8 +1,7 @@
-import { adminAuthErrorTypes, DefaultQueryDto } from "@common"; // File chứa định nghĩa lỗi
+import { adminAuthErrorTypes, DefaultQueryDto, generateUUID, generateHashedDefaultPassword, comparePassword } from "@common"; // File chứa định nghĩa lỗi
 import { LoggerService } from "@logger";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
-import { comparePassword, generateHashedDefaultPassword, generateUUID } from "@utils";
 import { Prisma } from "@prisma/client";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 
@@ -17,11 +16,9 @@ export class EmployeesRepository {
     //#region Kiểm tra username đã tồn tại chưa
     async getEmployeeByCodeAndPassword(code: string, password: string) {
         try {
-            console.log("🚀 🇵 🇭: ~ employees.repository.ts:19 ~ code:", code, password)
             const employee = await this.prisma.employee.findFirst({
                 where: { code: code },
             });
-            console.log("🚀 🇵 🇭: ~ employees.repository.ts:22 ~ employee:", employee)
 
             if (!employee) {
                 return null;

@@ -4,8 +4,9 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '@logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
-import { formatDateToYMD, toUnixByTimeZone } from '@utils';
+import { formatDateToYMD, toUnixByTimeZone } from '@common';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { NotificationsService, NotificationsGateway, createAndEmitNotificationToAdmins } from '@socket';
 
 @Injectable()
 export class LoginService {
@@ -13,6 +14,8 @@ export class LoginService {
   constructor(
     private readonly loginRepository: LoginRepository,
     private readonly loggerService: LoggerService,
+    private readonly notificationsService: NotificationsService,
+    private readonly notificationsGateway: NotificationsGateway,
   ) { }
 
   //#region Đăng nhập bằng email
@@ -43,6 +46,35 @@ export class LoginService {
       const result = await this.loginRepository.loginWithGoogle(
         loginGoogleDto,
       );
+
+      // Gửi thông báo đến admin nếu đây là customer mới (đăng ký qua Google)
+      // Kiểm tra createdAt - nếu trong vòng 10 giây thì là customer mới
+      if (result.info?.createdAt) {
+        const createdAt = new Date(result.info.createdAt);
+        const now = new Date();
+        const diffSeconds = (now.getTime() - createdAt.getTime()) / 1000;
+        
+        // Nếu customer được tạo trong vòng 10 giây thì gửi notification
+        if (diffSeconds <= 10) {
+          try {
+            // Luồng: Lưu vào database trước → Sau đó emit qua socket
+            await createAndEmitNotificationToAdmins(
+              this.notificationsService,
+              this.notificationsGateway,
+              {
+                title: 'Khách hàng mới đăng ký',
+                message: `Khách hàng ${result.info.fullName} (${result.info.email}) vừa đăng ký qua Google`,
+                type: 'info',
+                customerId: result.info.id,
+                customerCode: result.info.customerCode,
+              }
+            );
+          } catch (notificationError) {
+            this.loggerService.error(this.context, 'send-notification-to-admin', notificationError);
+          }
+        }
+      }
+
       return {
         message: result.message,
         info: {
@@ -66,6 +98,35 @@ export class LoginService {
       this.loggerService.debug(this.context, 'loginWithFacebook', loginFacebookDto);
 
       const result = await this.loginRepository.loginWithFacebook(loginFacebookDto);
+
+      // Gửi thông báo đến admin nếu đây là customer mới (đăng ký qua Facebook)
+      // Kiểm tra createdAt - nếu trong vòng 10 giây thì là customer mới
+      if (result.info?.createdAt) {
+        const createdAt = new Date(result.info.createdAt);
+        const now = new Date();
+        const diffSeconds = (now.getTime() - createdAt.getTime()) / 1000;
+        
+        // Nếu customer được tạo trong vòng 10 giây thì gửi notification
+        if (diffSeconds <= 10) {
+          try {
+            // Luồng: Lưu vào database trước → Sau đó emit qua socket
+            await createAndEmitNotificationToAdmins(
+              this.notificationsService,
+              this.notificationsGateway,
+              {
+                title: 'Khách hàng mới đăng ký',
+                message: `Khách hàng ${result.info.fullName} (${result.info.email}) vừa đăng ký qua Facebook`,
+                type: 'info',
+                customerId: result.info.id,
+                customerCode: result.info.customerCode,
+              }
+            );
+          } catch (notificationError) {
+            this.loggerService.error(this.context, 'send-notification-to-admin', notificationError);
+          }
+        }
+      }
+
       return {
         message: result.message,
         info: {

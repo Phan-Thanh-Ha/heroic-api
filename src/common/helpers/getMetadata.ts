@@ -1,10 +1,10 @@
 import { Request } from 'express';
-import { DEFAULT_QUERY } from '../enums';
+import { DEFAULT_QUERY } from '@common';
 
 export const getMetadata = (req: Request, data: any[]) => {
     // data[1] là tổng số lượng bản ghi trả về từ Repository (count)
-    const total = data[1] ? Number(data[1]) : 0; 
-    
+    const total = data[1] ? Number(data[1]) : 0;
+
     // Lấy query từ request và ép kiểu số
     const page = req.query.page ? Number(req.query.page) : DEFAULT_QUERY.PAGE;
     const limitQuery = req.query.limit ? Number(req.query.limit) : DEFAULT_QUERY.LIMIT;

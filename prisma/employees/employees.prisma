@@ -33,6 +33,10 @@ model employee {
     // Quan hệ với Login
     loginId Int?     @map("login_id")
     login   login?   
+    
+    // Notifications
+    receivedNotifications notification[] @relation("UserNotifications") // Notifications nhận được
+    createdNotifications  notification[] @relation("CreatedNotifications") // Notifications đã tạo
 
     @@index([id])
     @@index([code])

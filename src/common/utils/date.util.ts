@@ -47,11 +47,11 @@ export function toUnixByTimeZone(
 }
 
 /**
- * 
- * 
+ *
+ *
  * @param value - Date object, string parse được thành Date, hoặc null/undefined
  * @returns Chuỗi định dạng yyyy-MM-dd hoặc null nếu không hợp lệ
- * 
+ *
  */
 export function formatDateToYMD(value: Date | string | null | undefined): string | null {
     if (!value) return null;

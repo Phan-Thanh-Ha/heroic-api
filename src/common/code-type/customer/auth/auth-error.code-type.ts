@@ -1,4 +1,4 @@
-import { ErrorType } from '../../../interfaces';
+import { ErrorType } from '@common';
 
 interface CustomerAuthErrorTypes {
 	AUTH_LOGIN_FAILED: ErrorType;

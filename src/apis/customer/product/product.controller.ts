@@ -1,12 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { AppController } from 'src/common/decorators/decorator';
-import { APP_ROUTES } from 'src/common/apis-routes';
 import { ApiGet } from '@common';
-import { ApiGetProductBySlug } from './swagger/get-product-by-slug.swagger';
+import { Param } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
+import { APP_ROUTES } from '@common';
+import { AppController } from '@common';
+import { ProductService } from './product.service';
+import { ApiGetProductBySlug } from './swagger/get-product-by-slug.swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.PRODUCT)
 export class ProductController {
