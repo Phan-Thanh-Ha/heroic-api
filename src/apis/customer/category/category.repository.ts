@@ -26,18 +26,10 @@ export class CategoryRepository {
                             id: 'desc', // Lấy 5 sản phẩm mới nhất
                         },
                         include: {
-                            // Lấy ảnh để làm thumbnail
-                            productImages: {
-                                take: 1,
-                                select: { image: true }
-                            },
-                            // Lấy giá để tính Min Price
-                            productDetails: {
-                                select: {
-                                    retailPrice: true,
-                                    discount: true
-                                }
-                            }
+                            // Lấy full thông tin bảng productImages
+                            productImages: true,
+                            // Lấy full thông tin bảng productDetails
+                            productDetails: true,
                         }
                     },
                 },
@@ -46,37 +38,24 @@ export class CategoryRepository {
                 }
             });
 
-            // Format lại dữ liệu trước khi trả về
-            const formattedData = categoryList.map(category => ({
-                id: category.id,
-                name: category.name,
-                slug: category.slug,
-                banner: category.banner,
-                thumbnail: category.thumbnail,
-                description: category.description,
-                products: category.products.map(product => {
-                    // Tính giá thấp nhất sau khi trừ chiết khấu (nếu có)
-                    const minPrice = product.productDetails.length > 0
-                        ? Math.min(...product.productDetails.map(d => {
-                            const discountPrice = d.retailPrice - (d.retailPrice * (d.discount || 0) / 100);
-                            return discountPrice;
-                        }))
-                        : 0;
-
-                    return {
-                        id: product.id,
-                        name: product.name,
-                        slug: product.slug,
-                        image: product.productImages[0]?.image || null,
-                        minPrice: minPrice,
-                        // Có thể thêm nhãn Brand nếu cần
-                    };
-                })
+            const result = categoryList.map(category => ({
+                ...category,
+                products: category.products.map(product => ({
+                    ...product,
+                    productDetails: product.productDetails.map(detail => ({
+                        ...detail,
+                        // Thêm trường tính toán tại đây
+                        discountedPrice: detail.discount && detail.discount > 0
+                        // Công thức tính giá chiếc khấu là giá gốc trừ đi giá chiếc khấu
+                            ? detail.retailPrice * (1 - detail.discount / 100)
+                            : detail.retailPrice
+                    }))
+                }))
             }));
 
             return {
-                items: formattedData,
-                total: formattedData.length,
+                items: result,
+                total: result.length,
             };
         } catch (error) {
             this.logger.error(this.context, 'getCategoryList', error);
