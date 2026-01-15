@@ -14,9 +14,6 @@ yarn-error.log*
 yarn.lock
 lerna-debug.log*
 
-# Lưu ý: Đã xóa yarn.lock và pnpm-lock.yaml khỏi đây để đúng chuẩn
-# (Dù bạn đang dùng npm thì việc giữ lại lock file của tool khác cũng không hại gì)
-
 # OS
 .DS_Store
 
@@ -60,9 +57,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .env.test
 .ngrok-url
 
-# QUAN TRỌNG: Đã xóa .env.example khỏi danh sách này để commit lên Github
 
-# Uploaded files (Giữ thư mục nhưng không commit file bên trong)
 /uploads
 !/uploads/.gitkeep
 
