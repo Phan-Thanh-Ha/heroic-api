@@ -30,6 +30,8 @@ model customer {
   district districts? @relation(fields: [districtId], references: [id]) // Quan hệ N-1 với districts sẽ có nhiều khách hàng
   ward     wards?     @relation(fields: [wardId], references: [id]) // Quan hệ N-1 với wards sẽ có nhiều khách hàng
 
+  customerOrders customer_order[] // Quan hệ 1-N với bảng customer_order một khách hàng có nhiều đơn hàng
+
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo khách hàng
 
   @@index([id])

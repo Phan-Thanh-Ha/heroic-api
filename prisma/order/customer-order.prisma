@@ -1,0 +1,36 @@
+model customer_order {
+    id Int @id @default(autoincrement())
+    uuid String @unique @map("uuid") @db.Char(36)
+    orderCode String @unique @map("order_code") @db.VarChar(50) // Mã đơn hàng Ví dụ #ORD-20260101-0001
+    orderDate DateTime @default(now()) @map("order_date") @db.Timestamp(6) // Ngày đặt hàng
+    deliveryDate DateTime? @map("delivery_date") @db.Timestamp(6) // Ngày giao hàng
+
+    // ------------------------------ Tổng tiền ------------------------------
+    subTotal Float @default(0) @map("sub_total") // Tổng tiền hàng gốc
+    totalDiscount Float @default(0) @map("total_discount") // Tổng tiền đơn hàng sau giảm giá (giảm giá tổng)
+    totalAmount Float @default(0) @map("total_amount") // Tổng tiền đơn hàng (subTotal - totalDiscount + shippingFee + tax)
+    status String @default("pending") @map("status") @db.VarChar(50) // Trạng thái đơn hàng Ví dụ: pending, confirmed, shipped, delivered, cancelled
+    shippingFee Float @default(0) @map("shipping_fee") // Phí vận chuyển
+    discountCode String? @map("discount_code") @db.VarChar(50) // Mã giảm giá
+
+    // ------------------------------ Thanh toán ------------------------------
+    paymentMethod String @default("cash") @map("payment_method") @db.VarChar(50) // Phương thức thanh toán Ví dụ: cash, bank_transfer, credit_card, paypal, etc.
+    paymentStatus String @default("pending") @map("payment_status") @db.VarChar(50) // Trạng thái thanh toán Ví dụ: pending, paid, failed, etc.
+
+    // ------------------------------ Giao hàng ------------------------------
+    shippingAddress String? @map("shipping_address") @db.Text // Địa chỉ giao hàng
+    shippingPhone String? @map("shipping_phone") @db.VarChar(20) // Số điện thoại giao hàng
+    shippingName String? @map("shipping_name") @db.VarChar(255) // Tên người giao hàng
+
+    // ------------------------------ Thời gian ------------------------------
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6) // Ngày tạo đơn hàng
+    updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6) // Ngày cập nhật đơn hàng
+
+    // ------------------------------ Quan hệ ------------------------------
+    customerId Int @map("customer_id") // ID khách hàng
+    customer customer @relation(fields: [customerId], references: [id]) // Quan hệ N-1 với bảng customer
+    customerOrderDetails customer_order_detail[] // Quan hệ 1-N với bảng customer_order_detail
+
+    @@map("customer_order")
+}

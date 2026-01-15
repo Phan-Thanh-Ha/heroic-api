@@ -46,6 +46,7 @@
 			"@guards": ["src/guards"],
 			"@apis-routes": ["src/common/apis-routes/api.routes"],
 			"@socket": ["src/socket"],
+			"@payos": ["src/payos"],
 		}
 	},
 	"exclude": ["./node_modules/**"],

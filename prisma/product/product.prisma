@@ -16,7 +16,7 @@ model product {
 
     isActive    Boolean   @default(true) @map("is_active") // Trạng thái hoạt động của sản phẩm
     isDeleted   Boolean   @default(false) @map("is_deleted") // Trạng thái xóa của sản phẩm
-    
+
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6) // Ngày tạo sản phẩm
     createdById Int?     @map("created_by_id") // ID người tạo sản phẩm
     updatedById Int?     @map("updated_by_id") // ID người cập nhật sản phẩm
@@ -27,6 +27,7 @@ model product {
 
     productDetails product_detail[] // Quan hệ 1-N với bảng product_detail một sản phẩm có nhiều chi tiết sản phẩm
     productImages product_image[] // Quan hệ 1-N với bảng product_image một sản phẩm có nhiều ảnh sản phẩm
+    customerOrderDetails customer_order_detail[] // Quan hệ 1-N với bảng customer_order_detail một sản phẩm có nhiều chi tiết đơn hàng
 
 
 

@@ -53,6 +53,7 @@ export const APP_ROUTES = {
         },
         CATEGORY: { path: 'customers/category', tag: 'Customer_Category' },
         PRODUCT: { path: 'customers/product', tag: 'Customer_Product' },
+        ORDER: { path: 'customers/order', tag: 'Customer_Order' },
     },
 } as const;
 

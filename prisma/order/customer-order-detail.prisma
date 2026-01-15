@@ -1,0 +1,24 @@
+model customer_order_detail {
+    id Int @id @default(autoincrement()) // ID chi tiết đơn hàng
+    uuid String @unique @map("uuid") @db.Char(36) // UUID chi tiết đơn hàng
+
+
+    quantity Int @default(0) @map("quantity") // Số lượng sản phẩm
+    price Float @default(0) @map("price") // Giá sản phẩm
+    originalPrice Float @default(0) @map("original_price") // Tổng tiền sản phẩm gốc giá gốc của sản phẩm trước khi giảm giá
+    discount Float @default(0) @map("discount") // Giảm giá sản phẩm (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
+    discountedPrice Float @default(0) @map("discounted_price") // Tổng tiền sản phẩm sau giảm giá (giảm giá) giá thực tế của sản phẩm
+
+    totalAmount Float @default(0) @map("total_amount") // Tổng tiền sản phẩm (price * quantity)
+
+
+    // ------------------------------ Quan hệ ------------------------------
+    customerOrderId Int @map("customer_order_id") // ID đơn hàng
+    customerOrder customer_order @relation(fields: [customerOrderId], references: [id]) // Quan hệ N-1 với bảng customer_order
+
+    productId Int @map("product_id") // ID sản phẩm
+    productName String @map("product_name") @db.VarChar(255) // Tên sản phẩm
+    product product @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng product
+
+    @@map("customer_order_detail")
+}

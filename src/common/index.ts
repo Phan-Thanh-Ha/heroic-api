@@ -43,6 +43,7 @@ export * from './swagger/filter-document';
 export * from './swagger/response-fail';
 export * from './swagger/response';
 export * from './utils/customer-code-generator';
+export * from './utils/order-code-generator';
 export * from './utils/date.util';
 export * from './utils/otp-generator';
 export * from './utils/password.util';
