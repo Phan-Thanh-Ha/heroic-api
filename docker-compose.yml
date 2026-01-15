@@ -27,7 +27,7 @@ services:
   heroic-upload:
     container_name: heroic-upload
     build:
-      context: . 
+      context: .
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:

@@ -9,12 +9,13 @@
 logs
 *.log
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 yarn.lock
-pnpm-lock.yaml
+lerna-debug.log*
+
+# Lưu ý: Đã xóa yarn.lock và pnpm-lock.yaml khỏi đây để đúng chuẩn
+# (Dù bạn đang dùng npm thì việc giữ lại lock file của tool khác cũng không hại gì)
 
 # OS
 .DS_Store
@@ -49,7 +50,7 @@ pids
 *.seed
 *.pid.lock
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Environment variables
@@ -57,17 +58,16 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .env.development
 .env.production
 .env.test
-.env.example
 .ngrok-url
 
-# Ngrok config (nếu có authtoken, nên ignore)
-# ngrok.yml
+# QUAN TRỌNG: Đã xóa .env.example khỏi danh sách này để commit lên Github
 
-/generated/prisma
-
-# Uploaded files
+# Uploaded files (Giữ thư mục nhưng không commit file bên trong)
 /uploads
 !/uploads/.gitkeep
 
 # Email preview output
 /email-preview
+
+# Ngrok config
+/ngrok.yml
