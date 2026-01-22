@@ -1,20 +1,25 @@
-import { ApiPost, ApiGet, APP_ROUTES, AppController, Public } from '@common';
-import { Body, Param, Query, Req } from '@nestjs/common';
-import { Request } from 'express';
-import { OrderService } from './order.service';
+import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public } from '@common';
+import { Body, Param, Query } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreatePaymentLinkDto } from './dto/create-payment-link.dto';
+import { OrderService } from './order.service';
+import { ApiSecurity } from '@nestjs/swagger';
+import { JwtPayloadCustomer } from '@jwt';
 
 @AppController(APP_ROUTES.CUSTOMER.ORDER)
 export class OrderController {
-	constructor(private readonly orderService: OrderService) {}
+	constructor(private readonly orderService: OrderService) { }
 
 	@ApiPost('', {
 		summary: 'Tạo đơn hàng mới',
 		status: 201,
 	})
-	async createOrder(@Body() createOrderDto: CreateOrderDto) {
-		return await this.orderService.createOrder(createOrderDto);
+	@ApiSecurity('JWT')
+	async createOrder(
+		@Body() createOrderDto: CreateOrderDto,
+		@GetUser() customerInfor: JwtPayloadCustomer,
+	) {
+		return await this.orderService.createOrder(createOrderDto, customerInfor);
 	}
 
 	@ApiGet(':id', {

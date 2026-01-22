@@ -10,7 +10,7 @@ export class CategoryService {
   ) {
   }
 
-  async getCategoryList() { 
+  async getCategoryList() {
     return this.categoryRepository.getCategoryList();
   }
 }

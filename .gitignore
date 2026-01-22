@@ -5,6 +5,9 @@
 /docs
 /database/backups
 
+#setting 
+.vscode
+
 # Logs
 logs
 *.log

@@ -1,94 +1,71 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, ValidateNested, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export class OrderDetailDto {
-	@IsNotEmpty()
-	@IsNumber()
-	productId!: number;
-
-	@IsNotEmpty()
-	@IsString()
-	productName!: string;
-
-	@IsNotEmpty()
-	@IsNumber()
-	@Min(1)
-	quantity!: number;
-
-	@IsNotEmpty()
-	@IsNumber()
-	@Min(0)
-	price!: number;
-
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	originalPrice?: number;
-
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	discount?: number;
-
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	discountedPrice?: number;
-
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	totalAmount?: number;
-}
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { CreateOrderDetailDto } from './create-order-detail.dto';
 
 export class CreateOrderDto {
-	@IsNotEmpty()
-	@IsNumber()
-	customerId!: number;
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true }) // Validate mỗi phần tử trong mảng
+  @Type(() => CreateOrderDetailDto)
+  cartItems!: CreateOrderDetailDto[];
 
-	@IsNotEmpty()
-	@IsArray()
-	@ValidateNested({ each: true })
-	@Type(() => OrderDetailDto)
-	orderDetails!: OrderDetailDto[];
+  // Thông tin thanh toán
+  @IsNotEmpty()
+  @IsString()
+  paymentMethod!: string;
 
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	subTotal?: number;
+  @IsOptional()
+  @IsString()
+  discountCode?: string;
 
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	totalDiscount?: number;
+  // Phí vận chuyển
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  shippingFee!: number;
 
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	shippingFee?: number;
+  // Tổng tiền hàng sau khi trừ giảm giá
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  subTotal!: number;
 
-	@IsOptional()
-	@IsNumber()
-	@Min(0)
-	totalAmount?: number;
+  // Tổng giảm giá
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  totalDiscount!: number;
 
-	@IsOptional()
-	@IsString()
-	discountCode?: string;
+  // Tổng tiền
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(0)
+  totalAmount!: number;
 
-	@IsOptional()
-	@IsString()
-	paymentMethod?: string;
+  @IsOptional()
+  @IsString()
+  orderCode?: string;
 
-	@IsOptional()
-	@IsString()
-	shippingAddress?: string;
+  @IsOptional()
+  @IsString()
+  shippingAddress?: string;
 
-	@IsOptional()
-	@IsString()
-	shippingPhone?: string;
+  @IsOptional()
+  @IsString()
+  shippingPhone?: string;
 
-	@IsOptional()
-	@IsString()
-	shippingName?: string;
+  @IsOptional()
+  @IsString()
+  shippingName?: string;
+
+  @IsOptional()
+  customerInfo?: any;
 }

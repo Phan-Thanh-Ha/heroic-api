@@ -326,43 +326,40 @@ model notification {
 
 model customer_order_detail {
     id Int @id @default(autoincrement()) // ID chi tiết đơn hàng
-    uuid String @unique @map("uuid") @db.Char(36) // UUID chi tiết đơn hàng
 
-
-    quantity Int @default(0) @map("quantity") // Số lượng sản phẩm
-    price Float @default(0) @map("price") // Giá sản phẩm
-    originalPrice Float @default(0) @map("original_price") // Tổng tiền sản phẩm gốc giá gốc của sản phẩm trước khi giảm giá
-    discount Float @default(0) @map("discount") // Giảm giá sản phẩm (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
+    quantity        Int   @default(0) @map("quantity") // Số lượng sản phẩm
+    price           Float @default(0) @map("price") // Giá sản phẩm
+    originalPrice   Float @default(0) @map("original_price") // Tổng tiền sản phẩm gốc giá gốc của sản phẩm trước khi giảm giá
+    discount        Float @default(0) @map("discount") // Giảm giá sản phẩm (Ví dụ: giảm 50,000đ hoặc 10%) (Tính theo %)
     discountedPrice Float @default(0) @map("discounted_price") // Tổng tiền sản phẩm sau giảm giá (giảm giá) giá thực tế của sản phẩm
 
     totalAmount Float @default(0) @map("total_amount") // Tổng tiền sản phẩm (price * quantity)
 
-
     // ------------------------------ Quan hệ ------------------------------
-    customerOrderId Int @map("customer_order_id") // ID đơn hàng
-    customerOrder customer_order @relation(fields: [customerOrderId], references: [id]) // Quan hệ N-1 với bảng customer_order
+    customerOrderId Int            @map("customer_order_id") // ID đơn hàng
+    customerOrder   customer_order @relation(fields: [customerOrderId], references: [id]) // Quan hệ N-1 với bảng customer_order
 
-    productId Int @map("product_id") // ID sản phẩm
-    productName String @map("product_name") @db.VarChar(255) // Tên sản phẩm
-    product product @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng product
+    productId   Int     @map("product_id") // ID sản phẩm
+    productName String  @map("product_name") @db.VarChar(255) // Tên sản phẩm
+    product     product @relation(fields: [productId], references: [id]) // Quan hệ N-1 với bảng product
 
     @@map("customer_order_detail")
 }
 
 model customer_order {
-    id Int @id @default(autoincrement())
-    uuid String @unique @map("uuid") @db.Char(36)
-    orderCode String @unique @map("order_code") @db.VarChar(50) // Mã đơn hàng Ví dụ #ORD-20260101-0001
-    orderDate DateTime @default(now()) @map("order_date") @db.Timestamp(6) // Ngày đặt hàng
+    id           Int       @id @default(autoincrement())
+    uuid         String    @unique @map("uuid") @db.Char(36)
+    orderCode    String    @unique @map("order_code") @db.VarChar(50) // Mã đơn hàng Ví dụ #ORD-20260101-0001
+    orderDate    DateTime  @default(now()) @map("order_date") @db.Timestamp(6) // Ngày đặt hàng
     deliveryDate DateTime? @map("delivery_date") @db.Timestamp(6) // Ngày giao hàng
 
     // ------------------------------ Tổng tiền ------------------------------
-    subTotal Float @default(0) @map("sub_total") // Tổng tiền hàng gốc
-    totalDiscount Float @default(0) @map("total_discount") // Tổng tiền đơn hàng sau giảm giá (giảm giá tổng)
-    totalAmount Float @default(0) @map("total_amount") // Tổng tiền đơn hàng (subTotal - totalDiscount + shippingFee + tax)
-    status String @default("pending") @map("status") @db.VarChar(50) // Trạng thái đơn hàng Ví dụ: pending, confirmed, shipped, delivered, cancelled
-    shippingFee Float @default(0) @map("shipping_fee") // Phí vận chuyển
-    discountCode String? @map("discount_code") @db.VarChar(50) // Mã giảm giá
+    subTotal      Float   @default(0) @map("sub_total") // Tổng tiền hàng gốc
+    totalDiscount Float   @default(0) @map("total_discount") // Tổng tiền đơn hàng sau giảm giá (giảm giá tổng)
+    totalAmount   Float   @default(0) @map("total_amount") // Tổng tiền đơn hàng (subTotal - totalDiscount + shippingFee + tax)
+    status        String  @default("pending") @map("status") @db.VarChar(50) // Trạng thái đơn hàng Ví dụ: pending, confirmed, shipped, delivered, cancelled
+    shippingFee   Float   @default(0) @map("shipping_fee") // Phí vận chuyển
+    discountCode  String? @map("discount_code") @db.VarChar(50) // Mã giảm giá
 
     // ------------------------------ Thanh toán ------------------------------
     paymentMethod String @default("cash") @map("payment_method") @db.VarChar(50) // Phương thức thanh toán Ví dụ: cash, bank_transfer, credit_card, paypal, etc.
@@ -370,8 +367,8 @@ model customer_order {
 
     // ------------------------------ Giao hàng ------------------------------
     shippingAddress String? @map("shipping_address") @db.Text // Địa chỉ giao hàng
-    shippingPhone String? @map("shipping_phone") @db.VarChar(20) // Số điện thoại giao hàng
-    shippingName String? @map("shipping_name") @db.VarChar(255) // Tên người giao hàng
+    shippingPhone   String? @map("shipping_phone") @db.VarChar(20) // Số điện thoại giao hàng
+    shippingName    String? @map("shipping_name") @db.VarChar(255) // Tên người giao hàng
 
     // ------------------------------ Thời gian ------------------------------
 
@@ -379,8 +376,8 @@ model customer_order {
     updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6) // Ngày cập nhật đơn hàng
 
     // ------------------------------ Quan hệ ------------------------------
-    customerId Int @map("customer_id") // ID khách hàng
-    customer customer @relation(fields: [customerId], references: [id]) // Quan hệ N-1 với bảng customer
+    customerId           Int                     @map("customer_id") // ID khách hàng
+    customer             customer                @relation(fields: [customerId], references: [id]) // Quan hệ N-1 với bảng customer
     customerOrderDetails customer_order_detail[] // Quan hệ 1-N với bảng customer_order_detail
 
     @@map("customer_order")
