@@ -82,19 +82,19 @@ export class OrderRepository {
           const totalAmount = discountedPrice * quantity;
 
           return {
-            uuid: uuidv4(),
             customerOrderId: newOrder.id,
             productId: detail.productId,
             productName: productName,
             quantity: quantity,
             price: price,
-            originalPrice: price, // Giả sử giá gốc là retail price nếu không có logic khác
+            originalPrice: price,
             discount: discountPercentage,
             discountedPrice: discountedPrice,
             totalAmount: totalAmount,
           };
         }) || []
       );
+      console.log('orderDetailsData', orderDetailsData);
 
       await tx.customer_order_detail.createMany({
         data: orderDetailsData,
