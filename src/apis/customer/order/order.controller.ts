@@ -1,26 +1,29 @@
-import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public } from '@common';
+import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public, ResponseMessage } from '@common';
+import { JwtPayloadCustomer } from '@jwt';
 import { Body, Param, Query } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
+import { orderSuccessCodeType } from 'src/common/code-type';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreatePaymentLinkDto } from './dto/create-payment-link.dto';
 import { OrderService } from './order.service';
-import { ApiSecurity } from '@nestjs/swagger';
-import { JwtPayloadCustomer } from '@jwt';
 
 @AppController(APP_ROUTES.CUSTOMER.ORDER)
 export class OrderController {
 	constructor(private readonly orderService: OrderService) { }
 
-	@ApiPost('', {
+	@ApiPost('create', {
 		summary: 'Tạo đơn hàng mới',
 		status: 201,
 	})
 	@ApiSecurity('JWT')
+	@ResponseMessage(orderSuccessCodeType().ORDER_CREATED.message)
 	async createOrder(
 		@Body() createOrderDto: CreateOrderDto,
 		@GetUser() customerInfor: JwtPayloadCustomer,
 	) {
 		return await this.orderService.createOrder(createOrderDto, customerInfor);
 	}
+
 
 	@ApiGet(':id', {
 		summary: 'Lấy thông tin đơn hàng theo ID',

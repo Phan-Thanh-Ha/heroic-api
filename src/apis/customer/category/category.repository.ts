@@ -46,7 +46,7 @@ export class CategoryRepository {
                         ...detail,
                         // Thêm trường tính toán tại đây
                         discountedPrice: detail.discount && detail.discount > 0
-                        // Công thức tính giá chiếc khấu là giá gốc trừ đi giá chiếc khấu
+                            // Công thức tính giá chiếc khấu là giá gốc trừ đi giá chiếc khấu
                             ? detail.retailPrice * (1 - detail.discount / 100)
                             : detail.retailPrice
                     }))
@@ -61,5 +61,44 @@ export class CategoryRepository {
             this.logger.error(this.context, 'getCategoryList', error);
             throw error;
         }
+    }
+
+    async findAll(query: any) {
+        const { page = 1, limit = 10, name } = query;
+        const skip = (page - 1) * limit;
+
+        const where: any = {
+            isActive: true,
+            isDeleted: false,
+        };
+
+        if (name) {
+            where.name = {
+                contains: name,
+                mode: 'insensitive',
+            };
+        }
+
+        const [items, total] = await Promise.all([
+            this.prisma.category.findMany({
+                where,
+                skip: Number(skip),
+                take: Number(limit),
+                orderBy: {
+                    id: 'asc',
+                },
+            }),
+            this.prisma.category.count({ where }),
+        ]);
+
+        return {
+            items,
+            meta: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                totalPages: Math.ceil(total / limit),
+            },
+        };
     }
 }

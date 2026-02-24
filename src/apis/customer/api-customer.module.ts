@@ -7,6 +7,7 @@ import { CustomerModule } from './customer/customer.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
 	imports: [
@@ -20,7 +21,8 @@ import { OrderModule } from './order/order.module';
 		CategoryModule,
 		ProductModule,
 		OrderModule,
+		SearchModule,
 	],
 })
-export class ApiCustomerModule {}
+export class ApiCustomerModule { }
 

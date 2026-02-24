@@ -5,9 +5,9 @@ import { ProductRepository } from './product.repository';
 export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
-  ) {}
+  ) { }
 
-  async ApiGetProductBySlug(slug: string){
+  async ApiGetProductBySlug(slug: string) {
     // Mock implementation for demonstration purposes
     return this.productRepository.getProductBySlug(slug);
   }

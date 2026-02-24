@@ -4,29 +4,29 @@ import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
 export class DefaultQueryDto {
 	@IsOptional()
 	@IsString()
-	q?: string;
+	q?: string; // Search query
 
 	@IsOptional()
 	@IsString()
-	@Transform(() => '10') // Default limit is 10
-	limit?: number;
-
-	@IsOptional()
-	@IsString() // Default page is 1
-	@Transform(() => '1') // Default page is 1
-	page?: number;
+	@Transform(() => '10')
+	limit?: number; //Lấy 10 sản phẩm
 
 	@IsOptional()
 	@IsString()
-	search?: string;
+	@Transform(() => '1')
+	page?: number; //Trang 1
 
 	@IsOptional()
 	@IsString()
-	sort_by?: string;
+	search?: string; //Tim kiếm
 
 	@IsOptional()
 	@IsString()
-	sort_type?: SORT_TYPE;
+	sort_by?: string; //Sắp xếp theo
+
+	@IsOptional()
+	@IsString()
+	sort_type?: SORT_TYPE; //Loại sắp xếp
 }
 
 enum SORT_TYPE {

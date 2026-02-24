@@ -16,7 +16,7 @@ export const APP_ROUTES = {
             LOGIN: { path: 'admins/auth/', tag: 'Admin_Auth' },
         },
         EMPLOYEES: { path: 'admins/employees', tag: 'Admin_Employees' },
-        CATEGORY: {path: 'admin/category', tag: 'Admin_Category'},
+        CATEGORY: { path: 'admin/category', tag: 'Admin_Category' },
         UPLOAD: {
             IMAGE: { path: 'admins/upload/image', tag: 'Admin_Upload' },
         },
@@ -54,6 +54,7 @@ export const APP_ROUTES = {
         CATEGORY: { path: 'customers/category', tag: 'Customer_Category' },
         PRODUCT: { path: 'customers/product', tag: 'Customer_Product' },
         ORDER: { path: 'customers/order', tag: 'Customer_Order' },
+        SEARCH: { path: 'customers/search', tag: 'Customer_Search' },
     },
 } as const;
 
