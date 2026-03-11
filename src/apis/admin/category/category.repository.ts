@@ -4,7 +4,7 @@ import { categoryErrorTypes, generateUUID } from '../../../common';
 import { QueryUserDto } from "../employees/dto/query.dto";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { JwtPayloadAdmin } from "src/jwt";
+import { JwtPayloadAdmin } from '../../../jwt/index';
 @Injectable()
 export class CategoryRepository {
     constructor(

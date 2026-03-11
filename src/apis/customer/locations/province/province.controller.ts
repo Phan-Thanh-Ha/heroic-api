@@ -1,11 +1,11 @@
 import { LoggerService } from '../../../../logger';
-import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
-import { ApiGet } from 'src/common/decorators/api-endpoint.decorator';
-import { AppController } from 'src/common/decorators/decorator';
+import { APP_ROUTES } from '../../../../common/apis-routes/api.routes';
+import { ApiGet } from '../../../../common/decorators/api-endpoint.decorator';
+import { AppController } from '../../../../common/decorators/decorator';
 import { ProvinceService } from './province.service';
 import { ApiProvinceGetAll } from './swagger/get-all-province.swagger';
 import { Public, ResponseMessage } from '../../../../common';
-import { provinceSuccessTypes } from 'src/common/code-type/province/province-success.code-type';
+import { provinceSuccessTypes } from '../../../../common/code-type/province/province-success.code-type';
 import { ApiSecurity } from '@nestjs/swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.LOCATIONS.PROVINCE)

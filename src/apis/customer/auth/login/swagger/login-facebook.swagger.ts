@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { LoginFacebookDto } from "../dto/login-facebook.dto";
-import { HTTP_STATUS_ENUM } from "src/common/enums/http-status.enum";
+import { HTTP_STATUS_ENUM } from '../../../../../common/enums/http-status.enum';
 
 export const ApiLoginWithFacebook = () => {
     return applyDecorators(

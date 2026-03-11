@@ -6,7 +6,7 @@ import { LoginController } from './login.controller';
 import { LoginRepository } from './login.repository';
 import { LoginService } from './login.service';
 import { EmployeesModule } from '../../employees/employees.module';
-import { JwtModule } from 'src/jwt';
+import { JwtModule } from '../../../../jwt/index';
 
 @Module({
   imports: [LoggerModule, PrismaModule, JwtModule, MailModule, EmployeesModule],

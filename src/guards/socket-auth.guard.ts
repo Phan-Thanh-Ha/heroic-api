@@ -4,8 +4,8 @@ import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { LoggerService } from '../logger';
 import { SocketUser, IS_PUBLIC_SOCKET_KEY } from '../common';
-import { tokenErrorTypes } from 'src/common/code-type/token/token-error.code-type';
-import { JwtService } from 'src/jwt';
+import { tokenErrorTypes } from '../common/code-type/token/token-error.code-type';
+import { JwtService } from '../jwt/index';
 
 @Injectable()
 export class SocketAuthGuard implements CanActivate {

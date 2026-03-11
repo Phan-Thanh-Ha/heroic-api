@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { DefaultQueryDto } from "src/common/dto/pagination.dto";
+import { DefaultQueryDto } from '../../../../../common/dto/pagination.dto';
 import { IsNotEmpty, IsString } from "class-validator";
 
 export class QueryDistrictsDto extends DefaultQueryDto {

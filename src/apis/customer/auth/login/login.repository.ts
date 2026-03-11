@@ -6,11 +6,11 @@ import bcrypt from "bcryptjs";
 import { LoginFacebookDto } from "./dto/login-facebook.dto";
 import { LoginGoogleDto } from "./dto/login-google.dto";
 import { LoginDto } from "./dto/login.dto";
-import { EmailService } from "src/apis/otp/email/email.service";
-import { DiscordService } from "src/apis/otp/discord/discord.service";
+import { EmailService } from '../../../../apis/otp/email/email.service';
+import { DiscordService } from '../../../../apis/otp/discord/discord.service';
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
-import { TelegramService } from "src/apis/otp/telegram/telegram.service";
-import { JwtService } from "src/jwt";
+import { TelegramService } from '../../../../apis/otp/telegram/telegram.service';
+import { JwtService } from '../../../../jwt/index';
 
 @Injectable()
 export class LoginRepository {

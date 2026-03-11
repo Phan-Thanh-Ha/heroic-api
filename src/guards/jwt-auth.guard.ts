@@ -3,7 +3,7 @@ import { LoggerService } from '../logger';
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { tokenErrorTypes } from 'src/common/code-type/token/token-error.code-type';
+import { tokenErrorTypes } from '../common/code-type/token/token-error.code-type';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard([StrategyKey.JWT]) {

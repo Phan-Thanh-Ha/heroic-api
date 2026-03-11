@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { HTTP_STATUS_ENUM } from "src/common/enums/http-status.enum";
+import { HTTP_STATUS_ENUM } from '../../../../common/enums/http-status.enum';
 import { CategoryEntity } from "../entities/category.entity";
 
 export const ApiCategoryListSwagger = () => {

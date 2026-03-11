@@ -1,11 +1,11 @@
 import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public, ResponseMessage } from '../../../common';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { orderSuccessCodeType } from 'src/common/code-type';
+import { orderSuccessCodeType } from '../../../common/code-type/index';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreatePaymentLinkDto } from './dto/create-payment-link.dto';
 import { OrderService } from './order.service';
-import { JwtPayloadCustomer } from 'src/jwt';
+import { JwtPayloadCustomer } from '../../../jwt/index';
 
 @AppController(APP_ROUTES.CUSTOMER.ORDER)
 export class OrderController {

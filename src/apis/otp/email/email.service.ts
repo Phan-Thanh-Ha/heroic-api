@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SendMailOtpDto } from 'src/mail/dto/send-mail-otp.dto';
+import { SendMailOtpDto } from '../../../mail/dto/send-mail-otp.dto';
 import { EmailRepository } from './email.repository';
 
 @Injectable()

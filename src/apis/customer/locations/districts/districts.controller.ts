@@ -1,7 +1,7 @@
 import { ApiGet, AppController, Public, ResponseMessage } from '../../../../common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
-import { districtsSuccessTypes } from 'src/common/code-type/districts/districts-success.code-type';
+import { APP_ROUTES } from '../../../../common/apis-routes/api.routes';
+import { districtsSuccessTypes } from '../../../../common/code-type/districts/districts-success.code-type';
 import { DistrictsService } from './districts.service';
 import { QueryDistrictsDto } from './dto/query.dto';
 import { ApiDistrictsFindByParentCode } from './swagger';

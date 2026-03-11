@@ -1,7 +1,7 @@
 import { ApiSecurity } from '@nestjs/swagger';
 import { CustomerService } from './customer.service';
 import { ApiGet, APP_ROUTES, AppController, ResponseMessage } from '../../../common';
-import { customerSuccessTypes } from 'src/common/code-type/customers/customer-success.code-type';
+import { customerSuccessTypes } from '../../../common/code-type/customers/customer-success.code-type';
 import { ApiCustomerGetList } from './swagger/get-customer-list.swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.LIST)

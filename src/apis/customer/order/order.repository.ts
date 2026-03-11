@@ -4,7 +4,7 @@ import { PrismaService } from '../../../prisma';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { generateOrderCode } from '../../../common';
-import { JwtPayloadCustomer } from 'src/jwt';
+import { JwtPayloadCustomer } from '../../../jwt/index';
 
 @Injectable()
 export class OrderRepository {

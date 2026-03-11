@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { SocketUser } from '../interfaces/socket-user.interface';
-import { JwtPayloadAdmin } from 'src/jwt';
+import { JwtPayloadAdmin } from '../../jwt/index';
 
 /**
  * Decorator để lấy user từ HTTP request (dùng cho REST API)

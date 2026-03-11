@@ -1,7 +1,7 @@
 import { ApiGet, AppController, Public, ResponseMessage, wardSuccessTypes } from '../../../../common';
 import { Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
+import { APP_ROUTES } from '../../../../common/apis-routes/api.routes';
 import { ApiWardsFindByWardId } from '../../customer/swagger/get-ward-by-wardid.swagger';
 import { QueryWardsDto } from './dto/query.dto';
 import { ApiWardsFindByDistrictCode } from './swagger/get-wards-by-parencode.swagger';

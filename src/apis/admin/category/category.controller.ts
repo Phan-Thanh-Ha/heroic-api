@@ -13,7 +13,7 @@ import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
 import { ApiToggleCategorySwagger } from './swagger/toggle-category.swagger';
 import { ApiUpdateCategorySwagger } from './swagger/update-category.swagger';
 import { categorySuccessTypes } from '../../../common';
-import { JwtPayloadAdmin } from 'src/jwt';
+import { JwtPayloadAdmin } from '../../../jwt/index';
 @AppController(APP_ROUTES.ADMIN.CATEGORY)
 export class CategoryController {
   constructor(

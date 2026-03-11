@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { APP_PIPE, APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { AllExceptionsFilter } from '../common/filters/all-exceptions.filter'; 
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard'; 
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'; 
 import { ResponseTransformInterceptor } from '../common';
 
 /**

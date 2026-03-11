@@ -1,7 +1,7 @@
 import { LoggerService } from '../../../logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { categoryErrorTypes } from 'src/common/code-type/category/category-error.code-type';
-import { JwtPayloadAdmin } from 'src/jwt/jwt.interface';
+import { categoryErrorTypes } from '../../../common/code-type/category/category-error.code-type';
+import { JwtPayloadAdmin } from '../../../jwt/jwt.interface';
 import { QueryUserDto } from '../employees/dto/query.dto';
 import { CategoryRepository } from './category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';

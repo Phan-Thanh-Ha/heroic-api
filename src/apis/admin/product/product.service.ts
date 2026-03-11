@@ -5,7 +5,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductRepository } from './product.repository';
-import { JwtPayloadAdmin } from 'src/jwt';
+import { JwtPayloadAdmin } from '../../../jwt/index';
 
 @Injectable()
 export class ProductService {

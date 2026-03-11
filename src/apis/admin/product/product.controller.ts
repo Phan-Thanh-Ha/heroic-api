@@ -10,7 +10,7 @@ import { ProductService } from './product.service';
 import { ApiGetListProductSwagger } from './swagger/get-list-product.swagger';
 import { ApiCreateProductSwagger } from './swagger/create-product.swagger';
 import { ApiUpdateProductSwagger } from './swagger/update-product.repository';
-import { JwtPayloadAdmin } from 'src/jwt';
+import { JwtPayloadAdmin } from '../../../jwt/index';
 @AppController(APP_ROUTES.ADMIN.PRODUCT)
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
