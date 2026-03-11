@@ -1,31 +1,32 @@
-# --- Stage 1: Builder ---
-FROM node:22-alpine AS builder
-RUN apk add --no-cache openssl libc6-compat
+FROM node:20-alpine AS builder
+
+# 1. Cài đặt full công cụ cần thiết cho Prisma và biên dịch C++
+RUN apk add --no-cache openssl libc6-compat python3 make g++
+
 WORKDIR /app
 
+# 2. Copy package.json
 COPY package.json ./
-RUN npm install
+
+# 3. Cài đặt với flag an toàn nhất
+RUN npm install --legacy-peer-deps
 
 COPY . .
-
-# Generate Prisma Client
 RUN npx prisma generate
 RUN npm run build
 
 # --- Stage 2: Production ---
-FROM node:22-alpine AS production
+FROM node:20-alpine AS production
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
+# Copy từ builder sang
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 
 ENV NODE_ENV=production
-# Quan trọng: Prisma cần biến này để chạy trên Alpine
-ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/node_modules/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node
-
 EXPOSE 3104
 
 CMD ["node", "dist/main.js"]
