@@ -1,30 +1,31 @@
 # --- Stage 1: Builder ---
-    FROM node:22-alpine AS builder
-    RUN apk add --no-cache openssl
-    WORKDIR /app
-    COPY package.json yarn.lock* ./
-    RUN yarn install --non-interactive --ignore-engines
-    COPY . .
+FROM node:22-alpine AS builder
+RUN apk add --no-cache openssl libc6-compat
+WORKDIR /app
 
-    # Render sẽ tự động đưa file Secret .env vào thư mục /app lúc build
-    # Prisma sẽ tự đọc file này để lấy DATABASE_URL
-    RUN npx prisma generate
-    RUN yarn build
+COPY package.json ./
+RUN npm install
 
-    # --- Stage 2: Production ---
-    FROM node:22-alpine AS production
-    RUN apk add --no-cache openssl
-    WORKDIR /app
-    COPY package.json yarn.lock* ./
-    RUN yarn install --production --non-interactive --ignore-engines
+COPY . .
 
-    COPY --from=builder /app/dist ./dist
-    COPY --from=builder /app/prisma ./prisma
-    COPY --from=builder /app/generated ./generated
-    COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Generate Prisma Client
+RUN npx prisma generate
+RUN npm run build
 
-    ENV NODE_ENV=production
-    EXPOSE 3104
+# --- Stage 2: Production ---
+FROM node:22-alpine AS production
+RUN apk add --no-cache openssl libc6-compat
+WORKDIR /app
 
-    # Chạy server NestJS
-    CMD ["node", "dist/main.js"]
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+
+ENV NODE_ENV=production
+# Quan trọng: Prisma cần biến này để chạy trên Alpine
+ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/node_modules/prisma/libquery_engine-linux-musl-openssl-3.0.x.so.node
+
+EXPOSE 3104
+
+CMD ["node", "dist/main.js"]
