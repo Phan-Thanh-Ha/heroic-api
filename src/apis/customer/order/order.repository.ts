@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../../../prisma';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { generateOrderCode } from '../../../common';
 import { JwtPayloadCustomer } from 'src/jwt';
@@ -19,7 +19,7 @@ export class OrderRepository {
       // Tạo đơn hàng
       const newOrder = await tx.customer_order.create({
         data: {
-          uuid: uuidv4(),
+          uuid: randomUUID(),
           orderCode: '', // Sẽ được cập nhật sau khi có id
           orderDate: new Date(),// Ngày tạo đơn
           deliveryDate: new Date(),// Ngày giao hàng
