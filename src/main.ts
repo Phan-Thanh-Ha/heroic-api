@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { configuration } from './config';
 import { AllExceptionsFilter } from './common';
 import { ValidationProvider, logSwaggerUrls } from './providers';
-// import { LoggerService } from './logger'; // <-- Có thể bỏ nếu không dùng trong bootstrap
+import 'tsconfig-paths/register';
 import cookieParser from 'cookie-parser';
 import { initSwagger } from './app.swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -31,8 +31,8 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // Cấu hình CORS
-  app.enableCors({ 
-    origin: '*', 
+  app.enableCors({
+    origin: '*',
     credentials: true, // Cho phép trình duyệt nhận và gửi Cookie
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: '*', // Cho phép tất cả header
