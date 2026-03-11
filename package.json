@@ -136,12 +136,25 @@
     "test": "test"
   },
   "keywords": [],
-  "repository": {
-    "type": "git",
-    "url": "git+https://Phan-Thanh-Ha@github.com/PhanHa17/Heroic-api.git"
-  },
-  "bugs": {
-    "url": "https://github.com/PhanHa17/Heroic-api/issues"
-  },
-  "homepage": "https://github.com/PhanHa17/Heroic-api#readme"
+  "_moduleAliases": {
+    "@apis": "dist/apis",
+    "@common": "dist/common",
+    "@config": "dist/config",
+    "@logger": "dist/logger",
+    "@models": "dist/models",
+    "@entities": "dist/entities",
+    "@passport": "dist/passport",
+    "@firebase": "dist/firebase",
+    "@middlewares": "dist/middlewares",
+    "@providers": "dist/providers",
+    "@locations": "dist/apis/customer/locations",
+    "@prisma": "dist/prisma",
+    "@utils": "dist/common/utils",
+    "@interfaces": "dist/common/interfaces",
+    "@mail": "dist/mail/index",
+    "@guards": "dist/guards",
+    "@apis-routes": "dist/common/apis-routes/api.routes",
+    "@socket": "dist/socket",
+    "@payos": "dist/payos"
+  }
 }

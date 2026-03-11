@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { configuration } from './config';
