@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { LoggerService } from '../logger';
-import { SocketUser, IS_PUBLIC_SOCKET_KEY } from '@common';
+import { SocketUser, IS_PUBLIC_SOCKET_KEY } from '../common';
 import { tokenErrorTypes } from 'src/common/code-type/token/token-error.code-type';
 import { JwtService } from 'src/jwt';
 

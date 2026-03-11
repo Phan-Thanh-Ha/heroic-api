@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../..';
 
 interface WardSuccessTypes {
 	FIND_WARDS_BY_DISTRICT_CODE: SuccessType;

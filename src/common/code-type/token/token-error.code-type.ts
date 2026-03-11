@@ -1,4 +1,4 @@
-import { ErrorType } from '@common';
+import { ErrorType } from '../..';
 
 interface TokenErrorTypes {
     TOKEN_VERIFY_FAILED: ErrorType;

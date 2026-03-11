@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { configuration } from '../configuration';
-import { WS_ROUTES } from '@common';
+import { WS_ROUTES } from '../../common';
 
 export const socketConfig = () =>
     registerAs('socket', () => {

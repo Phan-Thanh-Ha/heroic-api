@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { configuration } from './config';
 import { AllExceptionsFilter } from './common';
 import { ValidationProvider, logSwaggerUrls } from './providers';
-import 'tsconfig-paths/register';
 import cookieParser from 'cookie-parser';
 import { initSwagger } from './app.swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';

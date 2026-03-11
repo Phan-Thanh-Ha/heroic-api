@@ -1,4 +1,4 @@
-import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, ResponseMessage } from '@common';
+import { adminAuthSuccessTypes, ApiGet, ApiPost, APP_ROUTES, AppController, ResponseMessage } from '../../../common';
 import { Body, Query } from '@nestjs/common';
 import { adminEmployeeSuccessTypes } from 'src/common/code-type/admin/employee/employee-success.code-type';
 import { QueryUserDto } from './dto';

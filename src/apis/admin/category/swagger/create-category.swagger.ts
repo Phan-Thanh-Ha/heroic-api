@@ -1,4 +1,4 @@
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { CreateCategoryDto } from "../dto/create-category.dto";
 import { Category } from "../entities/category.entity";

@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { PrismaService } from '@prisma';
+import { PrismaService } from '../../../prisma';
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
 @Injectable()

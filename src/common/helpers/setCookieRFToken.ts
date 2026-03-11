@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { tokenLifeTime } from '@common';
+import { tokenLifeTime } from '..';
 
 export const setCookieRFToken = (res: Response, refreshToken: string) => {
     res.cookie('refresh_token', refreshToken, {

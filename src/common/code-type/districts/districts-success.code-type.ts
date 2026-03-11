@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../..';
 
 interface DistrictsSuccessTypes {
 	FINK_DISTRICTS_BY_PARENT_CODE: SuccessType;

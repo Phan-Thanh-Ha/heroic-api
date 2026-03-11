@@ -20,7 +20,7 @@ export class PrismaService
 
             const pool = new Pool({ connectionString: databaseUrl });
             const adapter = new PrismaPg(pool);
-            
+
             super({ adapter } as Prisma.PrismaClientOptions);
             this.pool = pool;
         } else {

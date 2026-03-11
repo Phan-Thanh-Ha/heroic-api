@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { DEFAULT_QUERY } from '@common';
+import { DEFAULT_QUERY } from '..';
 
 export const getMetadata = (req: Request, data: any[]) => {
     // data[1] là tổng số lượng bản ghi trả về từ Repository (count)

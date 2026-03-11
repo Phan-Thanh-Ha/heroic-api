@@ -1,4 +1,4 @@
-import { ROUTER_TAG_ENUM } from "@common"
+import { ROUTER_TAG_ENUM } from '../../../../common'
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger"
 import { SendMailOtpDto } from "src/mail/dto/send-mail-otp.dto"
 import { EmailEntity } from "../entities/email.entity"

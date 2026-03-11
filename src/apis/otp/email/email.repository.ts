@@ -1,5 +1,5 @@
 import { Injectable, LoggerService } from "@nestjs/common";
-import { PrismaService } from "@prisma";
+import { PrismaService } from '../../../prisma';
 import { SendMailOtpDto } from "src/mail/dto/send-mail-otp.dto";
 import { MailService } from "src/mail/mail.service";
 

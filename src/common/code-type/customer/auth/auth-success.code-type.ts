@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../../..';
 
 interface CustomerAuthSuccessTypes {
 	AUTH_LOGIN_SUCCESS: SuccessType;

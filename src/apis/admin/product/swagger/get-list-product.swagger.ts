@@ -1,4 +1,4 @@
-import { APIOkSchema, HTTP_STATUS_ENUM } from "@common";
+import { APIOkSchema, HTTP_STATUS_ENUM } from '../../../../common';
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { ProductEntity } from "../entities/product.entity";

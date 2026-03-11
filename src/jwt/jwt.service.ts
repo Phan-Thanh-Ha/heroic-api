@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
-import { adminAuthErrorTypes, customerAuthErrorTypes, tokenLifeTime } from '@common';
-import { configuration } from '@config';
+import { adminAuthErrorTypes, customerAuthErrorTypes, tokenLifeTime } from '../common';
+import { configuration } from '../config';
 import { JwtPayloadAdmin, JwtPayloadCustomer } from './jwt.interface';
 
 @Injectable()

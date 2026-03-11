@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { LoggerService } from '../../../logger';
 import { EmployeesRepository } from './employees.repository';
-import { DefaultQueryDto } from '@common';
+import { DefaultQueryDto } from '../../../common';
 
 @Injectable()
 export class EmployeesService {

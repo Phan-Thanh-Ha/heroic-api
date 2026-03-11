@@ -1,4 +1,4 @@
-import { ApiDelete, ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
+import { ApiDelete, ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '../../../common';
 import { LoggerService } from '../../../logger';
 import { Body, Param, Query, Req } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
@@ -12,7 +12,7 @@ import { ApiGetListCategorySwagger } from './swagger/get-list-category.swagger';
 import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
 import { ApiToggleCategorySwagger } from './swagger/toggle-category.swagger';
 import { ApiUpdateCategorySwagger } from './swagger/update-category.swagger';
-import { categorySuccessTypes } from '@common';
+import { categorySuccessTypes } from '../../../common';
 import { JwtPayloadAdmin } from 'src/jwt';
 @AppController(APP_ROUTES.ADMIN.CATEGORY)
 export class CategoryController {

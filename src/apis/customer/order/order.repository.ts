@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@prisma';
+import { PrismaService } from '../../../prisma';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
-import { generateOrderCode } from '@common';
+import { generateOrderCode } from '../../../common';
 import { JwtPayloadCustomer } from 'src/jwt';
 
 @Injectable()

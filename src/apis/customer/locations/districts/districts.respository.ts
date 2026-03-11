@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { LoggerService } from "../../../../logger";
-import { PrismaService } from "@prisma";
+import { PrismaService } from '../../../../prisma';
 import { QueryDistrictsDto } from "./dto/query.dto";
 
 @Injectable()

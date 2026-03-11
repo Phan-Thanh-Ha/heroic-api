@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiHeader, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { Employee } from "../entities/employee.entity";
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 
 export const ApiGetListEmployeeSwagger = () => {
     return applyDecorators(

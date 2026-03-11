@@ -1,7 +1,7 @@
-import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@common";
+import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from '../../../../common';
 import { LoggerService } from "../../../../logger";
 import { ConflictException, Injectable } from "@nestjs/common";
-import { PrismaService } from "@prisma";
+import { PrismaService } from '../../../../prisma';
 import bcrypt from "bcryptjs";
 import { WardsService } from "../../locations/wards/wards.service";
 import { CreateRegisterDto } from "./dto/create-register.dto";

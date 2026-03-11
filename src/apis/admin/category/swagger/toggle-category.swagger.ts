@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Category } from "../entities/category.entity";
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 
 export const ApiToggleCategorySwagger = () => {
     return applyDecorators(

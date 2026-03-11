@@ -1,4 +1,4 @@
-import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public, ResponseMessage } from '@common';
+import { ApiGet, ApiPost, APP_ROUTES, AppController, GetUser, Public, ResponseMessage } from '../../../common';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { orderSuccessCodeType } from 'src/common/code-type';

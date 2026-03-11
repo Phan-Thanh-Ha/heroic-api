@@ -2,7 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { ProductEntity } from "../entities/product.entity";
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 
 export const ApiCreateProductSwagger = () => {
     return applyDecorators(

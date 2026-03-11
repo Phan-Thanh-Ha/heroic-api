@@ -1,4 +1,4 @@
-import { ErrorType } from "@common";
+import { ErrorType } from '../..';
 
 interface OrderErrorCodeType {
     ORDER_CREATE_FAILED: ErrorType;

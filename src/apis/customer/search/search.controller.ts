@@ -1,4 +1,4 @@
-import { AppController, APP_ROUTES, ApiGet } from '@common';
+import { AppController, APP_ROUTES, ApiGet } from '../../../common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { Query } from '@nestjs/common';
 import { SearchService } from './search.service';

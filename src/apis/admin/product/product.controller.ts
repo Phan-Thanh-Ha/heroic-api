@@ -1,7 +1,7 @@
-import { ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
+import { ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '../../../common';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { productSuccessCode } from '@common';
+import { productSuccessCode } from '../../../common';
 import { QueryProductDto } from './dto/query.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';

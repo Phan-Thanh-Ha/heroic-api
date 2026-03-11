@@ -1,4 +1,4 @@
-import { ApiPost, APP_ROUTES, HTTP_STATUS_ENUM } from '@common';
+import { ApiPost, APP_ROUTES, HTTP_STATUS_ENUM } from '../common';
 import {
     Controller,
     Query,

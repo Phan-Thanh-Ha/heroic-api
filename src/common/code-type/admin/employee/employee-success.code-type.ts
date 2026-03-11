@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../../..';
 
 interface AdminEmployeeSuccessTypes {
 	ADMIN_EMPLOYEE_GET_LIST_SUCCESS: SuccessType;

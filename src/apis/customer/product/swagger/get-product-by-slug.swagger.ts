@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 import { ProductEntity } from "src/apis/admin/product/entities/product.entity";
 
 export const ApiGetProductBySlug = () => {

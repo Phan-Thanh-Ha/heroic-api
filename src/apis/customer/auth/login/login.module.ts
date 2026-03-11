@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { LoginController } from './login.controller';
 import { LoggerModule } from '../../../../logger';
-import { PrismaModule } from '@prisma';
+import { PrismaModule } from '../../../../prisma';
 import { LoginRepository } from './login.repository';
 import { MailModule } from '../../../../mail/mail.module';
 import { EmailModule } from 'src/apis/otp/email/email.module';
 import { DiscordModule } from 'src/apis/otp/discord/discord.module';
 import { TelegramModule } from 'src/apis/otp/telegram/telegram.module';
-import { NotificationsModule } from '@socket';
+import { NotificationsModule } from '../../../../socket';
 import { JwtModule } from 'src/jwt';
 
 @Module({

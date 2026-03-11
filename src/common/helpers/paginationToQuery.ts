@@ -1,4 +1,4 @@
-import { DEFAULT_QUERY } from '@common';
+import { DEFAULT_QUERY } from '..';
 import { DefaultQueryDto } from '../dto'; // (Đường dẫn DTO của bạn)
 
 

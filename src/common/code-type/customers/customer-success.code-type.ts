@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../..';
 
 interface CustomerSuccessTypes {
     GET_CUSTOMER_LIST: SuccessType;

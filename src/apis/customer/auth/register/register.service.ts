@@ -2,7 +2,7 @@ import { LoggerService } from '../../../../logger';
 import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { RegisterRespository } from './register.respository';
-import { NotificationsGateway } from '@socket';
+import { NotificationsGateway } from '../../../../socket';
 
 @Injectable()
 export class RegisterService {

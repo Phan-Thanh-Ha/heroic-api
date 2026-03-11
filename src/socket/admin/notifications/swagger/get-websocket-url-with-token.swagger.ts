@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { HTTP_STATUS_ENUM } from '@common';
+import { HTTP_STATUS_ENUM } from '../../../../common';
 
 export const ApiGetWebSocketUrlWithTokenSwagger = () => {
   return applyDecorators(

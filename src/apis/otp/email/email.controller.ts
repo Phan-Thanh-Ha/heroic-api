@@ -1,5 +1,5 @@
 import { EmailService } from 'src/apis/otp/email/email.service';
-import { ApiPost } from '@common';
+import { ApiPost } from '../../../common';
 import { Body, Controller } from '@nestjs/common';
 import { SendMailOtpDto } from 'src/mail/dto/send-mail-otp.dto';
 import { ApiSendMailOtp } from './swagger/email.swagger';

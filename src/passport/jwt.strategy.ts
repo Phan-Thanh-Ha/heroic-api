@@ -1,5 +1,5 @@
-import { adminAuthErrorTypes } from '@common';
-import { configuration } from '@config';
+import { adminAuthErrorTypes } from '../common';
+import { configuration } from '../config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';

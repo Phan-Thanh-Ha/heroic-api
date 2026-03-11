@@ -4,9 +4,9 @@ import { LoginGoogleDto } from './dto/login-google.dto';
 import { LoggerService } from '../../../../logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
-import { formatDateToYMD, toUnixByTimeZone } from '@common';
+import { formatDateToYMD, toUnixByTimeZone } from '../../../../common';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
-import { NotificationsService, NotificationsGateway, createAndEmitNotificationToAdmins } from '@socket';
+import { NotificationsService, NotificationsGateway, createAndEmitNotificationToAdmins } from '../../../../socket';
 
 @Injectable()
 export class LoginService {

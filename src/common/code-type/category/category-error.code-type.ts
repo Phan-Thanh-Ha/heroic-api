@@ -1,4 +1,4 @@
-import { ErrorType } from '@common';
+import { ErrorType } from '../..';
 
 interface CategoryErrorTypes {
     CATEGORY_CREATE_FAILED: ErrorType;

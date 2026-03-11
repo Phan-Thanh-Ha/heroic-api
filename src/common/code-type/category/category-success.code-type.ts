@@ -1,4 +1,4 @@
-import { SuccessType } from '@common';
+import { SuccessType } from '../..';
 
 interface CategorySuccessTypes {
     CATEGORY_CREATE_SUCCESS: SuccessType;

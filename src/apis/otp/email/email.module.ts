@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { EmailController } from './email.controller';
 import { EmailRepository } from './email.repository';
-import { MailModule } from '@mail';
+import { MailModule } from '../../../mail/index';
 import { LoggerModule } from '../../../logger';
-import { PrismaModule } from '@prisma';
+import { PrismaModule } from '../../../prisma';
 
 @Module({
   imports: [

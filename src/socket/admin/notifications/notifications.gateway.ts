@@ -1,6 +1,6 @@
-import { createCustomRoom, createRoleRoom, emitToUser as emitToUserHelper, GetSocketUser, joinRoleRoom, joinUserRoom, SocketUser, WS_ROUTES } from '@common';
-import { socketConfig } from '@config';
-import { SocketAuthGuard } from '@guards';
+import { createCustomRoom, createRoleRoom, emitToUser as emitToUserHelper, GetSocketUser, joinRoleRoom, joinUserRoom, SocketUser, WS_ROUTES } from '../../../common';
+import { socketConfig } from '../../../config';
+import { SocketAuthGuard } from '../../../guards';
 import { UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,

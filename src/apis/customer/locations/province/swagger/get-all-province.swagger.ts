@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { APIOkSchema } from '@common';
+import { APIOkSchema } from '../../../../../common';
 
 export const ApiProvinceGetAll = () => {
     return applyDecorators(

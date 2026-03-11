@@ -1,4 +1,4 @@
-import { ErrorType } from '@common';
+import { ErrorType } from '../../..';
 
 interface AdminAuthErrorTypes {
 	AUTH_LOGIN_FAILED: ErrorType;

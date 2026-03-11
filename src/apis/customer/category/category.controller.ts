@@ -1,5 +1,5 @@
 import { ApiSecurity } from '@nestjs/swagger';
-import { APP_ROUTES, ApiGet, AppController } from '@common';
+import { APP_ROUTES, ApiGet, AppController } from '../../../common';
 import { CategoryService } from './category.service';
 import { ApiCategoryListSwagger } from './swagger/category-list.swagger';
 

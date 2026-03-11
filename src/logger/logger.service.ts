@@ -1,6 +1,6 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { format } from 'date-fns';
-import { COLOR_ENUM } from '@common';
+import { COLOR_ENUM } from '../common';
 
 @Injectable({
 	scope: Scope.DEFAULT,

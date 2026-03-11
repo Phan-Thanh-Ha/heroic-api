@@ -1,5 +1,5 @@
 import { Public } from './../../../../common/decorators/public.decoration';
-import { adminAuthSuccessTypes, HTTP_STATUS_ENUM, ResponseMessage, ApiPost } from '@common';
+import { adminAuthSuccessTypes, HTTP_STATUS_ENUM, ResponseMessage, ApiPost } from '../../../../common';
 import { LoggerService } from '../../../../logger';
 import { Body, Res } from '@nestjs/common';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';

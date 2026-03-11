@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from '@prisma';
+import { PrismaModule } from '../../../prisma';
 import { LoggerModule } from '../../../logger';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { OrderRepository } from './order.repository';
-import { PayOSModule } from '@payos';
+import { PayOSModule } from '../../../payos';
 
 @Module({
 	imports: [PrismaModule, LoggerModule, PayOSModule, ConfigModule],

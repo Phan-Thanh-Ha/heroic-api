@@ -1,4 +1,4 @@
-import { HTTP_STATUS_ENUM } from "@common";
+import { HTTP_STATUS_ENUM } from '../../../../common';
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { UpdateProductDto } from "../dto/update-product.dto";

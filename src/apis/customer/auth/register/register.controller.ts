@@ -1,4 +1,4 @@
-import { ApiPost, APP_ROUTES, AppController, customerAuthSuccessTypes, Public, ResponseMessage } from '@common';
+import { ApiPost, APP_ROUTES, AppController, customerAuthSuccessTypes, Public, ResponseMessage } from '../../../../common';
 import { LoggerService } from '../../../../logger';
 import { Body, Req } from '@nestjs/common';
 import { Request } from 'express';

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OrderRepository } from './order.repository';
-import { PayOSService } from '@payos';
+import { PayOSService } from '../../../payos';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreatePaymentLinkDto } from './dto/create-payment-link.dto';
 import { JwtPayloadCustomer } from 'src/jwt';

@@ -27,5 +27,5 @@ export const SERVER_EVENTS = {
 export {
     createCustomRoom, createRoleRoom, createRoomName,
     createUserRoom, ROOM_PREFIXES
-} from '@common';
+} from '../../../../common';
 

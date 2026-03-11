@@ -1,4 +1,4 @@
-import { ApiGet, AppController, Public, ResponseMessage, wardSuccessTypes } from '@common';
+import { ApiGet, AppController, Public, ResponseMessage, wardSuccessTypes } from '../../../../common';
 import { Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';

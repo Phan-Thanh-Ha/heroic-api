@@ -1,7 +1,7 @@
-import { customerAuthErrorTypes, customerAuthSuccessTypes, generateCustomerCode, generateUUID, generateOTP } from "@common";
+import { customerAuthErrorTypes, customerAuthSuccessTypes, generateCustomerCode, generateUUID, generateOTP } from '../../../../common';
 import { LoggerService } from "../../../../logger";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { PrismaService } from "@prisma";
+import { PrismaService } from '../../../../prisma';
 import bcrypt from "bcryptjs";
 import { LoginFacebookDto } from "./dto/login-facebook.dto";
 import { LoginGoogleDto } from "./dto/login-google.dto";

@@ -3,7 +3,7 @@ import { LoggerModule } from '../../../../logger';
 import { DistrictsController } from './districts.controller';
 import { DistrictsService } from './districts.service';
 import { DistrictsRepository } from './districts.respository';
-import { PrismaModule } from '@prisma';
+import { PrismaModule } from '../../../../prisma';
 
 @Module({
   imports: [LoggerModule, PrismaModule],

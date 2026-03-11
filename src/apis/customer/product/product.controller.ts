@@ -1,8 +1,8 @@
-import { ApiGet } from '@common';
+import { ApiGet } from '../../../common';
 import { Param } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { APP_ROUTES } from '@common';
-import { AppController } from '@common';
+import { APP_ROUTES } from '../../../common';
+import { AppController } from '../../../common';
 import { ProductService } from './product.service';
 import { ApiGetProductBySlug } from './swagger/get-product-by-slug.swagger';
 
