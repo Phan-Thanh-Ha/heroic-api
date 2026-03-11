@@ -13,21 +13,20 @@ export class PrismaService
     constructor() {
         const databaseUrl = process.env.DATABASE_URL;
 
-        // Nếu có URL, khởi tạo adapter ngay
-        if (databaseUrl) {
-            const maskedUrl = databaseUrl.replace(/:([^:@]+)@/, ':****@');
-            console.log('🔗 Database URL detected:', maskedUrl);
-
-            const pool = new Pool({ connectionString: databaseUrl });
-            const adapter = new PrismaPg(pool);
-
-            super({ adapter } as Prisma.PrismaClientOptions);
-            this.pool = pool;
-        } else {
-            // Nếu chưa có, khởi tạo Prisma mặc định (sẽ báo lỗi ở onModuleInit sau)
-            console.warn('⚠️ DATABASE_URL not found in constructor, waiting for module init...');
-            super();
+        if (!databaseUrl) {
+            // Prisma v7 requires a non-empty options object when instantiating the client.
+            // Throw early so the error is clear (instead of a generic PrismaClientInitializationError).
+            throw new Error('DATABASE_URL is required to initialize PrismaClient.');
         }
+
+        const maskedUrl = databaseUrl.replace(/:([^:@]+)@/, ':****@');
+        console.log('🔗 Database URL detected:', maskedUrl);
+
+        const pool = new Pool({ connectionString: databaseUrl });
+        const adapter = new PrismaPg(pool);
+
+        super({ adapter } as Prisma.PrismaClientOptions);
+        this.pool = pool;
     }
 
     async onModuleInit() {
