@@ -1,4 +1,4 @@
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../../logger';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@prisma';
 import { RegisterController } from './register.controller';

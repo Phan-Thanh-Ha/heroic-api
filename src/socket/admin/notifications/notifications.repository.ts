@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../logger';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { GetNotificationsDto } from './dto/get-notifications.dto';
 import { INotification } from './interfaces/notification.interface';
@@ -12,7 +12,7 @@ export class NotificationsRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   /**
    * Tạo notification mới

@@ -3,7 +3,7 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { PrismaModule } from '@prisma';
 import { ProductRepository } from './product.repository';
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../../logger';
 
 @Module({
   imports: [PrismaModule, LoggerModule],

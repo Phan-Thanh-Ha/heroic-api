@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { LoginGoogleDto } from './dto/login-google.dto';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { LoginRepository } from './login.repository';
 import { LoginFacebookDto } from './dto/login-facebook.dto';
 import { formatDateToYMD, toUnixByTimeZone } from '@common';
@@ -53,7 +53,7 @@ export class LoginService {
         const createdAt = new Date(result.info.createdAt);
         const now = new Date();
         const diffSeconds = (now.getTime() - createdAt.getTime()) / 1000;
-        
+
         // Nếu customer được tạo trong vòng 10 giây thì gửi notification
         if (diffSeconds <= 10) {
           try {
@@ -105,7 +105,7 @@ export class LoginService {
         const createdAt = new Date(result.info.createdAt);
         const now = new Date();
         const diffSeconds = (now.getTime() - createdAt.getTime()) / 1000;
-        
+
         // Nếu customer được tạo trong vòng 10 giây thì gửi notification
         if (diffSeconds <= 10) {
           try {

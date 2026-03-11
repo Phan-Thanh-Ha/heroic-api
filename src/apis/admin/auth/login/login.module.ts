@@ -1,4 +1,4 @@
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../../logger';
 import { MailModule, MailService } from '@mail';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@prisma';

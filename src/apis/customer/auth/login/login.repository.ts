@@ -1,5 +1,5 @@
 import { customerAuthErrorTypes, customerAuthSuccessTypes, generateCustomerCode, generateUUID, generateOTP } from "@common";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../../logger";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import bcrypt from "bcryptjs";

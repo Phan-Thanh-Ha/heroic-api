@@ -1,4 +1,4 @@
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../logger';
 import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from './category.repository';
 

@@ -1,5 +1,5 @@
 import { IS_PUBLIC_KEY, StrategyKey } from '@common';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../logger';
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';

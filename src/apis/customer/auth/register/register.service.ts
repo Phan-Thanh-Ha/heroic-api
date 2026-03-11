@@ -1,4 +1,4 @@
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import { RegisterRespository } from './register.respository';
@@ -12,7 +12,7 @@ export class RegisterService {
     private readonly registerRespository: RegisterRespository,
     private readonly loggerService: LoggerService,
     private readonly notificationsGateway: NotificationsGateway,
-  ) {}
+  ) { }
 
   //#region Đăng ký tài khoản khách hàng
   async register(createRegisterDto: CreateRegisterDto, timeZone?: string) {
@@ -41,7 +41,7 @@ export class RegisterService {
       }
 
       return {
-        user: {...customer},
+        user: { ...customer },
         accessToken: '1234567890', // TODO: Generate JWT token thực tế
       };
     } catch (error) {
@@ -51,7 +51,7 @@ export class RegisterService {
       }
       throw new InternalServerErrorException('Đăng ký thất bại. Vui lòng thử lại sau.');
     }
-    
+
   }
   //#endregion
 }

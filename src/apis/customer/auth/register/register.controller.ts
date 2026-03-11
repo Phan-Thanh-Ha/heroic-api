@@ -1,5 +1,5 @@
 import { ApiPost, APP_ROUTES, AppController, customerAuthSuccessTypes, Public, ResponseMessage } from '@common';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { Body, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateRegisterDto } from './dto/create-register.dto';

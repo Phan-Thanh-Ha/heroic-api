@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationsGateway } from './notifications.gateway';
 import { NotificationsRepository } from './notifications.repository';
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../logger';
 import { PrismaModule } from '@prisma';
 import { JwtModule } from 'src/jwt';
 

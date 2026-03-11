@@ -1,5 +1,5 @@
 import { ApiDelete, ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { Body, Param, Query, Req } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { Request } from 'express';

@@ -1,4 +1,4 @@
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../../logger";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import { QueryWardsDto } from "./dto/query.dto";
@@ -6,7 +6,7 @@ import { QueryWardsDto } from "./dto/query.dto";
 @Injectable()
 export class WardsRepository {
     private context = WardsRepository.name;
-    constructor(private readonly prisma: PrismaService, private readonly logger: LoggerService) {}
+    constructor(private readonly prisma: PrismaService, private readonly logger: LoggerService) { }
 
     async findWardsByDistrictCode(query: QueryWardsDto) {
         const { districtCode } = query;
@@ -16,7 +16,7 @@ export class WardsRepository {
                 orderBy: {
                     name: 'asc',
                 },
-            }); 
+            });
         }
         catch (error) {
             this.logger.error(this.context, 'findWardsByDistrictCode', error);
@@ -29,10 +29,10 @@ export class WardsRepository {
         try {
             return await this.prisma.wards.findFirst({
                 where: { id: wardId },
-            
-                
-            }); 
-            
+
+
+            });
+
         }
         catch (error) {
             this.logger.error(this.context, 'findWardsByDistrictCode', error);

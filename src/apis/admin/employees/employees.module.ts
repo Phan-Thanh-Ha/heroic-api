@@ -1,4 +1,4 @@
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../../logger';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@prisma';
 import { EmployeesController } from './employees.controller';
@@ -7,11 +7,11 @@ import { EmployeesService } from './employees.service';
 
 @Module({
   imports: [
-    LoggerModule, 
+    LoggerModule,
     PrismaModule,
   ],
   controllers: [EmployeesController],
   providers: [EmployeesService, EmployeesRepository],
   exports: [EmployeesRepository],
 })
-export class EmployeesModule {}
+export class EmployeesModule { }

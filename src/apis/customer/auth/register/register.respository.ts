@@ -1,5 +1,5 @@
 import { convertDdMmYyyyToUTCDate, formatDateToYMD, generateCustomerCode, generateUUID, toUnixByTimeZone } from "@common";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../../logger";
 import { ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import bcrypt from "bcryptjs";

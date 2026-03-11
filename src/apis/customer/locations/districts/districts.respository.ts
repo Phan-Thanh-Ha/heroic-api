@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../../logger";
 import { PrismaService } from "@prisma";
 import { QueryDistrictsDto } from "./dto/query.dto";
 
@@ -9,8 +9,8 @@ export class DistrictsRepository {
     constructor(
         private readonly prisma: PrismaService,
         private readonly logger: LoggerService,
-    ) {}
-    
+    ) { }
+
     async findDistrictsByProvinceCode(query: QueryDistrictsDto) {
         try {
             this.logger.log(this.context, 'findDistrictsByProvinceCode', query);
@@ -20,9 +20,9 @@ export class DistrictsRepository {
                 },
             });
             return ({
-                    items: districts,
-                    total: districts.length,
-                })
+                items: districts,
+                total: districts.length,
+            })
         } catch (error) {
             this.logger.error(this.context, 'findDistrictsByProvinceCode', error);
             throw error;

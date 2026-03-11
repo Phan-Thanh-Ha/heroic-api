@@ -1,5 +1,5 @@
 import { adminAuthErrorTypes } from "@common";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../../logger";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { setCookieRFToken } from "src/common/helpers/setCookieRFToken";
 import { EmployeesRepository } from "../../employees/employees.repository";

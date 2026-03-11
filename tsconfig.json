@@ -30,7 +30,6 @@
       "@apis": ["src/apis"],
       "@common": ["src/common"],
       "@config": ["src/config"],
-      "@logger": ["src/logger"],
       "@models": ["src/models"],
       "@entities": ["src/entities"],
       "@passport": ["src/passport"],

@@ -3,7 +3,7 @@ import { EmailService } from './email.service';
 import { EmailController } from './email.controller';
 import { EmailRepository } from './email.repository';
 import { MailModule } from '@mail';
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../logger';
 import { PrismaModule } from '@prisma';
 
 @Module({
@@ -16,4 +16,4 @@ import { PrismaModule } from '@prisma';
   providers: [EmailService, EmailRepository],
   exports: [EmailService],
 })
-export class EmailModule {}
+export class EmailModule { }

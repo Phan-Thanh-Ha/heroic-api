@@ -1,4 +1,4 @@
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { categoryErrorTypes } from 'src/common/code-type/category/category-error.code-type';
 import { JwtPayloadAdmin } from 'src/jwt/jwt.interface';
@@ -13,7 +13,7 @@ export class CategoryService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   //#region Tạo danh mục mới
   async createCategory(createCategoryDto: CreateCategoryDto, userInfo: JwtPayloadAdmin) {
@@ -45,7 +45,7 @@ export class CategoryService {
   //#region Cập nhật danh mục
   async updateCategory(updateCategoryDto: UpdateCategoryDto, userInfo: JwtPayloadAdmin) {
     try {
-      const category = await this.categoryRepository.updateCategory( updateCategoryDto, userInfo);
+      const category = await this.categoryRepository.updateCategory(updateCategoryDto, userInfo);
       return category;
     } catch (error) {
       this.logger.error(CategoryService.name, error.message, error.stack);

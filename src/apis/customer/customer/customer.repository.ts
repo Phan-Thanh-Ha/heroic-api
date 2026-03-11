@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../logger";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -29,17 +29,18 @@ export class CustomerRepository {
                     },
                 }
             );
-            const customerList = takeCustomerList.map( (item) => {
-                 return {...item,
+            const customerList = takeCustomerList.map((item) => {
+                return {
+                    ...item,
                     province: item.province?.name,
                     district: item.district?.name,
                     ward: item.ward?.name
 
-                 }
+                }
                 //  return {...takeCustomerList 
                 //     province : takeCustomerList[0].province?.name
                 //  }
-            } )
+            })
             return customerList
         } catch (error) {
             this.logger.error(this.context, 'getCustomerList', error);

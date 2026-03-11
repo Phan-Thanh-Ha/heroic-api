@@ -1,4 +1,4 @@
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { Injectable } from '@nestjs/common';
 import { WardsRepository } from './wards.respository';
 import { QueryWardsDto } from './dto/query.dto';
@@ -30,9 +30,9 @@ export class WardsService {
     try {
       const wards = await this.wardsRepository.findWardsByDistrictCode(query);
       return ({
-          items: wards,
-          total: wards.length,
-        })
+        items: wards,
+        total: wards.length,
+      })
     } catch (error) {
       this.logger.error(this.context, 'findWardsByDistrictCode', error);
       throw error;

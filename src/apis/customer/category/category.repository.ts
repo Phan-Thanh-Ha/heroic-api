@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { LoggerService } from "@logger";
+import { LoggerService } from "../../../logger";
 
 @Injectable()
 export class CategoryRepository {

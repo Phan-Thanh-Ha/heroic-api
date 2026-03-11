@@ -1,5 +1,5 @@
 import { productErrorTypes } from '@common';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query.dto';

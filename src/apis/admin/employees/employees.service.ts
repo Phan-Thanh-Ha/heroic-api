@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../../logger';
 import { EmployeesRepository } from './employees.repository';
 import { DefaultQueryDto } from '@common';
 
@@ -12,8 +12,8 @@ export class EmployeesService {
   constructor(
     private readonly employeesRepository: EmployeesRepository,
     private readonly loggerService: LoggerService,
-  ) {}
-  
+  ) { }
+
   //#region Tạo nhân viên
   async createEmployee(createEmployeeDto: CreateEmployeeDto) {
     const employee = await this.employeesRepository.createEmployee(createEmployeeDto);
@@ -28,5 +28,5 @@ export class EmployeesService {
     return await this.employeesRepository.getListEmployees(query);
   }
   //#endregion
-  
+
 }

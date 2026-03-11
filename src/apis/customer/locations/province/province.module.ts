@@ -1,4 +1,4 @@
-import { LoggerModule } from '@logger';
+import { LoggerModule } from '../../../../logger';
 import { Module } from '@nestjs/common';
 import { PrismaService } from '@prisma';
 import { ProvinceController } from './province.controller';
@@ -10,4 +10,4 @@ import { ProvinceService } from './province.service';
   controllers: [ProvinceController],
   providers: [ProvinceService, ProvinceRepository, PrismaService],
 })
-export class ProvinceModule {}
+export class ProvinceModule { }

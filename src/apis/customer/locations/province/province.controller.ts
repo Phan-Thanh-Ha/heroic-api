@@ -1,4 +1,4 @@
-import { LoggerService } from '@logger';
+import { LoggerService } from '../../../logger';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
 import { ApiGet } from 'src/common/decorators/api-endpoint.decorator';
 import { AppController } from 'src/common/decorators/decorator';
@@ -10,11 +10,11 @@ import { ApiSecurity } from '@nestjs/swagger';
 
 @AppController(APP_ROUTES.CUSTOMER.LOCATIONS.PROVINCE)
 export class ProvinceController {
-    constructor(private readonly provinceService: ProvinceService) {}
+    constructor(private readonly provinceService: ProvinceService) { }
 
     @ApiGet('', {
         summary: 'Lấy tất cả tỉnh thành',
-        swagger: ApiProvinceGetAll()    
+        swagger: ApiProvinceGetAll()
     })
     @ApiSecurity('JWT')
     @Public()
