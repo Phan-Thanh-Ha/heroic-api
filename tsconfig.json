@@ -34,7 +34,6 @@
       "@models": ["src/models"],
       "@entities": ["src/entities"],
       "@passport": ["src/passport"],
-      "@jwt": ["src/jwt"],
       "@firebase": ["src/firebase"],
       "@middlewares": ["src/middlewares"],
       "@providers/*": ["src/providers/*"],

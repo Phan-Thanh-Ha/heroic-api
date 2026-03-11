@@ -1,11 +1,11 @@
 import { productErrorTypes } from '@common';
-import { JwtPayloadAdmin } from '@jwt';
 import { LoggerService } from '@logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductRepository } from './product.repository';
+import { JwtPayloadAdmin } from 'src/jwt';
 
 @Injectable()
 export class ProductService {

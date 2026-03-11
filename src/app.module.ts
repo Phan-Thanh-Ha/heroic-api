@@ -10,7 +10,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProvidersModule, providerApp } from './providers';
 import { ProductModule } from './apis/customer/product/product.module';
 import { SocketModule } from './socket/socket.module';
-import { JwtModule } from '@jwt';
+import { JwtModule } from './jwt';
 
 @Module({
 	imports: [

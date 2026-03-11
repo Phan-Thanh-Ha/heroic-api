@@ -1,10 +1,10 @@
-import { JwtPayloadAdmin } from "@jwt";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import { categoryErrorTypes, generateUUID } from "@common";
 import { QueryUserDto } from "../employees/dto/query.dto";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { JwtPayloadAdmin } from "src/jwt";
 @Injectable()
 export class CategoryRepository {
     constructor(

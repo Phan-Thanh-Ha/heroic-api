@@ -1,5 +1,4 @@
 import { ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { JwtPayloadAdmin } from '@jwt';
 import { Body, Param, Query } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { productSuccessCode } from '@common';
@@ -11,9 +10,10 @@ import { ProductService } from './product.service';
 import { ApiGetListProductSwagger } from './swagger/get-list-product.swagger';
 import { ApiCreateProductSwagger } from './swagger/create-product.swagger';
 import { ApiUpdateProductSwagger } from './swagger/update-product.repository';
+import { JwtPayloadAdmin } from 'src/jwt';
 @AppController(APP_ROUTES.ADMIN.PRODUCT)
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   /**
    * Tạo sản phẩm

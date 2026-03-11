@@ -1,5 +1,4 @@
 import { ApiDelete, ApiGet, ApiPatch, ApiPost, APP_ROUTES, AppController, GetUser, HTTP_STATUS_ENUM, ResponseMessage } from '@common';
-import { JwtPayloadAdmin } from '@jwt';
 import { LoggerService } from '@logger';
 import { Body, Param, Query, Req } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
@@ -14,6 +13,7 @@ import { ApiCreateCategorySwagger } from './swagger/create-category.swagger';
 import { ApiToggleCategorySwagger } from './swagger/toggle-category.swagger';
 import { ApiUpdateCategorySwagger } from './swagger/update-category.swagger';
 import { categorySuccessTypes } from '@common';
+import { JwtPayloadAdmin } from 'src/jwt';
 @AppController(APP_ROUTES.ADMIN.CATEGORY)
 export class CategoryController {
   constructor(
@@ -93,7 +93,7 @@ export class CategoryController {
   @ApiSecurity('JWT')
   @ResponseMessage(categorySuccessTypes().CATEGORY_TOGGLE_SUCCESS.message)
   async toggleCategory(
-    @GetUser() user: JwtPayloadAdmin, 
+    @GetUser() user: JwtPayloadAdmin,
     @Param('uuid') uuid: string,
   ) {
     this.logger.debug(CategoryController.name, 'toggleCategory', uuid);

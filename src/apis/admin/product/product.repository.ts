@@ -1,11 +1,11 @@
 import { PrismaService } from "@prisma";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateProductDto } from "./dto/create-product.dto";
-import { JwtPayloadAdmin } from "@jwt";
-import { productErrorTypes,generateUUID } from "@common";
+import { productErrorTypes, generateUUID } from "@common";
 import { LoggerService } from "@logger";
 import { QueryProductDto } from "./dto/query.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { JwtPayloadAdmin } from "src/jwt";
 
 @Injectable()
 export class ProductRepository {

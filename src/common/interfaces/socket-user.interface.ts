@@ -1,4 +1,4 @@
-import { JwtPayloadAdmin, JwtPayloadCustomer } from '@jwt';
+import { JwtPayloadAdmin, JwtPayloadCustomer } from "src/jwt";
 
 export type SocketUser =
   | (JwtPayloadAdmin & { type: 'admin' })

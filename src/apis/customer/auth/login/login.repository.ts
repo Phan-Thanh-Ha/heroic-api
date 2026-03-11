@@ -1,5 +1,4 @@
 import { customerAuthErrorTypes, customerAuthSuccessTypes, generateCustomerCode, generateUUID, generateOTP } from "@common";
-import { JwtService } from "@jwt";
 import { LoggerService } from "@logger";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@prisma";
@@ -11,6 +10,7 @@ import { EmailService } from "src/apis/otp/email/email.service";
 import { DiscordService } from "src/apis/otp/discord/discord.service";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
 import { TelegramService } from "src/apis/otp/telegram/telegram.service";
+import { JwtService } from "src/jwt";
 
 @Injectable()
 export class LoginRepository {
@@ -97,7 +97,7 @@ export class LoginRepository {
 
                 console.log('user.telegramId', user.telegramId);
                 await this.telegramService.sendTelegramOTP(user.telegramId, otpCode);
-                }
+            }
         } catch (error) {
             this.loggerService.error(this.context, 'sendOtp', error);
             throw error;
@@ -224,7 +224,7 @@ export class LoginRepository {
 
             // Chưa tồn tại, tạo customer mới rồi đăng nhập luôn
             const newCustomer = await this.createCustomerWithGoogle(loginGoogleDto);
-            
+
             // Trim customerCode để loại bỏ khoảng trắng thừa từ Char(50)
             const trimmedCustomerCode = newCustomer.customerCode?.trim() || newCustomer.customerCode;
 

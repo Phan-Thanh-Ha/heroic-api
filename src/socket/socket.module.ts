@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { SocketAdminModule } from './admin';
 import { SocketCustomerModule } from './customer';
-import { JwtModule } from '@jwt';
 import { PrismaModule } from '@prisma';
+import { JwtModule } from 'src/jwt';
 
 @Module({
     imports: [
@@ -12,4 +12,4 @@ import { PrismaModule } from '@prisma';
         SocketAdminModule,
     ],
 })
-export class SocketModule {}
+export class SocketModule { }

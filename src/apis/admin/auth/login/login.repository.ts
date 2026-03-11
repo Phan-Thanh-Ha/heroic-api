@@ -1,11 +1,11 @@
 import { adminAuthErrorTypes } from "@common";
-import { JwtService } from "@jwt";
 import { LoggerService } from "@logger";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { setCookieRFToken } from "src/common/helpers/setCookieRFToken";
 import { EmployeesRepository } from "../../employees/employees.repository";
 import { EmployeeLoginDto } from "./dto/employee-login.dto";
 import { Response } from 'express';
+import { JwtService } from "src/jwt";
 
 @Injectable()
 export class LoginRepository {
