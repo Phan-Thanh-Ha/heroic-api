@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../logger';
+import { LoggerService } from '../../../../logger';
 import { APP_ROUTES } from 'src/common/apis-routes/api.routes';
 import { ApiGet } from 'src/common/decorators/api-endpoint.decorator';
 import { AppController } from 'src/common/decorators/decorator';

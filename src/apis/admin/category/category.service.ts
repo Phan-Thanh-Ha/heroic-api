@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../../logger';
+import { LoggerService } from '../../../logger';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { categoryErrorTypes } from 'src/common/code-type/category/category-error.code-type';
 import { JwtPayloadAdmin } from 'src/jwt/jwt.interface';

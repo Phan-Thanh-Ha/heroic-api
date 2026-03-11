@@ -1,5 +1,5 @@
 import { adminAuthErrorTypes, DefaultQueryDto, generateUUID, generateHashedDefaultPassword, comparePassword } from "@common"; // File chứa định nghĩa lỗi
-import { LoggerService } from "../../../../logger";
+import { LoggerService } from "../../../logger";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "@prisma";
 import { Prisma } from "@prisma/client";
