@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "node scripts/merge-prisma-schema.js && prisma generate && nest build",
+    "build": "node scripts/merge-prisma-schema.js && prisma generate && nest build --webpack",
     "start": "node dist/main.js",
     "start:prod": "cross-env NODE_ENV=production node dist/main.js",
     "postinstall": "prisma generate",
@@ -63,6 +63,7 @@
     "discord.js": "^14.25.1",
     "dotenv": "^17.2.3",
     "mariadb": "^3.5.2",
+    "module-alias": "^2.3.4",
     "mysql2": "^3.19.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
