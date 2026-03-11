@@ -9,8 +9,7 @@ WORKDIR /app
 COPY package.json ./
 
 # 3. Cài đặt với flag an toàn nhất
-RUN npm install --legacy-peer-deps
-
+RUN npm install --legacy-peer-deps --network-timeout=100000 --prefer-offline --no-audit --no-fund
 COPY . .
 RUN npx prisma generate
 RUN npm run build
